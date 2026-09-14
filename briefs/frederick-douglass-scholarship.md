@@ -19,7 +19,7 @@ The page-builder interior skeleton, unchanged (`page-builder/RULES.md` §21):
 
 | Region | Component |
 |---|---|
-| Hero | `umd-element-hero-minimal data-theme="dark"` + `ff-pattern-hero.png` in the image slot |
+| Hero | `umd-element-hero-minimal data-theme="dark"` + `interior-hero-pattern.png` in the image slot (now the sitewide interior convention — see CLAUDE.md § Interior page layouts) |
 | Breadcrumb | `umd-element-breadcrumb`, own `umd-layout-space-horizontal-larger` wrapper |
 | Sidebar | `umd-element-nav-slider`, mirrors the Tuition & Aid group in `shared/header.html` |
 | Content | `#umd-shell-content.max-w-[800px]` |
@@ -57,7 +57,7 @@ system and has been removed. Written up in `OVERRIDES.md`.
 
 | File | Source |
 |---|---|
-| `images/tuition/ff-pattern-hero.png` | supplied for this page |
+| `images/shared/interior-hero-pattern.png` | supplied for this page; moved out of `images/tuition/` on 2026-09-14 when it became the shared interior hero graphic |
 | `images/tuition/frederick-douglass-statue.jpg` | downloaded from the live page's CDN (1454×931, 219KB) rather than hotlinked |
 
 ## Banner promo — new sitewide treatment
