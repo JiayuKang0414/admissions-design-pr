@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Nico Magpantay — Undergraduate Admissions | University of Maryland</title>
+  <title>Find Your Community — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -817,173 +817,44 @@
       color: #000000;
       text-decoration: none;
     }
+
+
+    /* ============================================================
+       A. PAGE — ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md)
+       Neither rule is in the base bundles or critical.css.
+       min-width: 0 lets the 1fr tracks shrink — otherwise an image's
+       min-content forces its grid track to the intrinsic width and
+       unbalances the columns.
+       ============================================================ */
+    .umd-layout-grid-gap-two > * { min-width: 0; }
+    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
+      display: block; width: 100%; height: auto;
+    }
+    /* figcaption is not styled by any bundle — match umd-element-media-inline's
+       caption treatment so the one captioned image reads the same as it did
+       in the wrapped variant. */
+    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked figcaption {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #757575;
+    }
+
+    /* ALTERNATING SIDE — by `order`, not by DOM order.
+       LAYOUT-PATTERNS.md alternates the zig-zag by swapping the <figure> and
+       the text <div> in the markup. That is wrong below the 650px breakpoint
+       where the grid collapses to one column: the figure then stacks ABOVE its
+       own heading, so half the blocks lead with an unexplained photo. Keeping
+       the text first in the DOM everywhere and flipping the column with
+       `order` at 650px+ gives the same zig-zag with a reading order that
+       survives the collapse — and the same order for a screen reader. */
+    @media (min-width: 650px) {
+      .fc-media-first > figure { order: -1; }
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
-  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
-       NOT appended to the inlined critical.css above. tools/inline-critical.py
-       rewrites the FIRST style block in a file and leaves later ones alone, so
-       page CSS sitting inside that block is (a) invisible to --check, which
-       then reports the page as permanently stale, and (b) DELETED the moment
-       the tool is run over pages/. Cascade order is unchanged: critical <
-       page CSS < chrome CSS, exactly as when this sat at the tail of the
-       critical block. (No literal style tag in this comment on purpose -- the
-       repo's tooling finds these blocks by regex.) -->
-  <style>
-    /* ============================================================
-       26. ADMISSION REPRESENTATIVES — intro lockup + rep pages
-       ============================================================ */
-
-    /* --- intro lockup with brand chevron (landing page) --------
-       Same treatment as how-to-apply/index.html and tuition/index.html:
-       rule, uppercase eyebrow, rich text, with the brand animation
-       riding behind it and overlapping ~180px up into the hero.
-       The animation hardcodes its inner container to width:100vw /
-       height:50vw and anchors chevrons to right:0, so the host must
-       span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
-      position: relative;
-      overflow: visible;
-      z-index: 100;
-    }
-
-    .reps-intro-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .reps-chevron {
-      position: absolute;
-      top: -180px;
-      left: 0;
-      right: 0;
-      bottom: -80px;
-      pointer-events: none;
-      z-index: 1;
-      overflow: visible;
-    }
-
-    .reps-chevron > umd-element-brand-logo-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: block;
-    }
-
-    @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
-    }
-
-    /* --- rep grid ----------------------------------------------
-       No grid CSS of its own. The cards are the documented border-grid
-       pattern exactly as LAYOUT-PATTERNS.md describes it:
-       umd-layout-grid-border-four + class="umd-shell-person-grid-helper"
-       on every umd-element-person host (that class is the container-query
-       target -- without it the 24/32/48px cell padding never applies).
-       Partial rows are handled by critical.css §19's :not(:has(...)) rules,
-       so 24 reps in a 4-up grid needs no filler markup.
-
-       The one thing added: the grid's own left/right border is drawn by
-       layout.min.css against the cell edge, and a headshot sitting flush
-       in a 24px cell reads as unaligned next to a name that wraps to two
-       lines. umd-layout-grid-child-fill-height equalises the cells so the
-       job-title baselines line up across a row. */
-
-    /* --- search page: filter form ------------------------------
-       The CMS person-index template (omc.umd.edu/people) is built almost
-       entirely from design-system classes that ARE in our bundles:
-       umd-layout-background-highlight-light (grey panel + red left rule),
-       umd-layout-grid-gap-stacked / -two, umd-layout-grid-inline-stretch,
-       umd-text-line-trailing-light, umd-field-select-wrapper, umd-field-input,
-       umd-action-outline, umd-skip-content, sr-only.
-
-       What is NOT in our bundles, and is therefore reproduced below:
-         - the `umd-shell-*` classes (shellcraft site CSS, not the DS)
-         - the Tailwind utilities the template leans on for the search row
-           (flex, gap-min, items-center, aspect-square, bg-red, h-[44px])
-       Measured against the loaded bundles, not assumed. The rules below are
-       the "minimal lift" from briefs/experts-filter.md, which documents this
-       same search bar on the experts page. */
-    .reps-search-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .reps-search-row input { flex: 1; }
-    /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
-      flex: none;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--umd-color-red, #e21833);
-      border: 0;
-      cursor: pointer;
-      transition: background-color .5s;
-    }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
-
-    /* Gap between the results grid and whatever follows it.
-
-       The DS vertical rhythm classes are margin-BOTTOM only -- measured,
-       umd-layout-vertical-landing is `margin-bottom: 120px; margin-top: 0`
-       (the same thing CLAUDE.md notes about -child, and it holds for the
-       parent class too). The grid's own wrapper is a bare
-       umd-layout-space-horizontal-larger with no vertical class, so nothing
-       separated it from the next block and both the Load More button and the
-       trailing copy sat flush against the last row of cards.
-
-       Putting the space on the WRAPPER rather than on either follower is what
-       makes it hold in both states: Load More is display:none when every match
-       is already shown, so a margin on that section would vanish with it and
-       the copy would jump back up against the grid the moment a filter
-       narrowed the results. Followers have margin-top: 0, so there is no
-       collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
-
-    /* Results count + empty state. The template's .umd-shell-pagination-results
-       is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
-      font-size: 14px;
-      color: var(--umd-color-gray-dark, #757575);
-      margin-top: 24px;
-    }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
-    /* JS hides this when every match is already on screen; without JS the
-       whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
-
-    /* --- territory list (bio pages) ----------------------------
-       The territories are a plain list, but a rep can cover nine of them
-       (Abigail Trice) or none at all, so a single column runs long and a
-       fixed multi-column grid leaves a ragged hole. Columns that fill on
-       width keep both ends honest. */
-    .rep-regions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px 32px;
-    }
-    @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
-    }
-    .rep-regions-list li {
-      border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
-      padding-top: 12px;
-    }
-  </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1307,6 +1178,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 </head>
 <body>
 
+  <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1442,12 +1314,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/academics/limited-enrollment-programs"><span>Limited Enrollment Programs</span></a>
         <a href="https://ugst.umd.edu/llsop/index.html"><span>Living-Learning &amp; Special Programs</span></a>
       </div>
-      <div data-parent-ref="student-life">
+      <div data-parent-ref="student-life" data-active>
         <a href="../../pages/student-life/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
         <a href="https://admissions.umd.edu/student/student-support"><span>Student Support &amp; Safety</span></a>
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
-        <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
+        <a href="../../pages/student-life/find-community.html" data-selected><span>Find Your Community</span></a>
       </div>
       <div data-parent-ref="how-to-apply">
         <a href="../../pages/how-to-apply/"><span>Overview</span></a>
@@ -1472,91 +1344,206 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 3. PERSON HERO — the DS's own profile-page hero. It owns the breadcrumb
-       (registry-person.json: "do not also render a standalone
-       umd-element-breadcrumb"), so this page has none of its own. -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-person-hero>
-      <!-- The slot takes a umd-element-breadcrumb, NOT a bare <nav>: the
-           component validates its slots and logs 'Slot "breadcrumb" contains
-           invalid elements. Allowed: umd-element-breadcrumb' for anything
-           else. registry-person.json's "do not also render a standalone
-           umd-element-breadcrumb" means put it HERE rather than separately on
-           the page -- not that the slot takes hand-rolled markup.
+  <main id="main-content">
+    <!-- 2. HERO — the shared interior hero: minimal, dark, UMD chevron pattern
+         in the image slot, parent page in the eyebrow. See CLAUDE.md
+         § Interior page layouts. The live page hides its <h1> with .sr-only and
+         repeats the title as an <h2> in the content; the hero carries it here,
+         so the duplicate heading is dropped. -->
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <p slot="eyebrow">Student Life</p>
+        <h1 slot="headline">Find Your Community</h1>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+      </umd-element-hero-minimal>
+    </section>
 
-           The paths markup is RULES.md §"Breadcrumb", not the <ol>/<li>
-           shown in registry-navigation.json. The registry example is wrong:
-           the DS draws its separators with `.breadcrumb-path + *::before`, so
-           the paths have to be ADJACENT SIBLINGS. Wrapping each in its own
-           <li> gives every anchor a container to itself, the selector never
-           matches, and the trail renders as one run-on string
-           ("HomeAdmission RepresentativesAbigail Trice"). Flat <a> siblings
-           plus a <p> for the current page -- each with its own <span>, which
-           is what the hover underline animates. -->
-      <umd-element-breadcrumb slot="breadcrumb">
+    <!-- 3. BREADCRUMB — LAYOUT B: the breadcrumb lock matches the content lock,
+         so this is -normal. -->
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
         <div slot="paths">
           <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
-          <a href="index.html"><span>Admission Representatives</span></a>
-          <p aria-label="Current Page"><span>Nico Magpantay</span></p>
+          <a href="../../pages/student-life/"><span>Student Life</span></a>
+          <p aria-label="Current Page"><span>Find Your Community</span></p>
         </div>
       </umd-element-breadcrumb>
-      <img slot="image" src="../../images/admission-representatives/nico-magpantay.jpg" alt="Portrait of Nico Magpantay, Admission Counselor" />
-      <h1 slot="name">Nico Magpantay</h1>
-      <p slot="job-title">Admission Counselor</p>
-      <!-- NO slot="association". registry-person.json lists it, but
-           umd-element-person-hero silently drops it: the component rebuilds
-           its text lockup from the light DOM and only reads name + job-title
-           (verified against the rendered shadow tree in cdn.js@1.18.12). The
-           unit name would have been dead markup, so it is not emitted. -->
-      <!-- The email slot IS the contact action -- no slot="actions" CTA.
-           Both pointed at the same mailto, so the button restated the link
-           directly above it. The visible text is "Email <first name>" rather
-           than the address; the aria-label still names the actual inbox, so
-           the destination is not lost for a screen reader. -->
-      <a slot="email" href="mailto:ApplyMaryland@umd.edu?subject=Student%20Inquiry%20for%20Nico%20Magpantay" aria-label="Email Nico at ApplyMaryland@umd.edu"><span>Email Nico</span></a>
-    </umd-element-person-hero>
-  </section>
-
-  <!-- 4. BIO — the source modal's "Favorite Maryland Moment". Narrow -small
-       lock and the same rule + uppercase eyebrow lockup the interior pages use. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Favorite Maryland Moment</p>
-      <div class="umd-text-rich-advanced">
-        <p>My friends and I would always hop onto the Metro and before we knew it, we were in our nation&#x27;s capital. Washington D.C. is home to many free museums and lots of different events! It is always fun to catch a Capitals game or a Nationals game!</p>
-      </div>
     </div>
-  </section>
 
-  <!-- 5. TERRITORIES — the modal's region list. Columns fill on width
-       (page CSS §26); a rep can cover one territory or nine. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Territories</p>
-      <ul class="rep-regions-list">
-          <li>Massachusetts</li>
-          <li>Maryland - Carroll County</li>
-          <li>Virginia - Tidewater Region</li>
-          <li>Virginia - Richmond</li>
-      </ul>
+    <!-- 4. CONTENT — LAYOUT B: the source page has no left nav, so no
+         umd-layout-space-columns-left and no sidebar. One -normal lock.
+         Rich text needs no measure wrapper: element.min.css caps
+         p/ul/ol at 960px in place. -->
+    <div class="umd-layout-space-horizontal-normal">
+
+      <!-- 5. THE FIVE COMMUNITY BLOCKS — zig-zag columns
+           (LAYOUT-PATTERNS.md § Light background — two-column image + text).
+           The image column alternates side by swapping the order of the text
+           <div> and the <figure>. Each headline sits OUTSIDE
+           .umd-text-rich-advanced: a umd-sans-* size collapses to 18px inside
+           that block (RULES §18). -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Do Good Campus Community</h2>
+            <div class="umd-text-rich-advanced">
+              <p>Bring your valuable experiences, backgrounds, identities, and fields of study or interests to ignite meaningful change in the world. The Do Good Institute is committed to being a safe and welcoming place for all people, condemning and confronting acts of injustice, discrimination, harassment, or bigotry.</p>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/find-community/do-good-students-chatting.jpg"
+                 alt="Two computer science students in conversation on campus." />
+          </figure>
+        </div>
+      </section>
+
+      <!-- Image LEFT: the figure comes first. -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two fc-media-first">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Belonging and Community</h2>
+            <div class="umd-text-rich-advanced">
+              <p>The University of Maryland is committed to &ldquo;inclusive excellence&rdquo;&mdash;the notion that in order to educate our students with excellence, in order to foster outstanding research and scholarship, and in order to be national and global leaders, we must be diverse and inclusive. Through programs and resources, <a href="https://belonging.umd.edu/" target="_blank" rel="noopener noreferrer">Belonging &amp; Community at UMD</a> works to cultivate well-being, belonging, and a vibrant learning community for all.</p>
+              <p><a href="https://admissions.umd.edu/student/land-acknowledgement">Land Acknowledgement</a>.</p>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/shared/frederick-douglass-statue.jpg"
+                 alt="The Frederick Douglass statue on the University of Maryland campus, his right arm raised mid-speech and a copy of his autobiography held in his left." />
+            <figcaption>Frederick Douglass statue located in Hornbake Plaza.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">International Services</h2>
+            <div class="umd-text-rich-advanced">
+              <p>While our students hail from over 150 countries, they quickly come to call Maryland home. The <a href="https://globalmaryland.umd.edu/offices/international-students-scholar-services" target="_blank" rel="noopener noreferrer">International Student &amp; Scholar Services</a> office assists international students with the process of applying to Maryland, advises on immigration requirements and provides resources to assist with transitioning to campus.</p>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/find-community/international-students-walking.jpg"
+                 alt="A large group of students walking together outdoors on campus." />
+          </figure>
+        </div>
+      </section>
+
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two fc-media-first">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Veteran Services</h2>
+            <div class="umd-text-rich-advanced">
+              <p>The University of Maryland recognizes the extraordinary contributions of members of our armed services, and we understand the unique challenges of transitioning into a university environment. With a community of students, staff, faculty, and alumni who have served in the US military, <a href="https://thestamp.umd.edu/veteran_student_life" target="_blank" rel="noopener noreferrer">Veteran Student Life</a> supports a seamless transition from military life to civilian college life and provides support for continued growth in mind, body and spirit.</p>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/find-community/veteran-services-dining.jpg"
+                 alt="Students laughing over a meal in a University of Maryland dining hall." />
+          </figure>
+        </div>
+      </section>
+
+      <!-- 6. MULTICULTURAL & FAITH PROGRAMS — the live page's two cards.
+           They carry supporting copy, so standard cards rather than text-only
+           overlay link cards (LAYOUT-PATTERNS.md § Link Cards Grid). No source
+           image for either, so no image slot. -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Multicultural &amp; Faith Programs</h2>
+
+        <div class="umd-layout-grid-gap-two umd-layout-grid-child-fill-height">
+          <umd-element-card data-visual-bordered="true">
+            <h3 slot="headline">Office of Multi-Ethnic Student Education (OMSE)</h3>
+            <div slot="text">
+              <p>OMSE works to serve the more than 10,000 undergraduate multi-ethnic students. By serving these students in all academic, personal and programmatic endeavors, Maryland strives to increase rates of matriculation, retention, graduation and overall GPA.</p>
+            </div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://omse.umd.edu/" target="_blank" rel="noopener noreferrer"
+                   aria-label="Visit the Office of Multi-Ethnic Student Education">Visit OMSE</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+
+          <umd-element-card data-visual-bordered="true">
+            <h3 slot="headline">Multicultural Involvement and Community Advocacy (MICA)</h3>
+            <div slot="text">
+              <p>MICA provides opportunities and spaces that affirm students and their identities, builds inclusive communities among diverse members and creates social change locally, nationally and globally.</p>
+            </div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://thestamp.umd.edu/Multicultural_Involvement_Community_Advocacy/About_MICA" target="_blank" rel="noopener noreferrer"
+                   aria-label="Visit Multicultural Involvement and Community Advocacy">Visit MICA</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+        </div>
+      </section>
+
+      <!-- 7. ALUMNI ASSOCIATION — the fifth zig-zag block, after the cards,
+           matching the live page's order. Image left. -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two fc-media-first">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">Alumni Association</h2>
+            <div class="umd-text-rich-advanced">
+              <p>Stay involved after crossing that commencement stage by joining the <a href="https://alumni.umd.edu/" target="_blank" rel="noopener noreferrer">Alumni Association</a>. Participate in all sorts of events, programs and initiatives as a UMD graduate and serve as a beacon for students moving through their own college experiences.</p>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/find-community/alumni-cup.jpg"
+                 alt="Students celebrating with the Alumni Cup trophy." />
+          </figure>
+        </div>
+      </section>
+
+      <!-- 8. RESOURCES — icon cards, light theme (red chevron), matching the
+           treatment on pages/academics/index.html and know-before-you-go.html. -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Resources</h2>
+
+        <!-- One resource, but kept on the 2-up grid so it sits in a column
+             rather than stretching the full 1152px content box — it matches
+             the card rows above it and leaves room for a second resource.
+             umd-layout-grid-gap-two is repeat(2, 1fr) at 650px+, so a lone
+             child occupies the first track and the second stays empty. -->
+        <div class="umd-layout-grid-gap-two">
+          <umd-element-card-icon>
+            <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+            <h3 slot="headline">
+              <a href="https://ugst.umd.edu/llsop/index.html" target="_blank" rel="noopener noreferrer">Living-Learning Programs</a>
+            </h3>
+            <div slot="text">
+              <p>Nothing connects students more than our highly regarded living-learning programs, where students with a common interest share residence halls, classrooms, faculty and friendships to dig deep into contemporary topics and get unique research experiences. Roughly half of all first-year students find their niche in one of these programs. To be considered for a living-learning program, you must apply for freshman admission by the November 1 early action deadline.</p>
+            </div>
+          </umd-element-card-icon>
+        </div>
+      </section>
+
+      <!-- 9. STAY CONNECTED — the sitewide page closer. -->
+      <section class="umd-layout-space-vertical-interior">
+        <umd-element-banner-promo>
+          <h2 slot="headline">There is a lot more to learn about UMD</h2>
+          <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
+          <div slot="actions" class="banner-promo-actions">
+            <umd-element-call-to-action data-display="primary">
+              <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-banner-promo>
+      </section>
     </div>
-  </section>
+  </main>
 
-  <!-- 6. BACK TO THE DIRECTORY — the only navigation off this page, and the
-       thing the modal used to give for free by closing. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
-      <umd-element-call-to-action data-display="secondary">
-        <a href="index.html">All Admission Representatives</a>
-      </umd-element-call-to-action>
-    </div>
-  </section>
-
-  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
-  <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
-
+  <!-- 10. FOOTER — visual -->
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
     <a slot="logo" href="../../pages/">
@@ -1661,6 +1648,5 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     })();
   </script>
   <!-- SHARED:chrome-scripts:END -->
-
 </body>
 </html>

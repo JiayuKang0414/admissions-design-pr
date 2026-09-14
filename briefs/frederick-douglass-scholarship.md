@@ -58,7 +58,7 @@ system and has been removed. Written up in `OVERRIDES.md`.
 | File | Source |
 |---|---|
 | `images/shared/interior-hero-pattern.png` | supplied for this page; moved out of `images/tuition/` on 2026-09-14 when it became the shared interior hero graphic |
-| `images/tuition/frederick-douglass-statue.jpg` | downloaded from the live page's CDN (1454×931, 219KB) rather than hotlinked |
+| `images/shared/frederick-douglass-statue.jpg` | downloaded from the live page's CDN (1454×931, 219KB) rather than hotlinked; moved to `images/shared/` on 2026-09-14 when `find-community.html` turned out to use the byte-identical asset |
 
 ## Banner promo — new sitewide treatment
 
