@@ -202,20 +202,26 @@ Downloaded rather than hotlinked, per project convention. The CDN signs every
 transform URL, so **only the sizes the live page itself requests are obtainable** —
 an unsigned request for the original returns 401.
 
-| File | Source size | Note |
+| File | Size | Note |
 |---|---|---|
-| `hotel-at-umd.jpg` | 1920×1080, 341KB | fine |
-| `cambria-hotel.jpg` | 259×194, 16KB | ⚠️ low-res |
-| `marriott-conference-center.jpg` | 204×116, 8KB | ⚠️ low-res |
+| `hotel-at-umd.jpg` | 1920×1080, 341KB | from the live CDN |
+| `cambria-hotel.jpg` | 900×506, 138KB | client-supplied replacement, 2026-09-14 |
+| `marriott-conference-center.webp` | 480×320, 53KB | client-supplied replacement, 2026-09-14 |
 | `campus-map-page-1.jpg` | 4000×2589, 1334KB → 2000×1294, 540KB | downscaled |
 | `campus-map-page-2.jpg` | 4000×2637, 1493KB → 2000×1318, 599KB | downscaled |
+| `GreaterCollegePark_09182025_DS_7980_1920x1080.webp` | 1920×1080, 252KB | supplied; under both thresholds, untouched |
 
-**The two low-res hotel photos are a content-supply gap, not a build defect.**
-The live site serves them at 259×194 and 204×116 and will not sign a larger
-transform, so they render soft in a 363px card. `data-visual-image-aligned`
-crops them to the row ratio, which hides most of it, but a real build of this
-page needs proper assets from the client. Do not "fix" this by upscaling or by
-substituting unrelated stock photography of different buildings.
+**The Cambria and Marriott photos were originally the live CDN's own crops —
+259×194 and 204×116.** The CDN signs every transform URL and returns 401
+unsigned, so those were the only sizes obtainable and they rendered soft in a
+363px card. Both have since been replaced with proper assets. If either ever
+needs re-sourcing, note that the live page is not a usable source for them.
+
+**`marriott-conference-center` is a WebP and carries a `.webp` extension.** It
+arrived named `.jpg`; browsers sniff the content type and rendered it fine, but
+the extension was renamed to match the bytes. Anything stricter than a browser —
+a CDN setting `Content-Type` from the extension, an asset pipeline keying off it —
+would have mis-served it.
 
 The two campus maps were over the project's optimization threshold (>1MB and
 4000px wide) and were resaved at 2000px / q82 progressive, which keeps them
