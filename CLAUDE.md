@@ -97,6 +97,25 @@ exactly two layouts**. They share the same hero and breadcrumb; they differ only
 in whether the left nav is present and, consequently, which horizontal lock the
 content area sits in.
 
+### Which layout — read the source page, don't infer it
+
+**The layout is a per-page decision made by the source design, and the only
+reliable way to pick is to look at the page you are recreating.** Open it and
+check whether `main` actually contains a left nav.
+
+Section membership does **not** decide it. An earlier version of this rule said
+to use Layout A whenever the page sits in a section with "a real sibling set
+worth navigating", and named `student-life` as one such section. That is wrong
+and it produced a wrong build: `pages/student-life/find-community.html` was
+first built with a sidebar on that reasoning, when
+`https://admissions.umd.edu/student/find-community` has no left nav at all —
+its `main` contains no `nav` or `aside`, just a single centred column. The
+sidebar had to be torn out.
+
+The drawer group in `shared/header.html` is about the *mobile* nav and says
+nothing about whether a given page shows a *desktop* sidebar. Two pages in the
+same section can legitimately differ.
+
 Reference pages:
 
 | Layout | Reference |
@@ -164,8 +183,7 @@ content 790 at x=426.
 `data-child-ref` group in `shared/header.html`, but `scripts/_chrome.py` does
 not stamp it — write its `data-active` / `data-selected` by hand.
 
-Use layout A when the page belongs to a section that has a real sibling set worth
-navigating (`tuition`, `how-to-apply`, `academics`, `student-life`).
+Use layout A when **the page being recreated has a left nav**.
 
 ### Layout B — no left nav
 
@@ -185,8 +203,7 @@ The content area uses a different lock:
 </div>
 ```
 
-Use layout B for one-off pages with no meaningful sibling set — the standalone
-informational page that hangs off the site rather than off a section.
+Use layout B when **the page being recreated has no left nav**.
 
 **A section-less page is written at the top of `pages/`, not in a directory of
 its own** — `pages/know-before-you-go.html`, alongside `pages/index.html`. Don't
