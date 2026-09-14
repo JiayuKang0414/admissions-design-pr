@@ -841,11 +841,22 @@
        mt-xl all compute to 0. Hence this. */
     .kbyg-top-space { margin-top: 48px; }
 
-    /* 992px lock for the section intro. A bare max-width, NOT
-       .umd-layout-space-horizontal-small: that class carries its own 64px
-       side padding, which would compound with the -normal lock this sits
-       inside and pull the intro in to 864px. */
-    .kbyg-lock-992 { max-width: 992px; margin-left: auto; margin-right: auto; }
+    /* PAGE LEDE — replaces the section-intro component for the opening
+       paragraph. That component centres its text in a ~992px block, which is
+       fine under a full-width grid but reads wrong on a text-led page where
+       everything below it is left-aligned. The source lede is left-aligned
+       24px/400 in an 800px column, so this is left-aligned and capped at 800.
+
+       The <p> must sit OUTSIDE .umd-text-rich-advanced: a umd-sans-* size
+       collapses to 18px inside that wrapper (RULES §18), which would silently
+       undo the 22px.
+
+       The lede owns its own bottom spacing — 24px, the gap the source runs
+       between its intro and the block below it — so the section it sits in
+       carries no vertical-spacing class. The usual *-interior 80px would
+       strand it away from the copy it introduces. */
+    .interior-lede { max-width: 800px; margin-bottom: 24px; }
+    .interior-lede > p { margin: 0; }
 
     /* ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md). Neither rule is in the base
        bundles or critical.css.
@@ -1232,7 +1243,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <div slot="dropdown-links">
           <a href="../pages/student-life/">Overview</a>
           <a href="https://admissions.umd.edu/student/housing-and-dining">Housing &amp; Dining</a>
-          <a href="../pages/student-life/student-support.html">Student Support &amp; Safety</a>
+          <a href="https://admissions.umd.edu/student/student-support">Student Support &amp; Safety</a>
           <a href="https://admissions.umd.edu/student/get-involved">Get Involved on Campus</a>
           <a href="../pages/student-life/find-community.html">Find Your Community</a>
         </div>
@@ -1266,7 +1277,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
           <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
           <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
-          <a href="../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
+          <a href="https://admissions.umd.edu/tuition/frederick-douglass-scholarship">Frederick Douglass Scholarship</a>
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
@@ -1327,7 +1338,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <div data-parent-ref="student-life">
         <a href="../pages/student-life/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
-        <a href="../pages/student-life/student-support.html"><span>Student Support &amp; Safety</span></a>
+        <a href="https://admissions.umd.edu/student/student-support"><span>Student Support &amp; Safety</span></a>
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
@@ -1346,7 +1357,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
-        <a href="../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
+        <a href="https://admissions.umd.edu/tuition/frederick-douglass-scholarship"><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1387,20 +1398,15 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          use the full 1152px content box. -->
     <div class="umd-layout-space-horizontal-normal">
 
-      <!-- 5. INTRO — section-intro, text-only (no headline slot). The h1 is
-           already in the hero, so a headline here would repeat it; the
-           registry confirms the component renders correctly with text alone.
-           include-separator draws the red accent line above the text.
-           Held in its own 992px lock (.kbyg-lock-992, a bare max-width rather
-           than -horizontal-small, which would add a second 64px of padding
-           inside the -normal lock this already sits in). -->
-      <section class="umd-layout-space-vertical-interior">
-        <div class="kbyg-lock-992">
-          <umd-element-section-intro include-separator>
-            <div slot="text">
-              <p>We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
-            </div>
-          </umd-element-section-intro>
+      <!-- 5. LEDE — a left-aligned paragraph, NOT the section-intro
+           component. That component centres its text, which works under a
+           full-width grid but reads wrong on a text-led page. See §A for the
+           accent line. The <p> is deliberately NOT wrapped in
+           .umd-text-rich-advanced: that would collapse umd-sans-larger-bold
+           to 18px (RULES §18). -->
+      <section>
+        <div class="interior-lede">
+          <p class="umd-sans-larger-bold text-black">We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
         </div>
       </section>
 
