@@ -1421,6 +1421,35 @@ Removing the injection changed nothing visually: the actions box measures
 155×44 at the same coordinates with `display: block` as it did with the
 injected column flex, because there is only ever one action in it.
 
+## Zig-zag alternation: use `order`, not DOM order (2026-09-14)
+
+`LAYOUT-PATTERNS.md` § *Light background — two-column image + text* says to
+alternate the zig-zag by swapping the `<figure>` and the text `<div>` in the
+markup. **That breaks below 650px**, where `umd-layout-grid-gap-two` collapses
+to a single column: the figure then stacks *above* its own heading, so every
+alternating block leads with an unexplained photo. It is also the wrong order
+for a screen reader at any width.
+
+Keep the text `<div>` first in the DOM on every block and flip the column
+visually instead:
+
+```css
+@media (min-width: 650px) {
+  .fc-media-first > figure { order: -1; }
+}
+```
+
+650px is `umd-layout-grid-gap-two`'s own two-column breakpoint (`layout.min.css`),
+so the swap begins exactly when there are two columns to swap.
+
+Verified on `pages/student-life/find-community.html`: DOM order is
+`div | figure` on all five blocks; visual order at 1440px runs
+`div|figure`, `figure|div`, `div|figure`, `figure|div`, `figure|div`; and at
+375px every block stacks `div then figure`, so the heading always leads.
+
+The class name is page-scoped per this project's convention (`.fa-*`, `.wta-*`,
+`.cal-*`, `.kbyg-*`). If a third page needs it, promote it.
+
 ## `umd-element-section-intro` headline-less: the registry's CAUTION is stale at 2.0.0 (2026-09-14)
 
 `registry-content.json` carries this warning on `section-intro`:
