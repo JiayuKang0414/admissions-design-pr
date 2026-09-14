@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Search &#8212; Undergraduate Admissions | University of Maryland</title>
+  <title>Student Support &amp; Safety — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -817,216 +817,53 @@
       color: #000000;
       text-decoration: none;
     }
+
+
+    /* ============================================================
+       A. PAGE — ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md)
+       Neither rule is in the base bundles or critical.css.
+       min-width: 0 lets the 1fr tracks shrink — otherwise an image's
+       min-content forces its grid track to the intrinsic width and
+       unbalances the columns.
+       ============================================================ */
+    .umd-layout-grid-gap-two > * { min-width: 0; }
+    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
+      display: block; width: 100%; height: auto;
+    }
+    /* UNIFORM CROP on the zig-zag images. Two of the three source photos are
+       landscape (1920×1080 and 1200×630) but the Safety one is portrait
+       (600×760). Left at its intrinsic ratio it rendered 704px tall in a 556px
+       column against a 313px text column, so the block was mostly dead space.
+       16/9 is a no-op for the two landscape images and crops only the portrait
+       one, whose subject — the blue-light pillar — runs the full height and
+       survives a centre crop. Same reasoning as the pathway 6:5 cap in
+       OVERRIDES.md: one ratio across a repeated component. */
+    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
+      aspect-ratio: 16 / 9;
+      height: auto;
+      object-fit: cover;
+    }
+    /* 992px lock for the section intro. A bare max-width, NOT
+       .umd-layout-space-horizontal-small: that class carries its own 64px
+       side padding, which would compound with the -normal lock this sits
+       inside and pull the intro in to 864px. */
+    .ss-lock-992 { max-width: 992px; margin-left: auto; margin-right: auto; }
+
+    /* ALTERNATING SIDE — by `order`, not by DOM order.
+       LAYOUT-PATTERNS.md alternates the zig-zag by swapping the <figure> and
+       the text <div> in the markup. That is wrong below the 650px breakpoint
+       where the grid collapses to one column: the figure then stacks ABOVE its
+       own heading, so half the blocks lead with an unexplained photo. Keeping
+       the text first in the DOM everywhere and flipping the column with
+       `order` at 650px+ gives the same zig-zag with a reading order that
+       survives the collapse — and the same order for a screen reader. */
+    @media (min-width: 650px) {
+      .ss-media-first > figure { order: -1; }
+    }
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
 
-  <style>
-    /* ============================================================
-       SEARCH PAGE
-       The band, the results count and the divider list are all
-       critical.css §23 (`umd-filter-*`) plus upstream layout classes
-       (umd-layout-background-highlight-light, umd-layout-grid-gap-stacked,
-       umd-text-line-trailing-light, umd-tailwing-right-headline). Only
-       the pinned-result treatment and the empty/idle states below are
-       page-specific — there is no upstream "pinned search result".
-    ============================================================ */
-
-    /* ---- SEARCH FIELD -------------------------------------------
-       The band is a single full-width row, not the two-up select+search
-       grid of the Filter Band pattern — there is nothing to facet on.
-
-       critical.css §23 styles .umd-filter-search-row as a BOXED field:
-       white ground, 1px #c0c0c0 border with the right side removed, butted
-       against a 44x44 solid-red submit. That reads correctly in a filter
-       band, where the search sits beside select boxes and should match
-       them. Here it is the only control on the page and the sole thing
-       the page exists for, so it is restyled as a single underlined
-       field: transparent ground, one rule under the whole row, and the
-       magnifier as a plain glyph rather than a red button.
-
-       Scoped to #search-form on purpose — the calendar and the
-       representatives directory still want the boxed treatment, and they
-       share the class. Promote to a critical.css variant only if a
-       second page wants this. */
-    #search-form .umd-filter-search-row {
-      align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid var(--umd-color-gray-darker, #242424);
-    }
-
-    /* type="search" means §23's input rule no longer matches, so the
-       three things it supplied that are still wanted come back here.
-       Type comes from .umd-sans-larger on the element. */
-    #search-form .umd-filter-search-row input[type="search"] {
-      flex: 1;
-      min-width: 0;
-      color: var(--umd-color-gray-darker, #242424);
-      background: transparent;
-      border: 0;
-      padding: 8px 0;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    /* WebKit decorates type="search" with a rounded inset box and a native
-       clear affordance. The band has its own Clear search control, so both
-       go rather than competing with it. */
-    #search-form .umd-filter-search-row input[type="search"]::-webkit-search-decoration,
-    #search-form .umd-filter-search-row input[type="search"]::-webkit-search-cancel-button {
-      -webkit-appearance: none;
-      display: none;
-    }
-
-    /* The row's focus-within rule below IS the focus indicator, so the
-       input's own outline goes. */
-    #search-form .umd-filter-search-row input[type="search"]:focus {
-      outline: none;
-    }
-
-    /* Thickens the rule to 2px in Maryland red without reflow — a
-       border-width change here would shift the row by a pixel. */
-    #search-form .umd-filter-search-row:focus-within {
-      border-bottom-color: var(--umd-color-red, #E21833);
-      box-shadow: 0 1px 0 0 var(--umd-color-red, #E21833);
-    }
-
-    /* The form's only two children are the field and Clear search, so the
-       form's own gap IS the space between them. umd-layout-grid-gap-stacked
-       gives 32px, widening to 40px at desktop — that is the rhythm for
-       separating discrete blocks, and it leaves Clear search floating well
-       away from the control it acts on. 16px reads as attached to the field
-       at every width. */
-    #search-form { gap: 16px; }
-
-    /* Direct child of the grid form, so `hidden` takes it out of the
-       layout entirely and the idle band is field-only. */
-    .search-reset { justify-self: end; }
-
-    #search-form .umd-filter-search-btn {
-      background-color: transparent;
-      align-self: center;
-    }
-    #search-form .umd-filter-search-btn svg {
-      width: 24px;
-      height: 24px;
-      fill: var(--umd-color-gray-darker, #242424);
-      transition: fill .3s;
-    }
-    #search-form .umd-filter-search-btn:hover svg,
-    #search-form .umd-filter-search-btn:focus-visible svg {
-      fill: var(--umd-color-red, #E21833);
-    }
-    /* The 44x44 hit area stays; only its red ground goes. */
-    #search-form .umd-filter-search-btn:hover,
-    #search-form .umd-filter-search-btn:focus {
-      background-color: transparent;
-    }
-    #search-form .umd-filter-search-btn:focus-visible {
-      outline: 2px solid var(--umd-color-red, #E21833);
-      outline-offset: 2px;
-    }
-
-    /* Sits between the band and the count; the count's own 24px
-       margin-top handles the gap below the form. */
-    #search-count[hidden] { display: none; }
-
-    /* ---- PINNED RESULTS ------------------------------------------
-       Curated hits promoted above the ranked list for high-intent
-       terms ("apply", "tuition", "deadline"). One bordered box holds
-       the whole set, so the promotion reads as an editorial block
-       rather than as three individually decorated rows — and the cards
-       inside stay ordinary list cards, identical to the ranked ones
-       below. The box is the only thing saying "these are different".
-       ------------------------------------------------------------- */
-    .search-pinned {
-      margin-top: 40px;
-      border: 1px solid #000;
-      padding: 24px;
-    }
-    @media (min-width: 768px) {
-      .search-pinned { padding: 32px; }
-    }
-    .search-pinned[hidden] { display: none; }
-
-    /* Matches the eyebrow the cards render in their own shadow root
-       — .umd-element-eyebrow is Interstate 12px/700, uppercase, 0.6px
-       tracking — but in Maryland red, because this label belongs to
-       the box rather than to any one result inside it. Measured off
-       the live component, not guessed: umd-sans-min supplies the
-       family and the rest is set to the same numbers. */
-    .search-pinned-label {
-      color: var(--umd-color-red, #E21833);
-      text-transform: uppercase;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .6px;
-      line-height: 1.2;
-      margin: 0;
-    }
-
-    /* gap:0 on purpose. Consecutive umd-element-card[data-display=list]
-       siblings already get border-top:1px #E6E6E6 + padding-top:24px
-       from the design system, so a flex gap here would stack on top of
-       that 24px and push the rows apart while the DS rule keeps drawing
-       the divider at the old rhythm. Let the component space itself. */
-    .search-pinned-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin-top: 24px;
-    }
-
-    /* That same DS sibling rule collides with .umd-filter-list, which is
-       already drawing its own divider. critical.css §23 zeroes the
-       component's border-top there, so this page needs nothing for it. */
-
-    /* ---- RESULT LIST --------------------------------------------- */
-    /* .umd-filter-list gives the 1px #d0d0d0 rules between items and a
-       56px offset from whatever precedes it. */
-    #search-results[hidden] { display: none; }
-
-    /* ---- IDLE + EMPTY STATES ------------------------------------- */
-    .search-message {
-      margin-top: 56px;
-      padding-bottom: 8px;
-      max-width: 720px;
-    }
-    .search-message[hidden] { display: none; }
-    /* The DS type classes set face and size only, so the gap under the
-       heading is set here for whichever one the state uses. */
-    .search-message > h2 { margin: 0 0 16px; }
-    /* umd-text-rich-advanced supplies `> * { margin-top: 24px }` for the
-       block rhythm; only the list marker is missing from it. */
-    .search-message ul {
-      padding-left: 20px;
-      list-style: disc;
-    }
-    .search-message li { margin-top: 4px; }
-
-    /* Suggested terms — DS .umd-text-cluster-pill chip. They are real
-       links so a suggestion behaves like one: middle-click, open in a
-       new tab, and a real navigation to ?q=<term> rather than a
-       scripted swap.
-
-       Everything the chip needs comes from stylesheets now: ground,
-       box, 12px Interstate and the #FFD200 hover from element.min.css,
-       and the anchor's black text + no underline from critical.css §24,
-       which gap-fills the light variant's missing `color`.
-
-       What is left is this page's own layout choice — the container's
-       margin-top:-8px wrapping hack is swapped for a flex gap, so the
-       children's matching margin-top:8px has to go too, or wrapped rows
-       get 8 + 8. */
-    .search-suggest { margin-top: 24px; }
-    .search-suggest .umd-text-cluster-pill {
-      margin-top: 0;
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .search-suggest .umd-text-cluster-pill > a { margin-top: 0; }
-  </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1475,7 +1312,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
       <a href="../../pages/apply-now/"><span>Apply Now</span></a>
       <a href="https://admissions.umd.edu/connect"><span>Connect</span></a>
-      <a href="../../pages/search/" data-selected><span>Search</span></a>
+      <a href="../../pages/search/"><span>Search</span></a>
     </div>
     <div slot="children-slides">
       <div data-parent-ref="academics">
@@ -1486,10 +1323,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/academics/limited-enrollment-programs"><span>Limited Enrollment Programs</span></a>
         <a href="https://ugst.umd.edu/llsop/index.html"><span>Living-Learning &amp; Special Programs</span></a>
       </div>
-      <div data-parent-ref="student-life">
+      <div data-parent-ref="student-life" data-active>
         <a href="../../pages/student-life/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
-        <a href="../../pages/student-life/student-support.html"><span>Student Support &amp; Safety</span></a>
+        <a href="../../pages/student-life/student-support.html" data-selected><span>Student Support &amp; Safety</span></a>
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
@@ -1516,116 +1353,158 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 2. HERO — background, small, centered. Same treatment as the
-       section landing pages (academics, student-life, how-to-apply,
-       tuition, apply-now) so search does not read as a different kind
-       of page. No text block: the band directly below says what to do,
-       and a paragraph between the headline and the input is one thing
-       to read before the only control that matters. -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-hero data-layout-height="small" data-layout-text="center">
-      <img slot="image" src="../../images/calendar/blurry-testudo-FirstDayofClass_08262024_DS_2384_DAM.webp" alt="Students streaming past the Testudo statue outside McKeldin Library" />
-      <h1 slot="headline">Search</h1>
-    </umd-element-hero>
-  </section>
+  <main id="main-content">
+    <!-- 2. HERO — the shared interior hero: minimal, dark, UMD chevron pattern
+         in the image slot, parent page in the eyebrow.
+         See CLAUDE.md § Interior page layouts. -->
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <p slot="eyebrow">Student Life</p>
+        <h1 slot="headline">Student Support &amp; Safety</h1>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+      </umd-element-hero-minimal>
+    </section>
 
-  <!-- 3. SEARCH + RESULTS — one section so the band, the count and the
-       list keep their own internal rhythm (24px / 56px) rather than the
-       120px landing gap. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-small">
+    <!-- 3. BREADCRUMB — LAYOUT B: lock matches the content lock (-normal).
+         The source breadcrumb runs Home > Student Support & Safety with no
+         section step; Student Life is added here because this project's
+         pages/student-life/ section landing page exists. -->
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
+        <div slot="paths">
+          <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
+          <a href="../../pages/student-life/"><span>Student Life</span></a>
+          <p aria-label="Current Page"><span>Student Support &amp; Safety</span></p>
+        </div>
+      </umd-element-breadcrumb>
+    </div>
 
-      <!-- SEARCH BAND -->
-      <!-- No visible heading: the field is self-evident and the band sits
-           directly under a hero that already says SEARCH. The name the h2
-           used to carry moves to aria-label, so the search landmark is
-           still announced. -->
-      <form id="search-form" class="umd-layout-background-highlight-light umd-layout-grid-gap-stacked"
-            data-animation="off" action="" role="search" aria-label="Search this site">
+    <!-- 4. CONTENT — LAYOUT B: the source page has no left nav, so no
+         umd-layout-space-columns-left and no sidebar. One -normal lock.
+         Rich text needs no measure wrapper: element.min.css caps
+         p / ul / ol at 960px in place. -->
+    <div class="umd-layout-space-horizontal-normal">
 
-        <div>
-          <label for="search-q" class="sr-only">Search term</label>
-          <div class="umd-filter-search-row">
-            <!-- type="search", not "text". Correct for a site search, and it
-                 takes the field out of critical.css §23's
-                 `.umd-filter-search-row input[type="text"]` selector (0,2,1),
-                 which would otherwise outrank the .umd-sans-larger utility
-                 (0,1,0) and pin the field at 16px. umd-sans-larger is a fluid
-                 ramp -- 18px, calc(18px + 0.5vw), 22px across breakpoints --
-                 so re-asserting its values at higher specificity would mean
-                 copying a type scale into a page. -->
-            <input type="search" id="search-q" name="q" class="umd-sans-larger"
-                   placeholder="Enter a search term"
-                   autocomplete="off" spellcheck="false" />
-            <button type="submit" class="umd-filter-search-btn" aria-label="Submit search">
-              <!-- The design system's own magnifier, verbatim from
-                   web-icons-library/dist/search.js — the same glyph the site
-                   header uses. Hollow ring via fill-rule="evenodd". -->
-              <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M79.3401 42.2306C79.3401 54.1438 69.6826 63.8013 57.7694 63.8013C45.8562 63.8013 36.1987 54.1438 36.1987 42.2306C36.1987 30.3174 45.8562 20.6599 57.7694 20.6599C69.6826 20.6599 79.3401 30.3174 79.3401 42.2306ZM91 42.2306C91 60.5833 76.1222 75.4612 57.7694 75.4612C51.3447 75.4612 45.3458 73.6379 40.2619 70.4806L24.2216 86.5209H5L30.2245 60.8255C26.6351 55.5189 24.5388 49.1195 24.5388 42.2306C24.5388 23.8778 39.4167 9 57.7694 9C76.1222 9 91 23.8778 91 42.2306Z"></path>
-              </svg>
-            </button>
+      <!-- 5. LEDE — text-only section intro with the red accent line, in its
+           own 992px lock. Same treatment as know-before-you-go. -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="ss-lock-992">
+          <umd-element-section-intro include-separator>
+            <div slot="text">
+              <p>Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in, and we continue to work toward a safer and more secure community.</p>
+            </div>
+          </umd-element-section-intro>
+        </div>
+      </section>
+
+      <!-- 6. ACADEMICS / WELLNESS / SAFETY — zig-zag columns
+           (LAYOUT-PATTERNS.md § Light background — two-column image + text),
+           replacing the source page's floated images. The image column
+           alternates left / right / left.
+
+           The side is set with `order`, NOT by swapping the markup: below
+           650px the grid collapses to one column and figure-first markup would
+           stack the photo above its own heading (OVERRIDES.md § Zig-zag
+           alternation). Text stays first in the DOM on every block.
+
+           Each headline sits OUTSIDE .umd-text-rich-advanced — a umd-sans-*
+           size collapses to 18px inside that block (RULES §18). -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two ss-media-first">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Academics</h2>
+            <div class="umd-text-rich-advanced">
+              <ul>
+                <li>Tutoring services</li>
+                <li><a href="https://careers.umd.edu/" target="_blank" rel="noopener noreferrer">Career Center</a> &mdash; Whether you&rsquo;re looking to gain experience through an internship, fine tune your resume, practice your interviewing skills or evaluate a job offer, the Career Center has you covered. You&rsquo;ll receive support at every stage of your career development and will be prepared to pursue a meaningful career path through high-quality services, resources and instruction.</li>
+              </ul>
+            </div>
           </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/student-support/academics-engineering-lab.jpg"
+                 alt="Students sitting around a table in an engineering lab." />
+          </figure>
         </div>
+      </section>
 
-        <button type="reset" id="search-reset"
-                class="search-reset umd-sans-smaller umd-animation-line-slide-graydark-red" hidden>
-          <span aria-hidden="true">Clear search</span>
-          <span class="sr-only">Clear the search term and start over</span>
-        </button>
-      </form>
-
-      <p id="search-count" class="umd-filter-results-count" aria-live="polite" hidden></p>
-
-      <!-- PINNED — curated hits in one bordered box above the ranked
-           list. The box is the differentiator, so the cards inside are
-           ordinary list cards and each keeps its section eyebrow; the
-           single red "Featured" label belongs to the group. -->
-      <div id="search-pinned" class="search-pinned" hidden>
-        <h2 class="search-pinned-label umd-sans-min">Featured</h2>
-        <div class="search-pinned-list" id="search-pinned-list"></div>
-      </div>
-
-      <!-- RANKED RESULTS — divider list, critical.css §23 -->
-      <div class="umd-layout-grid-gap-stacked umd-filter-list" data-animation="off" id="search-results" hidden></div>
-
-      <!-- IDLE — before a term is entered -->
-      <div class="search-message" id="search-idle">
-        <h2 class="umd-sans-large">Popular searches</h2>
-        <div class="search-suggest">
-          <span class="umd-text-cluster-pill">
-            <a href="?q=application+deadlines"><span>Application deadlines</span></a>
-            <a href="?q=scholarships"><span>Scholarships</span></a>
-            <a href="?q=majors"><span>Majors</span></a>
-            <a href="?q=campus+tour"><span>Campus tour</span></a>
-            <a href="?q=transfer"><span>Transfer</span></a>
-            <a href="?q=cost+of+attendance"><span>Cost of attendance</span></a>
-          </span>
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Wellness</h2>
+            <div class="umd-text-rich-advanced">
+              <ul>
+                <li><a href="https://health.umd.edu/prospective-students" target="_blank" rel="noopener noreferrer">University Health Center</a> &mdash; Provides high-quality, cost-effective health care and wellness programs in order to promote the health of the university community and support academic success.</li>
+                <li><a href="https://www.counseling.umd.edu/aboutus/" target="_blank" rel="noopener noreferrer">Counseling Center</a> &mdash; Provides comprehensive support services that promote the personal, social and academic success of UMD students.</li>
+                <li><a href="https://recwell.umd.edu/" target="_blank" rel="noopener noreferrer">Recreation &amp; Wellness</a> &mdash; Creates a culture of wellness where all members of the university community thrive. Recreation is for everyone and there is something for everyone at RecWell.</li>
+              </ul>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/student-support/wellness-health-center.jpg"
+                 alt="The front entrance of the University Health Center." />
+          </figure>
         </div>
-      </div>
+      </section>
 
-      <!-- EMPTY — a term was entered and matched nothing -->
-      <div class="search-message" id="search-empty" hidden>
-        <h2 class="umd-sans-larger-bold">No results</h2>
-        <!-- umd-text-rich-advanced is the DS body-copy treatment: #454545
-             text and BLACK links underlined with a gradient rule that goes
-             Maryland red on hover. Without it these anchors fall through to
-             the browser's own blue/purple, which is the one place on the
-             page that happens. -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two ss-media-first">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Safety</h2>
+            <div class="umd-text-rich-advanced">
+              <p>Call University Police at <a href="tel:911">911</a> or <a href="tel:+13014053555">(301) 405-3555</a>. If you ever see a situation involving fighting between partners or groups, threatening actions or statements, screams, suspicious persons or behavior, weapons, etc., do not hesitate to call police immediately. Then, call your Service Desk or CA.</p>
+              <ul>
+                <li>Blue Light Program</li>
+                <li>Police Escorts</li>
+                <li>Opt-in Safety Alerts</li>
+                <li>UID Only Accessibility</li>
+              </ul>
+            </div>
+          </div>
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../../images/student-support/safety-blue-light.jpg"
+                 alt="A blue light emergency phone station on the University of Maryland campus." />
+          </figure>
+        </div>
+      </section>
+
+      <!-- 7. TRANSPORTATION & PARKING — no image on the source page, so this
+           one is not a zig-zag block. Full content width; the rich text caps
+           its own p/ul at 960px. -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Transportation &amp; Parking</h2>
+
         <div class="umd-text-rich-advanced">
-          <p>We couldn&#8217;t find anything for <strong id="search-empty-term"></strong>.</p>
+          <p>Whether you live on campus or off, the Department of Transportation Services makes it easy to get around. Shuttle-UM buses operate several campus-based routes and serve a six-mile radius beyond, taking students to Metro stations, shops, restaurants and more than two dozen apartment communities. All you need to ride Shuttle-UM is your student ID.</p>
+          <p>If you&rsquo;re living off campus, permits for campus parking are available for purchase from the Department of Transportation Services.</p>
           <ul>
-            <li>Check the spelling, or try a shorter term.</li>
-            <li>Search for a program name rather than a career (&#8220;computer science&#8221; rather than &#8220;software job&#8221;).</li>
-            <li>Browse <a href="../academics/programs.html">all programs</a>, the <a href="../calendar/">events calendar</a>, or <a href="../how-to-apply/">how to apply</a>.</li>
+            <li><a href="https://transportation.umd.edu/shuttle-um" target="_blank" rel="noopener noreferrer">Shuttle-UM</a> &mdash; DOTS provides routes that circulate around campus, commuter routes to neighboring communities and Park &amp; Ride routes that can be tracked on the Transit app. Students can also use the NITE Ride evening service to get around campus when shuttle routes are not operating.</li>
+            <li><a href="https://transportation.umd.edu/bikeumd-escooters" target="_blank" rel="noopener noreferrer">BikeUMD</a> &mdash; Students can bring their own bike to campus or rent one from the RecWell Bike Shop. Community members can also utilize the shared mobility system provided by VEO in partnership with the City of College Park and University Park.</li>
+            <li><a href="https://transportation.umd.edu/sustainable-transportation/local-regional-transit" target="_blank" rel="noopener noreferrer">Local &amp; Regional Transit</a> &mdash; College Park connects to many local and regional transit options that make many destinations easily accessible. It&rsquo;s also a snap to travel to Washington, D.C., Baltimore and local airports by using <a href="https://www.wmata.com/service/rail/" target="_blank" rel="noopener noreferrer">Metrorail</a> and <a href="https://mta.maryland.gov/marc-train" target="_blank" rel="noopener noreferrer">MARC</a> trains.</li>
+            <li><a href="https://transportation.umd.edu/parking" target="_blank" rel="noopener noreferrer">Parking</a> &mdash; Flexible parking permit options are available for each individual working, living and learning situation. If you are going to have a car on campus, you will need a parking permit. Permits can be purchased on the Department of Transportation Services website.</li>
           </ul>
         </div>
-      </div>
+      </section>
 
+      <!-- 8. STAY CONNECTED — the sitewide page closer. -->
+      <section class="umd-layout-space-vertical-interior">
+        <umd-element-banner-promo>
+          <h2 slot="headline">There is a lot more to learn about UMD</h2>
+          <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
+          <div slot="actions" class="banner-promo-actions">
+            <umd-element-call-to-action data-display="primary">
+              <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-banner-promo>
+      </section>
     </div>
-  </section>
+  </main>
 
-  <!-- 4. FOOTER — visual -->
+  <!-- 9. FOOTER — visual -->
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
     <a slot="logo" href="../../pages/">
@@ -1690,223 +1569,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </umd-element-footer>
   <!-- SHARED:footer:END -->
-
-  <!-- ============================================================
-       SEARCH BEHAVIOUR
-       Client-side over an embedded index, so the prototype can be
-       driven without a back end. Production replaces the index and the
-       rank() call with the CMS search endpoint; the render functions
-       and the markup they emit are the part being designed here.
-  ============================================================ -->
-  <script type="application/json" id="search-index">[{"t":"How to Apply","u":"../how-to-apply/","s":"How to Apply","d":"Ready to apply to the University of Maryland? Review our requirements and figure out your next steps.","img":"../../images/admissions/how-to-apply-hero.jpg","pin":["apply","application","how to apply","admissions"]},{"t":"Application Deadlines","u":"../how-to-apply/#deadlines","s":"How to Apply","d":"Required application deadlines for freshman, transfer, international and Shady Grove students.","pin":["deadline","deadlines","apply","application deadlines","early action","dates"]},{"t":"Majors &amp; Minors","u":"../academics/programs.html","s":"Academics","d":"Explore UMD&#8217;s majors and minors and find the perfect academic program for you. Search by program type, college and school, area of interest and campus location.","img":"../../images/academics/students-walking.jpg","pin":["major","majors","minor","program","programs","academics","degree"]},{"t":"Tuition &amp; Aid","u":"../tuition/","s":"Tuition &amp; Aid","d":"UMD&#8217;s cost of attendance for in-state and out-of-state students, plus the financial aid options available to you.","img":"../../images/tuition/idea-factory-hero.jpg","pin":["tuition","cost","aid","financial aid","cost of attendance","money","price","scholarship","scholarships"]},{"t":"Student Life","u":"../student-life/","s":"Student Life","d":"We want all Terps to feel at home. Learn more about student organizations, athletics, the College Park community and more.","img":"../../images/student-life/athletics.jpg","pin":["student life","campus life","housing","dining","clubs","greek"]},{"t":"Calendar","u":"../calendar/","s":"Visit &amp; Events","d":"Join us for an information session or tour, meet us at your high school or at a college fair.","img":"../../images/calendar/campus-clock.jpg","pin":["visit","tour","event","events","calendar","open house","information session"]},{"t":"Apply Now","u":"../apply-now/","s":"How to Apply","d":"Quick links to the application, required materials and the resources you need to finish it.","pin":["apply","apply now","application","common app"]},{"t":"Freshman Merit Scholarships","u":"https://admissions.umd.edu/tuition/freshman-merit-scholarships","s":"Tuition &amp; Aid","d":"Merit scholarships are awarded to incoming freshmen on the strength of the admission application &#8212; there is no separate scholarship application.","img":"../../images/tuition/TheM.jpg","pin":["scholarship","scholarships","merit","banneker","aid","money"]},{"t":"Freshman Applicants","u":"../how-to-apply/freshman-applicants.html","s":"How to Apply","d":"Requirements, deadlines and the review process for students applying to UMD directly from high school."},{"t":"Transfer Applicants","u":"../how-to-apply/transfer-applicants.html","s":"How to Apply","d":"Transfer credit, minimum coursework and the deadlines that apply to students moving to UMD from another institution."},{"t":"International Applicants","u":"../how-to-apply/international-applicants.html","s":"How to Apply","d":"English language proficiency, financial certification and visa steps for international students."},{"t":"Colleges &amp; Schools","u":"../academics/colleges-schools.html","s":"Academics","d":"Twelve colleges and schools, from Agriculture &amp; Natural Resources to Public Policy. See what each one offers."},{"t":"Programs by Interest: Engineering &amp; Technology","u":"../academics/interest-engineering-technology.html","s":"Academics","d":"Aerospace, bioengineering, computer science, cybersecurity and the rest of the majors that start with how things work."},{"t":"Admission Representatives","u":"../admission-representatives/","s":"Connect","d":"Meet the University of Maryland admission representatives, learn about their favorite UMD moments and the regions they recruit in."},{"t":"Find Your Representative","u":"../admission-representatives/search.html","s":"Connect","d":"Search the admission representative directory by territory to find the person who reads applications from your school."},{"t":"Frederick Douglass Scholarship","u":"../tuition/frederick-douglass-scholarship.html","s":"Tuition &amp; Aid","d":"A merit scholarship for academically talented transfer students from Maryland community colleges &#8212; 30 full and 15 partial tuition awards, application due March 1.","pin":["frederick douglass","douglass","fds","transfer scholarship","community college"]},{"t":"Cost of Attendance","u":"https://admissions.umd.edu/tuition/cost-of-attendance","s":"Tuition &amp; Aid","d":"Tuition, fees, housing, dining, books and personal expenses &#8212; the full year&#8217;s figure for in-state and out-of-state students."},{"t":"Essay Questions","u":"https://admissions.umd.edu/apply/essay-questions","s":"How to Apply","d":"The short-answer prompts on the UMD application, and what the admission committee is looking for in your responses."},{"t":"Submitting Documents","u":"https://admissions.umd.edu/apply/submitting-documents","s":"How to Apply","d":"How to send transcripts, test scores and supporting materials after you submit your application."},{"t":"Admission Review Process &amp; Factors","u":"https://admissions.umd.edu/apply/admission-review-process-factors","s":"How to Apply","d":"The 26 factors UMD considers in its holistic review, and how the committee weighs them."},{"t":"Application FAQs","u":"https://admissions.umd.edu/apply/application-faqs","s":"How to Apply","d":"Answers to the questions we field most often about applying, deadlines, decisions and next steps."},{"t":"Limited Enrollment Programs","u":"https://admissions.umd.edu/academics/limited-enrollment-programs","s":"Academics","d":"Some majors admit on a limited basis. Learn which programs are limited enrollment and how to gain direct admission."},{"t":"Maryland Transfer Advantage Program","u":"https://admissions.umd.edu/apply/maryland-transfer-advantage-program","s":"How to Apply","d":"A partnership with Maryland community colleges that gives participants a guided path and a tuition discount at UMD."},{"t":"Shady Grove Applicants","u":"https://admissions.umd.edu/apply/shady-grove-applicants","s":"How to Apply","d":"UMD programs offered at the Universities at Shady Grove in Rockville, and how admission there differs."},{"t":"English Language Proficiency","u":"https://admissions.umd.edu/apply/english-language-proficiency","s":"How to Apply","d":"TOEFL, IELTS and Duolingo score requirements, and the conditions under which the requirement is waived."},{"t":"Financial Certification","u":"https://admissions.umd.edu/apply/financial-certification","s":"How to Apply","d":"International students must certify they can cover one year of expenses before a Form I-20 is issued."},{"t":"Housing &amp; Dining","u":"https://admissions.umd.edu/student/housing-and-dining","s":"Student Life","d":"Residence halls, living-learning communities and the dining plans that come with them."},{"t":"Get Involved on Campus","u":"https://admissions.umd.edu/student/get-involved","s":"Student Life","d":"More than 800 student organizations, club sports, service groups and student government."},{"t":"Find Your Community","u":"https://admissions.umd.edu/student/find-community","s":"Student Life","d":"Cultural centers, identity-based organizations and the programs that help Terps find their people."},{"t":"Student Support &amp; Safety","u":"https://admissions.umd.edu/student/student-support","s":"Student Life","d":"Counseling, health services, accessibility support and campus safety resources."},{"t":"Fall Open House","u":"../calendar/","s":"Visit &amp; Events","d":"The next UMD Fall Open House will be held on Monday, September 14, 2026."},{"t":"Admitted Student Open House","u":"../calendar/","s":"Visit &amp; Events","d":"A campus day for admitted students and their families &#8212; academic sessions, tours and a chance to meet future classmates."},{"t":"Self-Guided Tour","u":"https://admissions.umd.edu/page/self-guided-tour","s":"Visit &amp; Events","d":"Take advantage of our self-guided audio tour and see the iconic sights of the University of Maryland."},{"t":"Group Tours","u":"https://admissions.umd.edu/page/group-tours","s":"Visit &amp; Events","d":"If you are bringing 10 or more people to campus you&#8217;ll need to schedule a group tour. Learn what is available and how to register."},{"t":"Visitor Center at The Hotel at UMD","u":"https://admissions.umd.edu/page/visitor-center","s":"Visit &amp; Events","d":"Location, hours, parking and special rates for guests of The Hotel at UMD."},{"t":"Know Before You Go","u":"https://admissions.umd.edu/page/know-before-you-go","s":"Visit &amp; Events","d":"Local lodging, dining and entertainment for guests planning a visit to the University of Maryland."},{"t":"Terps on Tour","u":"https://admissions.umd.edu/page/terpsontour","s":"Visit &amp; Events","d":"Terps on Tour receptions for Fall 2026 and Spring 2027 admitted freshmen, in 16 cities."},{"t":"Discover Maryland","u":"../calendar/","s":"Visit &amp; Events","d":"Discover Maryland will be held on Monday, February 16, 2026."},{"t":"College Access Conference","u":"https://admissions.umd.edu/page/college-access-conference","s":"Visit &amp; Events","d":"A day-long visit event designed to help high school students start thinking about, preparing for and planning for college."},{"t":"Counselor Conference","u":"https://admissions.umd.edu/page/counselor-conference","s":"Visit &amp; Events","d":"UMD&#8217;s biennial on-campus conference for counselors &#8212; the admissions process, transfer advising, financial aid and more."},{"t":"STARS &#8212; Small Town &amp; Rural Students","u":"https://admissions.umd.edu/page/stars","s":"Connect","d":"The STARS College Network supports students from small town and rural areas in exploring higher education, from pipeline programs to on-campus events."},{"t":"Maryland Ascent Program","u":"https://admissions.umd.edu/page/maryland-ascent","s":"Connect","d":"A partnership program for students in Prince George&#8217;s County and Baltimore."},{"t":"Connect","u":"https://admissions.umd.edu/connect","s":"Connect","d":"How to reach an admission representative, join the mailing list, follow us on social media and find our hours of operation."},{"t":"Prospective Students","u":"../personas/prospective-students.html","s":"Connect","d":"A starting point for students exploring UMD &#8212; what to look at first, and in what order."},{"t":"Living-Learning &amp; Special Programs","u":"https://ugst.umd.edu/llsop/index.html","s":"Academics","d":"Honors College, Scholars, and the other living-learning programs that pair a residence hall with a curriculum."},{"t":"Education Abroad","u":"https://admissions.umd.edu/academics/education-abroad","s":"Academics","d":"More than 400 study abroad programs in 70 countries, most of which apply directly to your degree."}]</script>
-
-  <script>
-    (function () {
-      var INDEX = JSON.parse(document.getElementById('search-index').textContent);
-
-      var form    = document.getElementById('search-form');
-      var input   = document.getElementById('search-q');
-      var reset   = document.getElementById('search-reset');
-      var count   = document.getElementById('search-count');
-      var pinWrap = document.getElementById('search-pinned');
-      var pinList = document.getElementById('search-pinned-list');
-      var results = document.getElementById('search-results');
-      var idle    = document.getElementById('search-idle');
-      var empty   = document.getElementById('search-empty');
-      var emptyTerm = document.getElementById('search-empty-term');
-
-      // Entities live in the index (it is rendered as HTML), so strip
-      // them before matching — otherwise "&amp;" would match "amp".
-      var scratch = document.createElement('div');
-      function plain(html) {
-        scratch.innerHTML = html;
-        return (scratch.textContent || '').toLowerCase();
-      }
-
-      // --- matching ------------------------------------------------
-      // Tokenized, AND across tokens: every word in the query has to
-      // land somewhere in the row. Enough fidelity that the prototype
-      // behaves like search on two-word queries ("campus tour") and
-      // plurals ("scholarships" → "scholarship"), which is what a
-      // reviewer will actually type. The real relevance model is the
-      // CMS's; this only has to stop the page from lying about how
-      // many results a term produces.
-      function tokens(q) {
-        return q.toLowerCase().split(/[^a-z0-9]+/).filter(function (w) {
-          return w.length > 1;
-        });
-      }
-
-      // Cheap singular fold so "majors"/"major" and "deadlines"/
-      // "deadline" are the same token. Not a stemmer — just the -s.
-      function fold(w) {
-        return w.length > 3 && w.charAt(w.length - 1) === 's' ? w.slice(0, -1) : w;
-      }
-
-      function has(hay, w) {
-        return hay.indexOf(fold(w)) !== -1;
-      }
-
-      // Title hit outranks a section hit outranks a description hit.
-      // Returns 0 when any token is unmatched, which is what drops the
-      // row from the results entirely.
-      function score(row, ws) {
-        var t = plain(row.t), d = plain(row.d), s = plain(row.s || '');
-        var n = 0;
-        for (var i = 0; i < ws.length; i++) {
-          var w = ws[i], hit = 0;
-          if (has(t, w)) hit += 40;
-          if (has(s, w)) hit += 10;
-          if (has(d, w)) hit += 5;
-          if (!hit) return 0;
-          n += hit;
-        }
-        if (plain(row.t) === ws.join(' ')) n += 100;
-        return n;
-      }
-
-      // A row is promoted when the query names one of its pin terms —
-      // every token of that term present, in any order. So "tuition"
-      // and "cost of tuition" both promote the tuition row, while
-      // "tuition deadline" promotes both it and the deadlines row.
-      function isPinned(row, ws) {
-        if (!row.pin || !ws.length) return false;
-        for (var i = 0; i < row.pin.length; i++) {
-          var pw = tokens(row.pin[i]), all = pw.length > 0;
-          for (var j = 0; j < pw.length; j++) {
-            var found = false;
-            for (var k = 0; k < ws.length; k++) {
-              if (fold(ws[k]) === fold(pw[j])) { found = true; break; }
-            }
-            if (!found) { all = false; break; }
-          }
-          if (all) return true;
-        }
-        return false;
-      }
-
-      // --- rendering -----------------------------------------------
-      // Both states are the same component — umd-element-card in its
-      // list display. The pinned one adds an eyebrow and sits inside a
-      // tinted, red-ruled wrapper; the ranked one is the bare card on
-      // the divider list. Same slots either way, so a result that gets
-      // promoted does not change shape, only surround.
-      function card(row, opts) {
-        var el = document.createElement('umd-element-card');
-        el.setAttribute('data-display', 'list');
-        // Pinned rows carry photography of whatever ratio the CMS
-        // happens to hold. Without this the card sizes the image
-        // intrinsically and each promoted row lands at a different
-        // height. Must be the literal string "true" — a bare attribute
-        // is inert (registry-cards.json).
-        if (opts.withImage) el.setAttribute('data-visual-image-aligned', 'true');
-
-        // One label, always above the headline: the section the page
-        // lives in. Pinned and ranked rows carry the same one — the
-        // "Featured" label belongs to the box, not to the cards inside
-        // it, so a promoted result is byte-for-byte the ranked card.
-        // The list card's other short slot (`date`) would put the label
-        // BELOW the body copy, which reads as a footnote rather than a
-        // category, so it is left unused.
-        var html = '';
-        if (row.s) html += '<p slot="eyebrow">' + row.s + '</p>';
-        html += '<h3 slot="headline"><a href="' + row.u + '">' + row.t + '</a></h3>';
-        html += '<p slot="text">' + row.d + '</p>';
-        if (opts.withImage && row.img) {
-          html += '<a slot="image" href="' + row.u + '" tabindex="-1" aria-hidden="true">' +
-                  '<img src="' + row.img + '" alt="" loading="lazy" /></a>';
-        }
-        el.innerHTML = html;
-        return el;
-      }
-
-      function show(el, on) {
-        if (on) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
-      }
-
-      function render(q) {
-        pinList.innerHTML = '';
-        results.innerHTML = '';
-
-        if (!q) {
-          show(count, false); show(pinWrap, false); show(results, false);
-          show(empty, false); show(idle, true); show(reset, false);
-          return;
-        }
-
-        show(idle, false);
-        show(reset, true);
-
-        var ws = tokens(q);
-        var pinned = [], ranked = [];
-        INDEX.forEach(function (row) {
-          if (isPinned(row, ws)) { pinned.push(row); return; }
-          var n = score(row, ws);
-          if (n > 0) ranked.push({ row: row, n: n });
-        });
-        ranked.sort(function (a, b) { return b.n - a.n; });
-
-        var total = pinned.length + ranked.length;
-
-        if (!total) {
-          show(count, false); show(pinWrap, false); show(results, false);
-          emptyTerm.textContent = '“' + q + '”';
-          show(empty, true);
-          return;
-        }
-
-        show(empty, false);
-        count.textContent = 'Showing ' + total + ' result' + (total === 1 ? '' : 's') +
-                            ' for “' + q + '”';
-        show(count, true);
-
-        pinned.forEach(function (row) {
-          pinList.appendChild(card(row, { withImage: true }));
-        });
-        show(pinWrap, pinned.length > 0);
-
-        ranked.forEach(function (hit) {
-          var el = card(hit.row, { withImage: false });
-          el.classList.add('umd-filter-item');
-          results.appendChild(el);
-        });
-        show(results, ranked.length > 0);
-      }
-
-      // --- wiring ---------------------------------------------------
-      // The query lives in the URL so an executed search is
-      // linkable and survives a reload — same contract as the live site.
-      function currentQuery() {
-        var m = /[?&]q=([^&]*)/.exec(window.location.search);
-        return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')).trim() : '';
-      }
-
-      function run(q, push) {
-        q = (q || '').trim();
-        input.value = q;
-        if (push) {
-          var url = window.location.pathname + (q ? '?q=' + encodeURIComponent(q) : '');
-          window.history.pushState({ q: q }, '', url);
-        }
-        render(q.toLowerCase());
-      }
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        run(input.value, true);
-      });
-
-      reset.addEventListener('click', function (e) {
-        e.preventDefault();
-        run('', true);
-        input.focus();
-      });
-
-      window.addEventListener('popstate', function () { run(currentQuery(), false); });
-
-      run(currentQuery(), false);
-    })();
-  </script>
 
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
   <!-- ============================================================

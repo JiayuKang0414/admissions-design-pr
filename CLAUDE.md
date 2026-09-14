@@ -363,6 +363,98 @@ Not every design project will start with an existing `shared/` chrome. In that c
 
 That scoping is why `shared/chrome.css` is not upstreamed: the flat-`<a>` utility-nav treatment is *this project's* composition choice, not a design-system default. The one genuinely generic bug it exposed — `critical.css` §11 zeroing the slot gap unconditionally — was fixed upstream instead (`design-system-page-builder` `be3ea6c`).
 
+## Interior page headings — the three-step scale
+
+Interior pages use **exactly three heading classes**. This exists so a scripted
+migration has a deterministic target.
+
+| Level | Class | 375px | 768px | ≥1024px |
+|---|---|---|---|---|
+| 1 | `umd-sans-extralarge-bold` | 22 / 700 | 26.9 / 700 | **32 / 700** |
+| 2 | `umd-sans-larger-bold` | 18 / 700 | 21.8 / 700 | **22 / 700** |
+| 3 | `umd-sans-large` | 18 / 700 | 18 / 700 | **18 / 700** |
+
+Body copy is 18 / 400 for contrast.
+
+### ⚠️ The level comes from the SOURCE, not from the tag
+
+**A page's section headings are not automatically level 1.** This was got wrong
+once, in the worst way: an audit on 2026-09-14 "conformed" every interior `h2`
+to level 1, which silently inflated three pages — including
+`frederick-douglass-scholarship.html`, which had been **correct** at level 2 and
+was pushed to level 1 for no reason. All three were reverted the same day.
+
+The live site distinguishes `headline-three` (32px) from `headline-four` (24px),
+and most interior pages use **four**, not three. Read the source element and map
+its size. `h2` says where a heading sits in the document outline; the class says
+how big it is. They are independent, and a page can legitimately have `h2`s at
+level 2 or 3.
+
+### Migration mapping
+
+Measured at 1440px. Across five sampled `/student/*` and `/page/*` pages, only
+these ever appear inside `umd-interior-content` — the region a migration carries
+over:
+
+| Source | Size | Migrate to | Note |
+|---|---|---|---|
+| `headline-three-san-serif` | 32px | **level 1** `umd-sans-extralarge-bold` | exact match |
+| `headline-four-san-serif` | 24px | **level 2** `umd-sans-larger-bold` (22px) | nearest step; the most common case |
+| `headline-five-san-serif` | 20px | **level 3** `umd-sans-large` (18px) | rare in content |
+| bare `<strong>` used as a label | 18px | **level 3** `umd-sans-large` (18px) | exact match — see below |
+
+Chrome and section components need no class: `headline-one` becomes the hero's
+`slot="headline"`, `headline-two` is the Resources component's own heading, and
+`headline-five` inside that component is component-styled.
+
+**`<strong>` as a pseudo-heading.** Authors bold a line instead of using a
+heading. Promote it to a real heading *tag* for outline and screen-reader
+structure, but keep its size: level 3, 18px, exactly what it rendered as. Do not
+promote the size too — that is what went wrong on `find-community.html`, where
+five 18px `<strong>` labels were shipped at 32px.
+
+### What each built page maps to
+
+| Page | Source | Level |
+|---|---|---|
+| `tuition/frederick-douglass-scholarship.html` | `headline-four` ×2 | 2 |
+| `know-before-you-go.html` | `headline-three` ×2, `headline-four` ×2 | 1, 2 |
+| `student-life/find-community.html` | `<strong>` ×5 | 3 (plus 2 of our own groupings at level 2) |
+| `student-life/student-support.html` | `headline-four` ×4 | 2 |
+
+`know-before-you-go.html` is the reference: it is the only source page carrying
+both `headline-three` and `headline-four`, so it is the one page that
+demonstrates the level-1/level-2 distinction.
+
+### Rules that fall out of this
+
+- **Never put a `umd-sans-*` class on a slotted heading.** A heading in
+  `slot="headline"` is styled by the component's shadow CSS and the class is
+  inert. Audited: 0 occurrences — keep it that way.
+- **Never put a `umd-sans-*` size inside `.umd-text-rich-advanced`** — it
+  collapses to 18px (RULES §18). Headings go *before* the rich-text block.
+  **The one exception is `umd-sans-large`**, which *is* 18px, so the collapse
+  takes nothing from it and the 700 weight still lands. That makes it the right
+  tool for a lede paragraph the source set in `<strong>`: on
+  `frederick-douglass-scholarship.html` the opening paragraph carries
+  `umd-sans-large text-black` and renders 18px / 700 / #000 inside the
+  rich-text block, against 18px / 400 / #454545 for the paragraphs after it.
+  Note the source's own bold is the *same* colour as its body copy — the
+  `text-black` is a deliberate project choice to push it further, not a
+  reproduction of the source.
+- **`umd-sans-large-bold` does not exist.** It computes 16 / 400, the unstyled
+  fallback. `umd-sans-large` is already bold.
+- **`umd-sans-larger` is not a smaller step** — it is `-larger-bold` at weight
+  400. Don't use it for a heading.
+- **Level 3 is not fluid.** `umd-sans-large` is 18px at every width, so at 375px
+  levels 2 and 3 are both 18 / 700 and are distinguished only by position.
+
+### Landing pages are deliberately different
+
+Landing pages use `umd-sans-largest-uppercase` (44 / 800, uppercase) for section
+headings. That contrast is intended — do not fold it into the scale above, and
+do not let a migration script touch landing pages.
+
 ## Search indexing — every page is `noindex`
 
 Every page under `pages/` carries, immediately after the viewport meta:
