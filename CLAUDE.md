@@ -25,6 +25,7 @@ landing page as `index.html` so `/pages/<section>/` serves it:
 ```
 pages/
 ├── index.html                               site home (stays at the top)
+├── know-before-you-go.html                  section-less interior page (Layout B)
 ├── academics/
 │   ├── index.html                           Academics landing
 │   ├── programs.html
@@ -81,12 +82,166 @@ Do **not** write to `examples/` or `test/` — test/qa fixtures live in the page
 
 - **Admissions-owned** (logos, page-specific photography): `../images/...`
 - **Shared library** (large/small/medium campus, people, events, default): `../page-builder/images/large/...` etc.
+- **Sitewide chrome art** (art reused across pages rather than owned by one): `images/shared/` — currently just `interior-hero-pattern.png`, the interior hero graphic
 
 When `images-index.json` is needed, read `page-builder/images/images-index.json`.
 
 ### Image optimization scope
 
 When shrinking oversized images (the `/optimize-images` skill or ad-hoc), only touch **static** JPG/PNG/WebP. **GIFs, animated WebPs, and video files are out of scope** — don't resave or report on them (resampling breaks animation, and they need dedicated tooling). Exclude `.gif` and video extensions from scans, and check `n_frames > 1` on any WebP before touching it. This rule is also baked into `~/.claude/commands/optimize-images.md`.
+
+## Interior page layouts
+
+Every interior page (anything that is not a section landing page) uses **one of
+exactly two layouts**. They share the same hero and breadcrumb; they differ only
+in whether the left nav is present and, consequently, which horizontal lock the
+content area sits in.
+
+Reference pages:
+
+| Layout | Reference |
+|---|---|
+| A — with left nav | [`pages/tuition/frederick-douglass-scholarship.html`](pages/tuition/frederick-douglass-scholarship.html) |
+| B — no left nav | [`pages/know-before-you-go.html`](pages/know-before-you-go.html) — recreates `https://admissions.umd.edu/page/know-before-you-go` |
+
+### The shared hero — same on both layouts
+
+Interior pages do **not** get a photographic hero. They get the minimal hero,
+dark, with the UMD chevron pattern in the image slot and the **parent page's
+name in the eyebrow**:
+
+```html
+<section>
+  <umd-element-hero-minimal data-theme="dark">
+    <p slot="eyebrow">Tuition &amp; Aid</p>
+    <h1 slot="headline">Frederick Douglass Scholarship</h1>
+    <img slot="image" src="{{ROOT}}images/shared/interior-hero-pattern.png" alt="" />
+  </umd-element-hero-minimal>
+</section>
+```
+
+- **The graphic is `images/shared/interior-hero-pattern.png`** (2602×1022 PNG).
+  It is sitewide chrome for interior pages, not page art, which is why it lives
+  in `images/shared/` and not in a per-page folder. *(It was
+  `images/tuition/ff-pattern-hero.png` until 2026-09-14 — that path is dead.)*
+- **`alt=""` is required.** The pattern is decoration; an empty alt keeps it out
+  of the accessibility tree so the `<h1>` is the first thing announced.
+- **The eyebrow is the parent page**, i.e. the section landing page the
+  breadcrumb's last link points at — `Tuition & Aid` for a page under
+  `pages/tuition/`, `How to Apply` for one under `pages/how-to-apply/`. It is
+  not a category, a tagline, or the page's own name.
+- `data-theme="dark"` is not optional. The pattern graphic is drawn for the
+  dark panel and has no contrast on the light or maryland themes.
+
+### Layout A — with left nav
+
+`umd-layout-space-horizontal-larger` (1600px max-width, 64px side padding at
+≥1200px) wrapping `umd-layout-space-columns-left`: a 242px `umd-element-nav-slider`
+sidebar plus the content column, which is capped at 800px for reading measure.
+
+```html
+<!-- breadcrumb: its own lock, matching the content lock -->
+<div class="umd-layout-space-horizontal-larger umd-layout-space-vertical-interior">
+  <umd-element-breadcrumb>…</umd-element-breadcrumb>
+</div>
+
+<div class="umd-layout-space-horizontal-larger">
+  <div class="umd-layout-space-columns-left">
+    <div id="umd-shell-sidebar-container">
+      <umd-element-nav-slider>…</umd-element-nav-slider>
+    </div>
+    <div id="umd-shell-content" class="max-w-[800px]">
+      <section class="umd-layout-space-vertical-interior">…</section>
+    </div>
+  </div>
+</div>
+```
+
+Measured at a 1280px viewport: lock 1280 → columns 1152 → sidebar 242 at x=64,
+content 790 at x=426.
+
+**The sidebar is page content, not shared chrome.** It mirrors the matching
+`data-child-ref` group in `shared/header.html`, but `scripts/_chrome.py` does
+not stamp it — write its `data-active` / `data-selected` by hand.
+
+Use layout A when the page belongs to a section that has a real sibling set worth
+navigating (`tuition`, `how-to-apply`, `academics`, `student-life`).
+
+### Layout B — no left nav
+
+Same hero, same breadcrumb, **no sidebar and no `umd-layout-space-columns-left`**.
+The content area uses a different lock:
+
+> **`umd-layout-space-horizontal-normal`** (1280px max-width, 64px side padding
+> at ≥1200px → content box caps at 1152px).
+
+```html
+<div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+  <umd-element-breadcrumb>…</umd-element-breadcrumb>
+</div>
+
+<div class="umd-layout-space-horizontal-normal">
+  <section class="umd-layout-space-vertical-interior">…</section>
+</div>
+```
+
+Use layout B for one-off pages with no meaningful sibling set — the standalone
+informational page that hangs off the site rather than off a section.
+
+**A section-less page is written at the top of `pages/`, not in a directory of
+its own** — `pages/know-before-you-go.html`, alongside `pages/index.html`. Don't
+invent a section folder with no `index.html` to justify it. `_chrome.py` then
+finds no section ref for the path and the mobile drawer opens at its top level,
+which is correct.
+
+**Do not use `-larger` here.** Without the 242px sidebar absorbing the left edge,
+a 1600px lock puts content at a width nothing else on the site sits at, and the
+breadcrumb and body copy stop lining up with the rest of the page stack.
+
+**Four things that follow from the narrower lock and the missing sidebar:**
+
+1. **Section intros: `umd-element-section-intro`, not `-wide`.** RULES §11 picks
+   the variant from the lock, not the page — `-wide` over `-normal` spans
+   further than the content beneath it.
+2. **The `-larger` CSS augmentation does not apply.** Both `critical.css` §3 and
+   the per-page §3 block set `position: relative; container-type: inline-size;
+   isolation: isolate` on `.umd-layout-space-horizontal-larger` **only**. A
+   watermark or a `@container`-driven component inside a `-normal` lock has no
+   containing block or query container. Add the same three properties to the
+   `-normal` rule on that page if you need either.
+3. **Rich text needs no page-level measure — the DS already caps it.**
+   `element.min.css` ships
+
+   ```css
+   :is(.umd-text-rich-advanced,.umd-rich-text) p,  /* + ul, ol, pre, blockquote */
+   { max-width: 960px; }
+   ```
+
+   and that rule sets `max-width` and **nothing else — no auto margins** — so
+   copy caps at 960px **in place**, flush to the left edge of the lock, while
+   the card grids and media still use the full 1152px content box. Do not add a
+   narrower page-level cap: it only fights the design system. (Layout A's 800px
+   `#umd-shell-content` cap is a *column* width for the sidebar layout, not a
+   measure to copy into Layout B.)
+4. **`umd-layout-space-vertical-interior-child` is margin-BOTTOM only** (32px,
+   margin-top 0). It spaces an `<h2>` away from the content it introduces, but
+   gives nothing to an element that *follows* a block of copy — a sub-heading or
+   a CTA row set after rich text collapses onto the paragraph above it and reads
+   as part of it. There is no `mt-*` utility to reach for: `mt-md` / `mt-lg` /
+   `mt-xl` all compute to 0 in this bundle set, so this needs a page-level rule.
+   Layout A hides the problem because its sections are shorter and divider-led.
+
+### What is the same on both
+
+- The `noindex` meta pair, the shared header/footer regions, and the access gate
+  — all spliced by `scripts/build-chrome.py`, identical on every page.
+- `umd-layout-space-vertical-interior` on each `<section>` — interior pages use
+  the `*-interior` spacing scale. `umd-layout-vertical-landing` is landing-page
+  only.
+- The breadcrumb's lock always matches the content lock. Don't mix `-larger`
+  breadcrumb with `-normal` content.
+- The closing `umd-element-banner-promo` "stay connected" block, per the
+  sitewide page-closer convention.
 
 ## Shared chrome and reference pages
 

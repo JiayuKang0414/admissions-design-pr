@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Frederick Douglass Scholarship — Undergraduate Admissions | University of Maryland</title>
+  <title>Know Before You Go — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -817,6 +817,50 @@
       color: #000000;
       text-decoration: none;
     }
+
+
+    /* ============================================================
+       A. PAGE — LAYOUT B VERTICAL SPACING
+       No reading-measure rule here, on purpose. element.min.css ships
+
+         :is(.umd-text-rich-advanced,.umd-rich-text) p, … ul, … ol,
+         … pre, … blockquote { max-width: 960px; }
+
+       and that rule sets max-width and NOTHING else — no auto margins —
+       so rich-text copy caps at 960px IN PLACE, flush to the left edge
+       of the lock. It needs no wrapper of its own, and a narrower
+       page-level cap would only fight the design system.
+       ============================================================ */
+
+    /* umd-layout-space-vertical-interior-child is margin-BOTTOM only
+       (32px, margin-top 0). It spaces an <h2> away from the content it
+       introduces, but gives nothing to an element that FOLLOWS a block of
+       copy — so a sub-heading or a CTA row set after a rich-text block
+       collapses onto the paragraph above it and reads as part of it.
+       There is no mt-* utility in the DS to reach for: mt-md / mt-lg /
+       mt-xl all compute to 0. Hence this. */
+    .kbyg-top-space { margin-top: 48px; }
+
+    /* 992px lock for the section intro. A bare max-width, NOT
+       .umd-layout-space-horizontal-small: that class carries its own 64px
+       side padding, which would compound with the -normal lock this sits
+       inside and pull the intro in to 864px. */
+    .kbyg-lock-992 { max-width: 992px; margin-left: auto; margin-right: auto; }
+
+    /* ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md). Neither rule is in the base
+       bundles or critical.css.
+       min-width: 0 lets the 1fr tracks shrink — otherwise the image's
+       min-content forces its track to the intrinsic 1920px and unbalances
+       the columns. */
+    .umd-layout-grid-gap-two > * { min-width: 0; }
+    .umd-layout-grid-gap-two figure.umd-layout-alignment-block-stacked img {
+      display: block; width: 100%; height: auto;
+    }
+    /* NOTE: the zig-zag pattern's third rule — a 1px black <hr> inside
+       .umd-text-rich-advanced — is deliberately absent. Every rule on this
+       page now sits ABOVE its heading as hr.umd-text-divider, which the DS
+       already styles (1px solid #000, 24px below), so there is no bare <hr>
+       left inside a rich-text block for it to fix. */
   </style>
 
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
@@ -1138,7 +1182,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       /* GATE:USERS:END */
     };
   </script>
-  <script src="../../page-builder/scripts/gate.js"
+  <script src="../page-builder/scripts/gate.js"
           onerror="document.documentElement.classList.add('umd-gate-error')" defer></script>
   <!-- SHARED:gate:END -->
 </head>
@@ -1151,12 +1195,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <umd-element-navigation-header
     sticky
     class="umd-layout-space-horizontal-full"
-    search-url="../../pages/search/"
-    cta-url="../../pages/apply-now/"
+    search-url="../pages/search/"
+    cta-url="../pages/apply-now/"
     cta-text="Apply Now">
-    <a slot="logo" href="../../pages/">
-      <img src="../../images/logos/admissions-logo.svg" alt="University of Maryland Admissions"
-           onerror="this.onerror=null;this.src='../../images/logos/primary-logo-dark.svg';" />
+    <a slot="logo" href="../pages/">
+      <img src="../images/logos/admissions-logo.svg" alt="University of Maryland Admissions"
+           onerror="this.onerror=null;this.src='../images/logos/primary-logo-dark.svg';" />
     </a>
     <div slot="utility-navigation">
       <a href="https://admissions.umd.edu/visit">Visit UMD</a>
@@ -1164,11 +1208,11 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
     <nav slot="main-navigation">
       <umd-element-nav-item>
-        <a slot="primary-link" href="../../pages/academics/">Academics</a>
+        <a slot="primary-link" href="../pages/academics/">Academics</a>
         <div slot="dropdown-links">
-          <a href="../../pages/academics/">Overview</a>
-          <a href="../../pages/academics/programs.html">All Programs</a>
-          <a href="../../pages/academics/colleges-schools.html">Colleges &amp; Schools</a>
+          <a href="../pages/academics/">Overview</a>
+          <a href="../pages/academics/programs.html">All Programs</a>
+          <a href="../pages/academics/colleges-schools.html">Colleges &amp; Schools</a>
           <a href="https://admissions.umd.edu/programs/interest">Programs by Interest</a>
           <a href="https://admissions.umd.edu/academics/limited-enrollment-programs">Limited Enrollment Programs</a>
           <a href="https://ugst.umd.edu/llsop/index.html">Living-Learning &amp; Special Programs</a>
@@ -1176,17 +1220,17 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
              light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
         <div slot="dropdown-callout" class="umd-nav-promo">
-          <a href="../../pages/academics/programs.html">
-            <img src="../../images/academics/students-walking.jpg" alt="" />
+          <a href="../pages/academics/programs.html">
+            <img src="../images/academics/students-walking.jpg" alt="" />
             <span class="umd-nav-promo-title">All Programs</span>
             <span class="umd-nav-promo-text">Over 100 undergraduate majors across 12 colleges and schools.</span>
           </a>
         </div>
       </umd-element-nav-item>
       <umd-element-nav-item>
-        <a slot="primary-link" href="../../pages/student-life/">Student Life</a>
+        <a slot="primary-link" href="../pages/student-life/">Student Life</a>
         <div slot="dropdown-links">
-          <a href="../../pages/student-life/">Overview</a>
+          <a href="../pages/student-life/">Overview</a>
           <a href="https://admissions.umd.edu/student/housing-and-dining">Housing &amp; Dining</a>
           <a href="https://admissions.umd.edu/student/student-support">Student Support &amp; Safety</a>
           <a href="https://admissions.umd.edu/student/get-involved">Get Involved on Campus</a>
@@ -1194,12 +1238,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         </div>
       </umd-element-nav-item>
       <umd-element-nav-item>
-        <a slot="primary-link" href="../../pages/how-to-apply/">How To Apply</a>
+        <a slot="primary-link" href="../pages/how-to-apply/">How To Apply</a>
         <div slot="dropdown-links">
-          <a href="../../pages/how-to-apply/">Overview</a>
-          <a href="../../pages/how-to-apply/freshman-applicants.html">Freshman Applicants</a>
-          <a href="../../pages/how-to-apply/transfer-applicants.html">Transfer Applicants</a>
-          <a href="../../pages/how-to-apply/international-applicants.html">International Applicants</a>
+          <a href="../pages/how-to-apply/">Overview</a>
+          <a href="../pages/how-to-apply/freshman-applicants.html">Freshman Applicants</a>
+          <a href="../pages/how-to-apply/transfer-applicants.html">Transfer Applicants</a>
+          <a href="../pages/how-to-apply/international-applicants.html">International Applicants</a>
           <a href="https://admissions.umd.edu/apply/shady-grove-applicants">Shady Grove Applicants</a>
           <a href="https://admissions.umd.edu/apply/application-deadlines">Application Deadlines</a>
           <a href="https://admissions.umd.edu/apply/admission-review-process-factors">Admission Review Process &amp; Factors</a>
@@ -1209,27 +1253,27 @@ umd-element-scroll-top[data-layout-fixed="true"] {
              light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
         <div slot="dropdown-callout" class="umd-nav-promo">
           <a href="https://admissions.umd.edu/apply/application-deadlines">
-            <img src="../../images/admissions/how-to-apply-hero.jpg" alt="" />
+            <img src="../images/admissions/how-to-apply-hero.jpg" alt="" />
             <span class="umd-nav-promo-title">Application Deadlines</span>
             <span class="umd-nav-promo-text">Key dates for freshman, transfer and international applicants.</span>
           </a>
         </div>
       </umd-element-nav-item>
       <umd-element-nav-item>
-        <a slot="primary-link" href="../../pages/tuition/">Tuition &amp; Aid</a>
+        <a slot="primary-link" href="../pages/tuition/">Tuition &amp; Aid</a>
         <div slot="dropdown-links">
-          <a href="../../pages/tuition/">Overview</a>
+          <a href="../pages/tuition/">Overview</a>
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">Cost of Attendance</a>
           <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships">Freshman Merit Scholarships</a>
           <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships">Transfer Merit Scholarships</a>
-          <a href="../../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
+          <a href="../pages/tuition/frederick-douglass-scholarship.html">Frederick Douglass Scholarship</a>
           <a href="https://financialaid.umd.edu/">Office of Student Financial Aid</a>
         </div>
         <!-- Dropdown promo — projected through a real <slot>, so it stays in the
              light DOM and is styled by .umd-nav-promo in shared/chrome.css. -->
         <div slot="dropdown-callout" class="umd-nav-promo">
           <a href="https://admissions.umd.edu/tuition/cost-of-attendance">
-            <img src="../../images/tuition/idea-factory-hero.jpg" alt="" />
+            <img src="../images/tuition/idea-factory-hero.jpg" alt="" />
             <span class="umd-nav-promo-title">Cost of Attendance</span>
             <span class="umd-nav-promo-text">See what a year at Maryland actually costs.</span>
           </a>
@@ -1253,10 +1297,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          scripts/_chrome.py relies on that to stamp data-active / data-selected
          per page — rename a directory and its drawer ref has to follow. -->
     <div slot="primary-slide-links">
-      <a href="../../pages/academics/" data-child-ref="academics"><span>Academics</span></a>
-      <a href="../../pages/student-life/" data-child-ref="student-life"><span>Student Life</span></a>
-      <a href="../../pages/how-to-apply/" data-child-ref="how-to-apply"><span>How To Apply</span></a>
-      <a href="../../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
+      <a href="../pages/academics/" data-child-ref="academics"><span>Academics</span></a>
+      <a href="../pages/student-life/" data-child-ref="student-life"><span>Student Life</span></a>
+      <a href="../pages/how-to-apply/" data-child-ref="how-to-apply"><span>How To Apply</span></a>
+      <a href="../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
     </div>
     <!-- The utility row plus the two things the drawer is the ONLY route to on a
          phone: Apply Now (the red CTA) and Search (the magnifier) both live in
@@ -1267,42 +1311,42 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          no CTA to duplicate. -->
     <div slot="primary-slide-secondary-links">
       <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
-      <a href="../../pages/apply-now/"><span>Apply Now</span></a>
+      <a href="../pages/apply-now/"><span>Apply Now</span></a>
       <a href="https://admissions.umd.edu/connect"><span>Connect</span></a>
-      <a href="../../pages/search/"><span>Search</span></a>
+      <a href="../pages/search/"><span>Search</span></a>
     </div>
     <div slot="children-slides">
       <div data-parent-ref="academics">
-        <a href="../../pages/academics/"><span>Overview</span></a>
-        <a href="../../pages/academics/programs.html"><span>All Programs</span></a>
-        <a href="../../pages/academics/colleges-schools.html"><span>Colleges &amp; Schools</span></a>
+        <a href="../pages/academics/"><span>Overview</span></a>
+        <a href="../pages/academics/programs.html"><span>All Programs</span></a>
+        <a href="../pages/academics/colleges-schools.html"><span>Colleges &amp; Schools</span></a>
         <a href="https://admissions.umd.edu/programs/interest"><span>Programs by Interest</span></a>
         <a href="https://admissions.umd.edu/academics/limited-enrollment-programs"><span>Limited Enrollment Programs</span></a>
         <a href="https://ugst.umd.edu/llsop/index.html"><span>Living-Learning &amp; Special Programs</span></a>
       </div>
       <div data-parent-ref="student-life">
-        <a href="../../pages/student-life/"><span>Overview</span></a>
+        <a href="../pages/student-life/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
         <a href="https://admissions.umd.edu/student/student-support"><span>Student Support &amp; Safety</span></a>
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="https://admissions.umd.edu/student/find-community"><span>Find Your Community</span></a>
       </div>
       <div data-parent-ref="how-to-apply">
-        <a href="../../pages/how-to-apply/"><span>Overview</span></a>
-        <a href="../../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
-        <a href="../../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
-        <a href="../../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
+        <a href="../pages/how-to-apply/"><span>Overview</span></a>
+        <a href="../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
+        <a href="../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
+        <a href="../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
         <a href="https://admissions.umd.edu/apply/shady-grove-applicants"><span>Shady Grove Applicants</span></a>
         <a href="https://admissions.umd.edu/apply/application-deadlines"><span>Application Deadlines</span></a>
         <a href="https://admissions.umd.edu/apply/admission-review-process-factors"><span>Admission Review Process &amp; Factors</span></a>
         <a href="https://admissions.umd.edu/apply/application-faqs"><span>Application FAQs</span></a>
       </div>
-      <div data-parent-ref="tuition" data-active>
-        <a href="../../pages/tuition/"><span>Overview</span></a>
+      <div data-parent-ref="tuition">
+        <a href="../pages/tuition/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
         <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
         <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
-        <a href="../../pages/tuition/frederick-douglass-scholarship.html" data-selected><span>Frederick Douglass Scholarship</span></a>
+        <a href="../pages/tuition/frederick-douglass-scholarship.html"><span>Frederick Douglass Scholarship</span></a>
         <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
       </div>
     </div>
@@ -1311,144 +1355,256 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:header:END -->
 
   <main id="main-content">
-    <!-- 2. HERO — minimal, dark, with the UMD chevron pattern in the image
-         slot. The pattern is decoration, not content: alt="" keeps it out of
-         the accessibility tree so the h1 is the page's first announced thing. -->
+    <!-- 2. HERO — the shared interior hero: minimal, dark, UMD chevron pattern
+         in the image slot, parent page in the eyebrow. The pattern is
+         decoration, not content: alt="" keeps it out of the accessibility tree
+         so the h1 is the page's first announced thing.
+         See CLAUDE.md § Interior page layouts. -->
     <section>
       <umd-element-hero-minimal data-theme="dark">
-        <p slot="eyebrow">Tuition &amp; Aid</p>
-        <h1 slot="headline">Frederick Douglass Scholarship</h1>
-        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+        <p slot="eyebrow">Visit UMD</p>
+        <h1 slot="headline">Know Before You Go</h1>
+        <img slot="image" src="../images/shared/interior-hero-pattern.png" alt="" />
       </umd-element-hero-minimal>
     </section>
 
-    <!-- 3. BREADCRUMB — own horizontal lock and interior spacing. -->
-    <div class="umd-layout-space-horizontal-larger umd-layout-space-vertical-interior">
+    <!-- 3. BREADCRUMB — LAYOUT B: the breadcrumb lock matches the content lock,
+         so this is -normal, not the -larger the sidebar layout uses. -->
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
       <umd-element-breadcrumb>
         <div slot="paths">
-          <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
-          <a href="../../pages/tuition/"><span>Tuition &amp; Aid</span></a>
-          <p aria-label="Current Page"><span>Frederick Douglass Scholarship</span></p>
+          <a href="../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
+          <a href="https://admissions.umd.edu/visit"><span>Visit UMD</span></a>
+          <p aria-label="Current Page"><span>Know Before You Go</span></p>
         </div>
       </umd-element-breadcrumb>
     </div>
 
-    <!-- 4. COLUMNS — sidebar + content, own horizontal wrapper. -->
-    <div class="umd-layout-space-horizontal-larger">
-      <div class="umd-layout-space-columns-left">
-        <!-- The slide mirrors the Tuition &amp; Aid group in shared/header.html.
-             The sidebar is page content, not a shared region, so it is not
-             stamped by scripts/_chrome.py -- data-active / data-selected are
-             written here by hand. -->
-        <div id="umd-shell-sidebar-container">
-          <umd-element-nav-slider>
-            <div slot="primary-slide-links">
-              <a href="../../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
+    <!-- 4. CONTENT — LAYOUT B: no sidebar, so no umd-layout-space-columns-left
+         and no #umd-shell-sidebar-container. One -normal lock, full width.
+         Long-form copy needs no measure wrapper: element.min.css caps
+         rich-text p/ul/ol at 960px in place (see §A). Grids and media
+         use the full 1152px content box. -->
+    <div class="umd-layout-space-horizontal-normal">
+
+      <!-- 5. INTRO — section-intro, text-only (no headline slot). The h1 is
+           already in the hero, so a headline here would repeat it; the
+           registry confirms the component renders correctly with text alone.
+           include-separator draws the red accent line above the text.
+           Held in its own 992px lock (.kbyg-lock-992, a bare max-width rather
+           than -horizontal-small, which would add a second 64px of padding
+           inside the -normal lock this already sits in). -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="kbyg-lock-992">
+          <umd-element-section-intro include-separator>
+            <div slot="text">
+              <p>We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
             </div>
-            <div slot="children-slides">
-              <div data-active data-parent-ref="tuition">
-                <a href="../../pages/tuition/"><span>Overview</span></a>
-                <a href="https://admissions.umd.edu/tuition/cost-of-attendance"><span>Cost of Attendance</span></a>
-                <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
-                <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
-                <a href="frederick-douglass-scholarship.html" data-selected><span>Frederick Douglass Scholarship</span></a>
-                <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
-              </div>
+          </umd-element-section-intro>
+        </div>
+      </section>
+
+      <!-- 6. WHERE TO STAY — three accommodation cards.
+           data-visual-image-aligned="true" forces one aspect ratio across the
+           row; data-visual-bordered="true" gives the card body its 1px rule.
+           Both MUST be the literal string "true" — a bare attribute is inert
+           (registry-cards.json). -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Where to Stay</h2>
+
+        <div class="umd-layout-grid-gap-three umd-layout-grid-child-fill-height">
+          <umd-element-card data-visual-image-aligned="true" data-visual-bordered="true">
+            <img slot="image" src="../images/know-before-you-go/hotel-at-umd.jpg"
+                 alt="The main entrance of The Hotel at the University of Maryland." />
+            <p slot="eyebrow">Accommodation</p>
+            <h3 slot="headline">The Hotel at The University of Maryland</h3>
+            <div slot="text">
+              <p>7777 Baltimore Ave, College Park, MD 20740</p>
+              <p>Telephone: <a href="tel:+13012777777">(301) 277-7777</a></p>
             </div>
-          </umd-element-nav-slider>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://www.thehotelumd.com/offers/" target="_blank" rel="noopener noreferrer"
+                   aria-label="Plan your stay at The Hotel at UMD">Plan Your Stay</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+
+          <umd-element-card data-visual-image-aligned="true" data-visual-bordered="true">
+            <img slot="image" src="../images/know-before-you-go/cambria-hotel.jpg"
+                 alt="The Cambria Hotel College Park." />
+            <p slot="eyebrow">Accommodation</p>
+            <h3 slot="headline">Cambria Hotel College Park</h3>
+            <div slot="text">
+              <p>8321 Baltimore Ave, College Park, MD 20740</p>
+              <p>Telephone: <a href="tel:+13016159889">(301) 615-9889</a></p>
+            </div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://www.cambriacollegepark.com/" target="_blank" rel="noopener noreferrer"
+                   aria-label="Plan your stay at the Cambria Hotel College Park">Plan Your Stay</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+
+          <umd-element-card data-visual-image-aligned="true" data-visual-bordered="true">
+            <img slot="image" src="../images/know-before-you-go/marriott-conference-center.webp"
+                 alt="The College Park Marriott Hotel and Conference Center." />
+            <p slot="eyebrow">Accommodation</p>
+            <h3 slot="headline">College Park Marriott Hotel and Conference Center</h3>
+            <div slot="text">
+              <p>3501 University Blvd E, Hyattsville, MD 20783</p>
+              <p>Telephone: <a href="tel:+13019857300">(301) 985-7300</a></p>
+            </div>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="secondary">
+                <a href="https://www.marriott.com/en-us/hotels/wasum-college-park-marriott-hotel-and-conference-center/overview/"
+                   target="_blank" rel="noopener noreferrer"
+                   aria-label="Plan your stay at the College Park Marriott Hotel and Conference Center">Plan Your Stay</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-card>
+        </div>
+      </section>
+
+      <!-- 7. WHAT TO DO — zig-zag: text column left, image column right
+           (LAYOUT-PATTERNS.md § Light background — two-column image + text).
+           The headline sits OUTSIDE .umd-text-rich-advanced: a umd-sans-*
+           size collapses to 18px inside that block (RULES §18). The rule sits
+           ABOVE the title as hr.umd-text-divider — the same DS class the other
+           sections open with, so all three section heads now match. -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-layout-grid-gap-two">
+          <div>
+            <hr class="umd-text-divider" />
+            <h2 class="text-black umd-sans-extralarge-bold umd-layout-space-vertical-headline-large">What to Do</h2>
+            <div class="umd-text-rich-advanced">
+              <p>At the center of the <a href="https://www.collegeparkmd.gov/" target="_blank" rel="noopener noreferrer">City of College Park</a> and a short 20-minute drive from Washington, D.C., the nation&rsquo;s capital, there are a multitude of <a href="https://www.visitmaryland.org/list/things-do-college-park-and-hyattsville" target="_blank" rel="noopener noreferrer">interesting activities and experiences</a> a visitor to the University of Maryland can enjoy. View the resources at the bottom of this page to learn more.</p>
+            </div>
+          </div>
+
+          <figure class="umd-layout-alignment-block-stacked">
+            <img src="../images/know-before-you-go/GreaterCollegePark_09182025_DS_7980_1920x1080.webp"
+                 alt="Visitors and students in Greater College Park, the shops and streetscape just beyond the University of Maryland campus." />
+          </figure>
         </div>
 
-        <div id="umd-shell-content" class="max-w-[800px]">
-          <!-- 5. INTRO — statue photo with caption, then the lede. -->
-          <section class="umd-layout-space-vertical-interior">
-            <!-- Wrapped mode: slot="text" is what activates it, and
-                 data-layout-alignment="right" floats the image (and its
-                 caption with it) to the right with the copy running down the
-                 left. Without slot="text" the component renders the image
-                 full-width and the alignment attribute does nothing. -->
-            <umd-element-media-inline data-layout-alignment="right">
-              <img slot="image" src="../../images/tuition/frederick-douglass-statue.jpg"
-                   alt="The Frederick Douglass statue on the University of Maryland campus, seen against the trees of Hornbake Plaza." />
-              <div class="umd-text-rich-advanced" slot="text">
-                <p>The Frederick Douglass Scholarship (FDS) is a prestigious University of Maryland (UMD) scholarship for academically talented transfer students from Maryland community colleges.</p>
-                <p>This exceptional merit-based scholarship honors the life and legacy of Frederick Douglass, who made lasting contributions to American history through his work as an abolitionist, suffragist, author and agent of positive change. 30 full and 15 partial tuition scholarships are awarded to students who are selected from a rigorous review and interview process.</p>
-                <p>The FDS application must be submitted no later than March 1 by 5:00 p.m. Selected students will be invited to interview in late March or early April as part of the final scholarship review process. Scholarship recipients will be notified by the end of April. If you have any questions please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a>.</p>
-              </div>
-              <div slot="caption">
-                <p>Frederick Douglass statue located in Hornbake Plaza.</p>
-              </div>
-            </umd-element-media-inline>
-          </section>
-
-          <!-- 6. ELIGIBILITY -->
-          <section class="umd-layout-space-vertical-interior">
+        <!-- The two sub-topics as peer columns. Each h3 sits OUTSIDE its
+             .umd-text-rich-advanced block — a umd-sans-* size collapses to
+             18px inside one (RULES §18). -->
+        <div class="kbyg-top-space umd-layout-space-vertical-interior umd-layout-grid-gap-two">
+          <div>
             <hr class="umd-text-divider" />
-            <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Eligibility</h2>
-
+            <h3 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Self-Guided Tour</h3>
             <div class="umd-text-rich-advanced">
-              <p>In order to be eligible for the Frederick Douglass Scholarship, students must:</p>
-              <ul>
-                <li>Be an admitted UMD student for the current spring semester or a transfer applicant with a completed and submitted application (including all required documents) for the upcoming fall semester with no previous degree-seeking status at the university.</li>
-                <li>Be a Maryland resident at the time of applying. This is determined by the applicant&rsquo;s response to the residency questions on the admission application. UMD adheres to the Board of Regents&rsquo; <a href="https://registrar.umd.edu/residency-reclassification" target="_blank" rel="noopener noreferrer">residency classification policies</a>.</li>
-                <li>Be a U.S. citizen, permanent resident, or qualify for in-state status by way of the <a href="https://registrar.umd.edu/residency-reclassification/non-resident-tuition-exemptions/maryland-dream-act" target="_blank" rel="noopener noreferrer">non-resident tuition exemption status</a> at the time of applying.</li>
-                <li>Have a cumulative GPA of 3.5 or higher for all college work, including work from institutions other than Maryland community colleges.</li>
-                <li>Earned an associate&rsquo;s degree from a Maryland community college, have completed, or be in the process of completing 56 college credits with the most recent 30 credits earned at a Maryland community college. The degree or credits must be earned by the end of the spring semester during which the application is being completed.</li>
-                <li>Students completing their 56th credit at the time of applying must reflect that courses are in progress on their transcript or on the transfer application.</li>
-                <li>Show English language proficiency, as demonstrated through a review of all materials submitted with the application.</li>
-              </ul>
-              <p>If you have questions about scholarship criteria, application completion or residency status, please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> before March 1. It is the applicant&rsquo;s responsibility to ensure all scholarship and admission materials are submitted and received by the March 1 application deadline. It is also the applicant&rsquo;s responsibility to resolve any outstanding residency concerns affecting their status as qualifying for in-state tuition status or documents related to their admission application as outlined above. It is recommended that the applicant inquires 7&ndash;10 business days prior to the deadline for best consideration. Any discrepancies must be resolved within five business days following the deadline, including the receipt of any additional documentation required for review and final residency determination.</p>
+              <p>Grab your phone, lace up your walking shoes and prepare to see the iconic sights of the University of Maryland&hellip;at your own pace! Our <a href="https://admissions.umd.edu/page/self-guided-tour">self-guided walking tour</a> is great if you are in town and want to explore campus.</p>
             </div>
-          </section>
-
-          <!-- 7. HOW TO APPLY -->
-          <section class="umd-layout-space-vertical-interior">
+          </div>
+          <div>
             <hr class="umd-text-divider" />
-            <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">How to Apply</h2>
-
+            <h3 class="text-black umd-sans-larger-bold umd-layout-space-vertical-headline-large">Transportation &amp; Parking</h3>
             <div class="umd-text-rich-advanced">
-              <p>To apply for the Frederick Douglass Scholarship, candidates must submit the following required materials by March 1:</p>
-              <ol>
-                <li>A completed <a href="../../pages/how-to-apply/transfer-applicants.html">transfer application</a> for admission.</li>
-                <li>A completed FDS application.
-                  <ul>
-                    <li>Students applying to UMD for the fall semester must complete the FDS application online by March 1 to be considered for the scholarship. Transfer students recently admitted for the spring semester are eligible to apply as well by March 1.</li>
-                  </ul>
-                </li>
-                <li>Official transcripts from all post-secondary institutions attended.</li>
-                <li>An activities and awards list or resume detailing your extracurricular and personal activities, including dates, and describing your involvement and participation.</li>
-                <li>A 500 word, typed and double-spaced essay on the following topic: Describe the neighborhood or community you grew up in. How has it shaped your dreams and aspirations, and how do you intend to use your educational and professional goals to impact UMD and beyond?</li>
-                <li>Two letters of recommendation, one of which must be from a community college faculty member and one from an individual of your choosing. All recommendation letters must be submitted to <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> directly from the recommenders.</li>
-              </ol>
-              <p><strong>Note:</strong> The Frederick Douglass Scholarship has replaced the Transfer Academic Excellence Scholarship.</p>
+              <p><strong>Registrants of Office of Undergraduate Admissions planned events and visits will receive an email prior to arrival with details about parking, check-in and what to expect during their visit.</strong> Other visitors to campus can find designated <a href="https://transportation.umd.edu/parking/visitors" target="_blank" rel="noopener noreferrer">visitor parking</a> on the Department of Transportation Services website, along with <a href="https://transportation.umd.edu/sustainable-transportation/local-regional-transit" target="_blank" rel="noopener noreferrer">local and regional transit</a> options.</p>
             </div>
-          </section>
-
-          <!-- 8. STAY CONNECTED — banner promo. Interior pages use the
-               *-interior spacing scale; umd-layout-vertical-landing is
-               landing-page only. -->
-          <section class="umd-layout-space-vertical-interior">
-            <umd-element-banner-promo>
-              <h2 slot="headline">There is a lot more to learn about UMD</h2>
-              <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
-              <div slot="actions" class="banner-promo-actions">
-                <umd-element-call-to-action data-display="primary">
-                  <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
-                </umd-element-call-to-action>
-              </div>
-            </umd-element-banner-promo>
-          </section>
+          </div>
         </div>
-      </div>
+
+        <div class="umd-layout-space-vertical-interior umd-layout-grid-inline-tablet-rows">
+          <umd-element-call-to-action data-display="primary">
+            <a href="https://maps.umd.edu/map/" target="_blank" rel="noopener noreferrer">Interactive Campus Map</a>
+          </umd-element-call-to-action>
+        </div>
+
+        <!-- Contact + sign-off as a black banner promo. data-theme="dark" is
+             the only non-default value the component takes; headline and text
+             are both required slots (registry-alerts.json). The page closer
+             below is the same component in its default gold, so the two read
+             as a pair rather than a repeat. -->
+        <div class="umd-layout-space-vertical-interior">
+          <umd-element-banner-promo data-theme="dark">
+            <h2 slot="headline">Have questions about your visit?</h2>
+            <p slot="text">Contact the Visitor Center at The Hotel at The University of Maryland at <a href="mailto:visit@umd.edu">visit@umd.edu</a>. Safe travels, and we look forward to seeing you on campus!</p>
+            <div slot="actions">
+              <umd-element-call-to-action data-display="primary" data-theme="dark">
+                <a href="https://admissions.umd.edu/page/visitor-center">Visitor Center</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-banner-promo>
+        </div>
+
+        <!-- The two campus parking map pages. No slot="text", so media-inline
+             renders the image full-width with its caption beneath rather than
+             wrapping copy around it (see OVERRIDES.md § umd-element-media-inline). -->
+        <div class="umd-layout-space-vertical-interior-child umd-layout-grid-gap-stacked">
+          <umd-element-media-inline>
+            <img slot="image" src="../images/know-before-you-go/campus-map-page-1.jpg"
+                 alt="University of Maryland campus parking map showing lots, garages and visitor parking areas." />
+            <div slot="caption"><p>Campus parking map.</p></div>
+          </umd-element-media-inline>
+          <umd-element-media-inline>
+            <img slot="image" src="../images/know-before-you-go/campus-map-page-2.jpg"
+                 alt="Key to the University of Maryland campus parking map, with the building inventory." />
+            <div slot="caption"><p>Map key and building inventory.</p></div>
+          </umd-element-media-inline>
+        </div>
+      </section>
+
+      <!-- 8. RESOURCES — links that carry supporting copy, so these are
+           standard cards, not text-only overlay link cards
+           (LAYOUT-PATTERNS.md § Link Cards Grid). -->
+      <section class="umd-layout-space-vertical-interior">
+        <hr class="umd-text-divider" />
+        <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-extralarge-bold">Resources</h2>
+
+        <!-- Icon cards, light theme — the same Resources treatment as
+             pages/academics/index.html, which uses the dark variant. Light
+             means no data-theme plus the red-chevron icon-link.svg; the dark
+             variant's icon-link-dark.svg would be wrong here. -->
+        <div class="umd-layout-grid-gap-two">
+          <umd-element-card-icon>
+            <img slot="image" src="../page-builder/images/icons/icon-link.svg" alt="" />
+            <h3 slot="headline">
+              <a href="https://campusvisitorguides.com/digital-magazine/umd/" target="_blank" rel="noopener noreferrer">Explore College Park</a>
+            </h3>
+            <div slot="text">
+              <p>There is more to College Park. View this campus visitor brochure to see what&rsquo;s going on around town.</p>
+            </div>
+          </umd-element-card-icon>
+          <umd-element-card-icon>
+            <img slot="image" src="../page-builder/images/icons/icon-link.svg" alt="" />
+            <h3 slot="headline">
+              <a href="https://weather.com/weather/tenday/l/College+Park+MD" target="_blank" rel="noopener noreferrer">10-Day Forecast</a>
+            </h3>
+            <div slot="text">
+              <p>Need to pack a water bottle or maybe an umbrella? Be sure to check the forecast before your visit.</p>
+            </div>
+          </umd-element-card-icon>
+        </div>
+      </section>
+
+      <!-- 9. STAY CONNECTED — the sitewide page closer. -->
+      <section class="umd-layout-space-vertical-interior">
+        <umd-element-banner-promo>
+          <h2 slot="headline">There is a lot more to learn about UMD</h2>
+          <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
+          <div slot="actions" class="banner-promo-actions">
+            <umd-element-call-to-action data-display="primary">
+              <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
+            </umd-element-call-to-action>
+          </div>
+        </umd-element-banner-promo>
+      </section>
     </div>
   </main>
 
-  <!-- 9. FOOTER — visual -->
+  <!-- 10. FOOTER — visual -->
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
-    <a slot="logo" href="../../pages/">
-      <img src="../../images/logos/footer-logo.svg" alt="University of Maryland" />
+    <a slot="logo" href="../pages/">
+      <img src="../images/logos/footer-logo.svg" alt="University of Maryland" />
     </a>
-    <img slot="image" src="../../page-builder/images/large/campus/footer-campus.jpg" alt="University of Maryland campus" />
+    <img slot="image" src="../page-builder/images/large/campus/footer-campus.jpg" alt="University of Maryland campus" />
 
     <p slot="contact-headline">Undergraduate Admissions</p>
     <!-- Every address line needs its own <span>: umd-element-footer extracts and
@@ -1477,14 +1633,14 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <!-- A link column's heading comes from data-headline on the slot element —
          a heading tag inside the column is dropped (the DS collects only <a>). -->
     <div slot="link-column-one">
-      <a href="../../pages/academics/programs.html">Majors &amp; Minors</a>
-      <a href="../../pages/student-life/">Student Life</a>
-      <a href="../../pages/how-to-apply/">Admissions Requirements</a>
+      <a href="../pages/academics/programs.html">Majors &amp; Minors</a>
+      <a href="../pages/student-life/">Student Life</a>
+      <a href="../pages/how-to-apply/">Admissions Requirements</a>
       <a href="https://admissions.umd.edu/apply/application-deadlines">Application Deadlines</a>
-      <a href="../../pages/tuition/">Tuition &amp; Aid</a>
+      <a href="../pages/tuition/">Tuition &amp; Aid</a>
     </div>
     <div slot="link-column-two" data-headline="Information For:">
-      <a href="../../pages/personas/prospective-students.html">Prospective Students</a>
+      <a href="../pages/personas/prospective-students.html">Prospective Students</a>
       <a href="https://admissions.umd.edu/persona/parent-families">Parents &amp; Families</a>
       <a href="https://admissions.umd.edu/persona/counselors-advisors">Counselors &amp; Advisors</a>
       <a href="https://admissions.umd.edu/persona/admitted-students">Admitted Students</a>
@@ -1495,10 +1651,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     <div slot="link-column-three" data-headline="Get Started:">
       <a href="https://admissions.umd.edu/visit">Visit UMD</a>
       <a href="https://admissions.umd.edu/connect">Connect</a>
-      <a href="../../pages/apply-now/">Apply Now</a>
+      <a href="../pages/apply-now/">Apply Now</a>
     </div>
 
-    <a slot="actions" href="../../pages/apply-now/">Apply Now</a>
+    <a slot="actions" href="../pages/apply-now/">Apply Now</a>
 
     <!-- Privacy Policy and Web Accessibility are appended by the component
          itself — listing them here would render them twice. -->
