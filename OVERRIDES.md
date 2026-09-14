@@ -1421,6 +1421,41 @@ Removing the injection changed nothing visually: the actions box measures
 155×44 at the same coordinates with `display: block` as it did with the
 injected column flex, because there is only ever one action in it.
 
+## `umd-element-section-intro` headline-less: the registry's CAUTION is stale at 2.0.0 (2026-09-14)
+
+`registry-content.json` carries this warning on `section-intro`:
+
+> CAUTION (verified v1.18.12): the intended larger/bold treatment for
+> headline-less text is NOT implemented — slotted text renders at the default
+> 18px/400 whether wrapped in a div or slotted as a bare `p`; style the slotted
+> paragraph from page CSS when the design calls for a bold lead.
+
+**That is no longer true at web-components-library 2.0.0, the version this
+project pins.** Measured on `pages/know-before-you-go.html`, a text-only
+`umd-element-section-intro` (no `headline` slot) renders its paragraph at
+**22px / 700 / #000, centered** — the component now wraps the cloned text in
+`.umd-text-rich-simple-largest` inside its shadow root. Page CSS for a bold lead
+is unnecessary; adding it would fight the component.
+
+For contrast, ordinary body copy on the same page computes 18px / 400 / #454545,
+left-aligned. The intro is doing real work as a lede, not just repeating the
+body style centered.
+
+Two other things worth knowing before reaching for it:
+
+- **It clones into the shadow root rather than projecting through a `<slot>`.**
+  The light-DOM `<p>` you author measures 0×0; the rendered copy is the shadow
+  clone. Measure the shadow node, not your own markup. (Same shape as the
+  `slot="image"` node on `umd-element-hero-minimal`.)
+- **Its lock is 992px with 80px side margins, not the ~640px the registry's
+  notes field implies.** Inside a 1152px `-normal` content box at 1440px it
+  renders x=217, w=992 — inset from the body copy's left edge, which is what
+  makes it read as a lede rather than a first paragraph.
+
+The registry's `page_types: ["landing"]` is also advisory rather than a
+restriction — RULES §11's lock→variant table covers interior use, and this is an
+interior page.
+
 ## `umd-element-media-inline` — `slot="text"` is what turns on wrapping (2026-09-10)
 
 `data-layout-alignment="right"` on its own does nothing. The component picks its
