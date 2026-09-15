@@ -819,34 +819,8 @@
     }
   </style>
 
-  <style>
-    /* Keep the opening copy at the standard rich-text size while making its
-       emphasis visually explicit across the design-system cascade. */
-    .fds-intro-copy,
-    .fds-intro-copy strong {
-      font-weight: 700 !important;
-    }
-
-    /* Source editorial image — the DS rich-text pattern does not constrain
-       standalone figure media or supply its caption treatment. */
-    .fds-feature-figure {
-      margin: 24px 0 32px;
-    }
-    .fds-feature-figure img {
-      display: block;
-      height: auto;
-      width: 100%;
-    }
-    .fds-feature-figure figcaption {
-      color: #454545;
-      font-family: var(--umd-font-sans, Interstate, Helvetica, Arial, Verdana, sans-serif);
-      font-size: 14px;
-      line-height: 1.5;
-      margin-top: 8px;
-    }
-  </style>
-
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
+
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1170,10 +1144,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 </head>
 <body>
 
-  <!-- ========================================
-       1. GLOBAL UNIVERSITY HEADER
-       Hardcoded. Never modified. Zero config.
-  ======================================== -->
+  <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1342,86 +1313,100 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:header:END -->
 
   <main id="main-content">
-    <!-- Compact interior hero keeps the scholarship page aligned with the
-         Tuition & Aid section's existing Cost of Attendance subpage. -->
+    <!-- 2. HERO — minimal, dark, with the UMD chevron pattern in the image
+         slot. The pattern is decoration, not content: alt="" keeps it out of
+         the accessibility tree so the h1 is the page's first announced thing. -->
     <section>
       <umd-element-hero-minimal data-theme="dark">
         <p slot="eyebrow">Tuition &amp; Aid</p>
-        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
         <h1 slot="headline">Frederick Douglass Scholarship</h1>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
       </umd-element-hero-minimal>
     </section>
 
-    <!-- Breadcrumb owns its own horizontal lock and interior spacing. -->
+    <!-- 3. BREADCRUMB — own horizontal lock and interior spacing. -->
     <div class="umd-layout-space-horizontal-larger umd-layout-space-vertical-interior">
       <umd-element-breadcrumb>
         <div slot="paths">
           <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
           <a href="../../pages/tuition/"><span>Tuition &amp; Aid</span></a>
-          <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
           <p aria-label="Current Page"><span>Frederick Douglass Scholarship</span></p>
         </div>
       </umd-element-breadcrumb>
     </div>
 
+    <!-- 4. COLUMNS — sidebar + content, own horizontal wrapper. -->
     <div class="umd-layout-space-horizontal-larger">
       <div class="umd-layout-space-columns-left">
+        <!-- The slide mirrors the Tuition &amp; Aid group in shared/header.html.
+             The sidebar is page content, not a shared region, so it is not
+             stamped by scripts/_chrome.py -- data-active / data-selected are
+             written here by hand. -->
         <div id="umd-shell-sidebar-container">
           <umd-element-nav-slider>
             <div slot="primary-slide-links">
               <a href="../../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
             </div>
             <div slot="children-slides">
-              <div data-parent-ref="tuition">
+              <div data-active data-parent-ref="tuition">
+                <a href="../../pages/tuition/"><span>Overview</span></a>
                 <a href="../../pages/tuition/cost-of-attendance.html"><span>Cost of Attendance</span></a>
                 <a href="https://admissions.umd.edu/tuition/freshman-merit-scholarships"><span>Freshman Merit Scholarships</span></a>
-                <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships" data-child-ref="transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+                <a href="https://admissions.umd.edu/tuition/transfer-merit-scholarships"><span>Transfer Merit Scholarships</span></a>
+                <a href="frederick-douglass-scholarship.html" data-selected><span>Frederick Douglass Scholarship</span></a>
                 <a href="https://financialaid.umd.edu/"><span>Office of Student Financial Aid</span></a>
-              </div>
-              <div data-active data-parent-ref="transfer-merit-scholarships">
-                <a href="../../pages/tuition/frederick-douglass-scholarship.html" data-selected><span>Frederick Douglass Scholarship</span></a>
               </div>
             </div>
           </umd-element-nav-slider>
         </div>
 
         <div id="umd-shell-content" class="max-w-[800px]">
+          <!-- 5. INTRO — statue photo with caption, then the lede. -->
           <section class="umd-layout-space-vertical-interior">
-            <div class="umd-text-rich-advanced">
-              <p class="fds-intro-copy"><strong>The Frederick Douglass Scholarship (FDS) is a prestigious University of Maryland (UMD) scholarship for academically talented transfer students from Maryland community colleges.</strong></p>
-              <figure class="fds-feature-figure">
-                <img src="../../images/shared/frederick-douglass-statue.jpg" alt="Weathered bronze statue of abolitionist, social reformer and statesman, Frederick Douglass. His right arm raised while delivering a powerful speech. His left arm holds tight a copy of his autobiography." />
-                <figcaption>Frederick Douglass statue located in Hornbake Plaza.</figcaption>
-              </figure>
-              <p>This exceptional merit-based scholarship honors the life and legacy of Frederick Douglass, who made lasting contributions to American history through his work as an abolitionist, suffragist, author and agent of positive change. 30 full and 15 partial tuition scholarships are awarded&nbsp;to students who are selected from a rigorous review and interview process.</p>
-              <p>The FDS application must be submitted no later than March 1 by 5:00 p.m. Selected students will be invited to&nbsp;interview in late March or early April as part of the final scholarship review process. Scholarship recipients will be notified by the end of April. If you have any questions please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a>.</p>
-            </div>
+            <!-- Wrapped mode: slot="text" is what activates it, and
+                 data-layout-alignment="right" floats the image (and its
+                 caption with it) to the right with the copy running down the
+                 left. Without slot="text" the component renders the image
+                 full-width and the alignment attribute does nothing. -->
+            <umd-element-media-inline data-layout-alignment="right">
+              <img slot="image" src="../../images/shared/frederick-douglass-statue.jpg"
+                   alt="The Frederick Douglass statue on the University of Maryland campus, seen against the trees of Hornbake Plaza." />
+              <div class="umd-text-rich-advanced" slot="text">
+                <p class="umd-sans-large text-black">The Frederick Douglass Scholarship (FDS) is a prestigious University of Maryland (UMD) scholarship for academically talented transfer students from Maryland community colleges.</p>
+                <p>This exceptional merit-based scholarship honors the life and legacy of Frederick Douglass, who made lasting contributions to American history through his work as an abolitionist, suffragist, author and agent of positive change. 30 full and 15 partial tuition scholarships are awarded to students who are selected from a rigorous review and interview process.</p>
+                <p>The FDS application must be submitted no later than March 1 by 5:00 p.m. Selected students will be invited to interview in late March or early April as part of the final scholarship review process. Scholarship recipients will be notified by the end of April. If you have any questions please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a>.</p>
+              </div>
+              <div slot="caption">
+                <p>Frederick Douglass statue located in Hornbake Plaza.</p>
+              </div>
+            </umd-element-media-inline>
           </section>
 
+          <!-- 6. ELIGIBILITY -->
           <section class="umd-layout-space-vertical-interior">
+            <hr class="umd-text-divider" />
             <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Eligibility</h2>
+
             <div class="umd-text-rich-advanced">
               <p>In order to be eligible for the Frederick Douglass Scholarship, students must:</p>
               <ul>
                 <li>Be an admitted UMD student for the current spring semester or a transfer applicant with a completed and submitted application (including all required documents) for the upcoming fall semester with no previous degree-seeking status at the university.</li>
-                <li>Be a Maryland resident at the time of applying. This is determined by the applicant's response to the residency questions on the admission application. UMD adheres to the Board of Regents' <a href="https://registrar.umd.edu/residency-reclassification">residency classification policies</a>.</li>
-                <li>Be a U.S. citizen, permanent resident, or qualify for in-state status by way of the <a href="https://registrar.umd.edu/residency-reclassification/non-resident-tuition-exemptions/maryland-dream-act">non-resident tuition exemption status</a> at the time of applying.</li>
+                <li>Be a Maryland resident at the time of applying. This is determined by the applicant&rsquo;s response to the residency questions on the admission application. UMD adheres to the Board of Regents&rsquo; <a href="https://registrar.umd.edu/residency-reclassification" target="_blank" rel="noopener noreferrer">residency classification policies</a>.</li>
+                <li>Be a U.S. citizen, permanent resident, or qualify for in-state status by way of the <a href="https://registrar.umd.edu/residency-reclassification/non-resident-tuition-exemptions/maryland-dream-act" target="_blank" rel="noopener noreferrer">non-resident tuition exemption status</a> at the time of applying.</li>
                 <li>Have a cumulative GPA of 3.5 or higher for all college work, including work from institutions other than Maryland community colleges.</li>
-                <li>Earned an associate’s degree from a Maryland community college, have completed, or be in the process of completing 56 college credits with the most recent 30 credits earned at a Maryland community college.
-                  <ul>
-                    <li>The degree or credits must be earned by the end of the spring semester during which the application is being completed.</li>
-                    <li>Students completing their 56th credit at the time of applying must reflect that courses are in progress on their transcript or on the transfer application.</li>
-                  </ul>
-                </li>
+                <li>Earned an associate&rsquo;s degree from a Maryland community college, have completed, or be in the process of completing 56 college credits with the most recent 30 credits earned at a Maryland community college. The degree or credits must be earned by the end of the spring semester during which the application is being completed.</li>
+                <li>Students completing their 56th credit at the time of applying must reflect that courses are in progress on their transcript or on the transfer application.</li>
                 <li>Show English language proficiency, as demonstrated through a review of all materials submitted with the application.</li>
               </ul>
-              <p>If you have questions about&nbsp;scholarship criteria, application completion or residency status, please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> before March 1. It is the applicant's responsibility to ensure all scholarship and admission&nbsp;materials are submitted and received by the March 1 application deadline. It is also the applicant's responsibility to resolve any outstanding residency concerns affecting their status as qualifying for in-state tuition status or documents related to their admission application as outlined above.</p>
-              <p>It is recommended that the applicant inquires 7-10 business days prior to the deadline for best consideration.&nbsp;Any discrepancies must be resolved within five business days following the deadline, including the receipt of any additional documentation required for review and final residency determination.</p>
+              <p>If you have questions about scholarship criteria, application completion or residency status, please email <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> before March 1. It is the applicant&rsquo;s responsibility to ensure all scholarship and admission materials are submitted and received by the March 1 application deadline. It is also the applicant&rsquo;s responsibility to resolve any outstanding residency concerns affecting their status as qualifying for in-state tuition status or documents related to their admission application as outlined above. It is recommended that the applicant inquires 7&ndash;10 business days prior to the deadline for best consideration. Any discrepancies must be resolved within five business days following the deadline, including the receipt of any additional documentation required for review and final residency determination.</p>
             </div>
           </section>
 
+          <!-- 7. HOW TO APPLY -->
           <section class="umd-layout-space-vertical-interior">
+            <hr class="umd-text-divider" />
             <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">How to Apply</h2>
+
             <div class="umd-text-rich-advanced">
               <p>To apply for the Frederick Douglass Scholarship, candidates must submit the following required materials by March 1:</p>
               <ol>
@@ -1433,25 +1418,23 @@ umd-element-scroll-top[data-layout-fixed="true"] {
                 </li>
                 <li>Official transcripts from all post-secondary institutions attended.</li>
                 <li>An activities and awards list or resume detailing your extracurricular and personal activities, including dates, and describing your involvement and participation.</li>
-                <li>A 500 word, typed and double-spaced essay on the following topic:
-                  <ul>
-                    <li>Describe the neighborhood or community you grew up in. How has it shaped your dreams and aspirations, and how do you intend to use your educational and professional goals to impact UMD and beyond?</li>
-                  </ul>
-                </li>
+                <li>A 500 word, typed and double-spaced essay on the following topic: Describe the neighborhood or community you grew up in. How has it shaped your dreams and aspirations, and how do you intend to use your educational and professional goals to impact UMD and beyond?</li>
                 <li>Two letters of recommendation, one of which must be from a community college faculty member and one from an individual of your choosing. All recommendation letters must be submitted to <a href="mailto:FDS@umd.edu">FDS@umd.edu</a> directly from the recommenders.</li>
               </ol>
-              <p>Note: The Frederick Douglass Scholarship has replaced the Transfer Academic Excellence Scholarship.</p>
+              <p><strong>Note:</strong> The Frederick Douglass Scholarship has replaced the Transfer Academic Excellence Scholarship.</p>
             </div>
           </section>
 
-          <!-- STAY CONNECTED — constrained to the interior content width -->
+          <!-- 8. STAY CONNECTED — banner promo. Interior pages use the
+               *-interior spacing scale; umd-layout-vertical-landing is
+               landing-page only. -->
           <section class="umd-layout-space-vertical-interior">
             <umd-element-banner-promo>
               <h2 slot="headline">There is a lot more to learn about UMD</h2>
-              <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the Mailing List</a> or <a href="https://admissions.umd.edu/connect">Connect</a>!</p>
+              <p slot="text">Let&rsquo;s stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
               <div slot="actions" class="banner-promo-actions">
                 <umd-element-call-to-action data-display="primary">
-                  <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the List</a>
+                  <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
                 </umd-element-call-to-action>
               </div>
             </umd-element-banner-promo>
@@ -1461,11 +1444,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </main>
 
-  <!-- ========================================
-       4. FOOTER
-       Visual footer with campus background image.
-       Default image: ../images/large/campus/footer-campus.jpg
-  ======================================== -->
+  <!-- 9. FOOTER — visual -->
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
     <a slot="logo" href="../../pages/">
@@ -1530,19 +1509,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     </div>
   </umd-element-footer>
   <!-- SHARED:footer:END -->
-
-  <script>
-    // umd-element-banner-promo — stack actions vertically with 8px gap.
-    // Banner-promo reprojects slot="actions" into shadow DOM under
-    // .banner-promo-actions with no gap when stacked.
-    customElements.whenDefined('umd-element-banner-promo').then(() => {
-      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
-        const style = document.createElement('style');
-        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
-        el.shadowRoot && el.shadowRoot.appendChild(style);
-      });
-    });
-  </script>
 
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
   <!-- ============================================================

@@ -92,12 +92,14 @@ When shrinking oversized images (the `/optimize-images` skill or ad-hoc), only t
 
 ## Interior page layouts
 
-The four reviewed interior pages are present:
+The four interior pages are present:
 `tuition/frederick-douglass-scholarship.html`,
 `student-life/student-support.html`,
 `how-to-apply/english-language-proficiency.html`, and
-`tuition/cost-of-attendance.html`. The first three return from the
-`interior-pages-handoff` workflow. Shared navigation links to the local pages.
+`tuition/cost-of-attendance.html`. Frederick Douglass Scholarship retains the
+version restored to `main` on 2026-09-15. Student Support and English Language
+Proficiency return from the `interior-pages-handoff` workflow, and Cost of
+Attendance is added alongside them. Shared navigation links to all four pages.
 
 
 Every interior page (anything that is not a section landing page) uses **one of
@@ -128,7 +130,7 @@ Reference pages:
 
 | Layout | Reference |
 |---|---|
-| A — with left nav | `pages/tuition/frederick-douglass-scholarship.html` |
+| A — with left nav | [`pages/tuition/frederick-douglass-scholarship.html`](pages/tuition/frederick-douglass-scholarship.html) — recreates `https://admissions.umd.edu/tuition/frederick-douglass-scholarship` |
 | B — no left nav | [`pages/know-before-you-go.html`](pages/know-before-you-go.html) — recreates `https://admissions.umd.edu/page/know-before-you-go` |
 
 ### The shared hero — same on both layouts
