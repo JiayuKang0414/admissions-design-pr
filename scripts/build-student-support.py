@@ -38,12 +38,7 @@ assert pin, "TEMPLATE.html has no web-components-library cdn.js pin"
 
 body = r'''  </style>
   <style>
-    /* Keep long-form text readable within the design-system content container. */
     @media (min-width: 768px) {
-      .student-support-content .umd-text-rich-advanced {
-        max-width: 800px;
-      }
-
       .student-support-media .student-support-safety-image {
         object-position: center 10%;
       }
@@ -97,10 +92,10 @@ body = r'''  </style>
     </div>
 
     <div class="umd-layout-space-horizontal-normal">
-      <div id="umd-shell-content" class="student-support-content">
+      <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-text-rich-advanced">
-            <p>Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</p>
+            <h2 class="umd-sans-large text-black">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</h2>
           </div>
         </section>
 
@@ -238,7 +233,7 @@ banner_start = output.index("<umd-element-banner-promo>")
 shell_start = output.index('<div id="umd-shell-content"')
 shell_end = output.index("</div>\n    </div>\n  </main>", shell_start)
 assert shell_start < banner_start < shell_end
-assert '<div id="umd-shell-content" class="student-support-content">' in output
+assert '<div id="umd-shell-content">' in output
 for heading in ("Academics", "Wellness", "Safety", "Transportation &amp; Parking"):
     assert f">{heading}</h2>" in output
 for image in (

@@ -39,15 +39,6 @@ pin = re.search(r"web-components-library@([\d.]+)/dist/cdn\.js", template)
 assert pin, "TEMPLATE.html has no web-components-library cdn.js pin"
 
 body = r'''  </style>
-  <style>
-    /* Keep long-form text readable within the design-system content container. */
-    @media (min-width: 768px) {
-      .english-proficiency-content .umd-text-rich-advanced {
-        max-width: 800px;
-      }
-    }
-
-  </style>
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@@@PIN@@/dist/cdn.js"></script>
 @@CHROME:chrome-css@@
 @@CHROME:gate@@
@@ -76,10 +67,10 @@ body = r'''  </style>
     </div>
 
     <div class="umd-layout-space-horizontal-normal">
-      <div id="umd-shell-content" class="english-proficiency-content">
+      <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-text-rich-advanced">
-            <p>If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</p>
+            <h2 class="umd-sans-large text-black">If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</h2>
             <p>The Office of Undergraduate Admissions employs a holistic review process when considering all applicants and will consider all materials submitted in the application package to determine the level of English language proficiency.</p>
             <p>Please have an official report of your scores sent directly to the Office of Undergraduate Admissions by the <a href="https://admissions.umd.edu/apply/application-deadlines">appropriate deadline</a>. Submitted scores must be less than two years old.</p>
             <p>For the University of Maryland (UMD) to receive your scores, <strong>please use the reporting code 5814</strong>.</p>
