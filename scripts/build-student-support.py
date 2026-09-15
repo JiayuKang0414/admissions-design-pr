@@ -95,7 +95,7 @@ body = r'''  </style>
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-text-rich-advanced">
-            <h2 class="umd-sans-large text-black">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</h2>
+            <p class="umd-sans-large text-black">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</p>
           </div>
         </section>
 
@@ -244,6 +244,12 @@ for image in (
     assert image in output
 assert '../../pages/student-life/student-support.html" data-selected' in output
 assert "https://admissions.umd.edu/student/student-support" not in output
+# The page lede is a PARAGRAPH, not a heading. umd-sans-large gives it 18px/700
+# in place; wrapping a multi-sentence lede in <h2> puts a paragraph in the
+# document outline and makes screen-reader heading navigation announce the whole
+# thing. Matches tuition/frederick-douglass-scholarship.html.
+assert '<p class="umd-sans-large text-black">' in output
+assert '<h2 class="umd-sans-large' not in output
 assert '<html lang="en">' in output
 assert (
     f"web-components-library@{pin.group(1)}/dist/cdn.js" in output

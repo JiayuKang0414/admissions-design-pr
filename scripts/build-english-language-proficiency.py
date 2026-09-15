@@ -70,7 +70,7 @@ body = r'''  </style>
       <div id="umd-shell-content">
         <section class="umd-layout-space-vertical-interior">
           <div class="umd-text-rich-advanced">
-            <h2 class="umd-sans-large text-black">If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</h2>
+            <p class="umd-sans-large text-black">If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</p>
             <p>The Office of Undergraduate Admissions employs a holistic review process when considering all applicants and will consider all materials submitted in the application package to determine the level of English language proficiency.</p>
             <p>Please have an official report of your scores sent directly to the Office of Undergraduate Admissions by the <a href="https://admissions.umd.edu/apply/application-deadlines">appropriate deadline</a>. Submitted scores must be less than two years old.</p>
             <p>For the University of Maryland (UMD) to receive your scores, <strong>please use the reporting code 5814</strong>.</p>
@@ -266,6 +266,12 @@ assert "Students are notified within their admission decision letter" in resourc
 assert "mei-resource-" not in output
 assert "<table" not in output
 assert "rich-text-table.css" not in output
+# The page lede is a PARAGRAPH, not a heading. umd-sans-large gives it 18px/700
+# in place; wrapping a multi-sentence lede in <h2> puts a paragraph in the
+# document outline and makes screen-reader heading navigation announce the whole
+# thing. Matches tuition/frederick-douglass-scholarship.html.
+assert '<p class="umd-sans-large text-black">' in output
+assert '<h2 class="umd-sans-large' not in output
 assert '<html lang="en">' in output
 assert (
     f"web-components-library@{pin.group(1)}/dist/cdn.js" in output

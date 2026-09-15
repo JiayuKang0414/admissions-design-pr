@@ -412,17 +412,36 @@ over:
 | `headline-four-san-serif` | 24px | **level 2** `umd-sans-larger-bold` (22px) | nearest step; the most common case |
 | `headline-five-san-serif` | 20px | **level 2 or 3 — break the tie by role** | see below |
 | bare `<strong>` used as a label | 18px | **level 3** `umd-sans-large` (18px) | exact match — see below |
-| `.rich-text.intro` (the page lede) | 24px / **400** | **level 3** heading with `umd-sans-large text-black` inside `.umd-text-rich-advanced` | project migration treatment — see below |
+| `.rich-text.intro` (the page lede) | 24px / **400** | `<p class="umd-sans-large text-black">` inside `.umd-text-rich-advanced` | a paragraph, **not** a heading — see below |
 
 Chrome and section components need no class: `headline-one` becomes the hero's
 `slot="headline"`, `headline-two` is the Resources component's own heading, and
 `headline-five` inside that component is component-styled.
 
-**Migrate the source lede as a heading inside rich text.** Source
-`.rich-text.intro` copy becomes an `<h2 class="umd-sans-large text-black">`
-inside `.umd-text-rich-advanced`, preserving the full introduction before the
-body paragraphs. The 18px / 700 treatment is the project's migration choice.
-Use the appropriate heading level for the document outline.
+**Migrate the source lede as a PARAGRAPH inside rich text.** Source
+`.rich-text.intro` copy becomes a `<p class="umd-sans-large text-black">` inside
+`.umd-text-rich-advanced`, preserving the full introduction before the body
+paragraphs. The 18px / 700 treatment is the project's migration choice: the
+source lede is 24px / 400, and we compensate for the size with the bolding
+rather than carry a fourth type step or a custom class just for the lede.
+
+**It is not a heading.** An earlier pass shipped the lede as an `<h2>` on
+`student-life/student-support.html` and
+`how-to-apply/english-language-proficiency.html`, and it was wrong on both: a
+lede is a multi-sentence paragraph (392 characters on the latter), so wrapping
+it in a heading puts a paragraph in the document outline and makes
+screen-reader heading navigation announce the whole thing. On
+`student-support.html` it was also the only element in its section, giving a
+heading with nothing beneath it. Both were converted back to `<p>` on
+2026-09-15, and their builders now assert it.
+
+`tuition/frederick-douglass-scholarship.html` is the reference — it has used
+`<p class="umd-sans-large text-black">` since it shipped. `umd-sans-large`
+renders 18px / 700 / #000 on a `<p>` exactly as it would on a heading, so
+nothing about the visual treatment depends on the tag.
+
+A real heading still uses a heading tag and the three-step scale; that is a
+separate element from the lede.
 
 Do not recreate the old `.interior-lede` wrapper or its 800px width cap, and do
 not transfer that cap to the rest of the body copy. Layout B uses the design
