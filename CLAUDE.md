@@ -92,14 +92,20 @@ When shrinking oversized images (the `/optimize-images` skill or ad-hoc), only t
 
 ## Interior page layouts
 
-> **Three interior pages are not on `main` right now.**
-> `tuition/frederick-douglass-scholarship.html`,
+> **Two interior pages are not on `main` right now.**
 > `student-life/student-support.html` and
 > `how-to-apply/english-language-proficiency.html` were handed to another
 > author on 2026-09-14 and live on the **`interior-pages-handoff`** branch
 > pending their pull request. The rules below were derived from those pages and
 > still apply — the pages themselves are just elsewhere. `shared/header.html`
-> points the two nav entries back at the live site until they return.
+> points the Student Support & Safety nav entry back at the live site until it
+> returns.
+>
+> **`tuition/frederick-douglass-scholarship.html` came back to `main` on
+> 2026-09-15.** Its page link had been handed out while the pull request was
+> still open and the PR slipped, so the page ships from `main` rather than
+> waiting on it. The branch's copy is byte-identical, so that pull request
+> still merges without a conflict — do not re-remove the page when it lands.
 
 
 Every interior page (anything that is not a section landing page) uses **one of
@@ -130,7 +136,7 @@ Reference pages:
 
 | Layout | Reference |
 |---|---|
-| A — with left nav | `pages/tuition/frederick-douglass-scholarship.html` — **on `interior-pages-handoff`**, not `main` |
+| A — with left nav | [`pages/tuition/frederick-douglass-scholarship.html`](pages/tuition/frederick-douglass-scholarship.html) — recreates `https://admissions.umd.edu/tuition/frederick-douglass-scholarship` |
 | B — no left nav | [`pages/know-before-you-go.html`](pages/know-before-you-go.html) — recreates `https://admissions.umd.edu/page/know-before-you-go` |
 
 ### The shared hero — same on both layouts
@@ -482,7 +488,7 @@ five 18px `<strong>` labels were shipped at 32px.
 
 | Page | Source | Level |
 |---|---|---|
-| `tuition/frederick-douglass-scholarship.html` *(branch)* | `headline-four` ×2 | 2 |
+| `tuition/frederick-douglass-scholarship.html` | `headline-four` ×2 | 2 |
 | `know-before-you-go.html` | `headline-three` ×2, `headline-four` ×2 | 1, 2 |
 | `student-life/find-community.html` | `<strong>` ×5 | 3 (plus 2 of our own groupings at level 2) |
 | `student-life/student-support.html` *(branch)* | `headline-four` ×4 | 2 |
