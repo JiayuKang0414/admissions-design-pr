@@ -92,20 +92,14 @@ When shrinking oversized images (the `/optimize-images` skill or ad-hoc), only t
 
 ## Interior page layouts
 
-> **Two interior pages are not on `main` right now.**
-> `student-life/student-support.html` and
-> `how-to-apply/english-language-proficiency.html` were handed to another
-> author on 2026-09-14 and live on the **`interior-pages-handoff`** branch
-> pending their pull request. The rules below were derived from those pages and
-> still apply — the pages themselves are just elsewhere. `shared/header.html`
-> points the Student Support & Safety nav entry back at the live site until it
-> returns.
->
-> **`tuition/frederick-douglass-scholarship.html` came back to `main` on
-> 2026-09-15.** Its page link had been handed out while the pull request was
-> still open and the PR slipped, so the page ships from `main` rather than
-> waiting on it. The branch's copy is byte-identical, so that pull request
-> still merges without a conflict — do not re-remove the page when it lands.
+The four interior pages are present:
+`tuition/frederick-douglass-scholarship.html`,
+`student-life/student-support.html`,
+`how-to-apply/english-language-proficiency.html`, and
+`tuition/cost-of-attendance.html`. Frederick Douglass Scholarship retains the
+version restored to `main` on 2026-09-15. Student Support and English Language
+Proficiency return from the `interior-pages-handoff` workflow, and Cost of
+Attendance is added alongside them. Shared navigation links to all four pages.
 
 
 Every interior page (anything that is not a section landing page) uses **one of
@@ -418,51 +412,22 @@ over:
 | `headline-four-san-serif` | 24px | **level 2** `umd-sans-larger-bold` (22px) | nearest step; the most common case |
 | `headline-five-san-serif` | 20px | **level 2 or 3 — break the tie by role** | see below |
 | bare `<strong>` used as a label | 18px | **level 3** `umd-sans-large` (18px) | exact match — see below |
-| `.rich-text.intro` (the page lede) | 24px / **400** | **level 2** `umd-sans-larger-bold` on a bare `<p>` in `.interior-lede` | **not** `umd-element-section-intro` — see below |
+| `.rich-text.intro` (the page lede) | 24px / **400** | **level 3** heading with `umd-sans-large text-black` inside `.umd-text-rich-advanced` | project migration treatment — see below |
 
 Chrome and section components need no class: `headline-one` becomes the hero's
 `slot="headline"`, `headline-two` is the Resources component's own heading, and
 `headline-five` inside that component is component-styled.
 
-**The lede is a paragraph, not `umd-element-section-intro`.** The component
-centres its text in a ~992px block. That reads fine on a page where a
-full-width grid sits directly under it, and wrong on a text-led page where
-everything below the lede is left-aligned — the lede ends up the only centred
-thing on the page. All interior pages now use a left-aligned `<p>` in
-`.interior-lede` instead, capped at 800px — the width the source lede runs at.
+**Migrate the source lede as a heading inside rich text.** Source
+`.rich-text.intro` copy becomes an `<h2 class="umd-sans-large text-black">`
+inside `.umd-text-rich-advanced`, preserving the full introduction before the
+body paragraphs. The 18px / 700 treatment is the project's migration choice.
+Use the appropriate heading level for the document outline.
 
-**No accent line — it belongs to the component.** The red rule is
-`include-separator`, an *attribute of* `umd-element-section-intro`, not a
-free-standing decoration. Drop the component and the line goes with it.
-
-The first pass got this wrong: it reproduced the line as a hand-rolled
-`::before` on `.interior-lede` with the component's 2px × 64px geometry. That
-invents a design-system element in page CSS — it looks like the DS, isn't, and
-drifts the moment upstream changes `include-separator`. It also dragged along
-the 80px of top padding the component needs to clear the line, pushing the lede
-away from the copy it introduces.
-
-**General rule: don't reimplement a component's features in page CSS.** If a
-component's treatment is what you want, use the component. If the component
-doesn't fit — as here, where centred text is wrong on a text-led page — you give
-up its features too. That trade is the decision; papering over half of it with
-hand-rolled CSS is not.
-
-**The lede owns its own bottom spacing — 24px**, which is the gap the source
-runs between its intro and the block below. Its `<section>` therefore carries
-**no** `umd-layout-space-vertical-interior`: that class's 80px strands the lede
-from the copy it belongs to. This is the one interior `<section>` with no
-vertical-spacing class, and that is deliberate.
-
-Two things to get right:
-
-- **The `<p>` must sit outside `.umd-text-rich-advanced`.** `umd-sans-larger-bold`
-  is 22px and would collapse to 18px inside that wrapper (RULES §18), silently
-  undoing the treatment. `.interior-lede` is a bare `<div>` for this reason.
-- **The source lede is weight 400, not 700.** Measured 24px / 400 / left, in an
-  800px column, identically on all three source pages. We ship it bold at
-  `umd-sans-larger-bold` as a deliberate project choice. `umd-sans-larger`
-  (22px / 400) is the exact-weight match if that ever needs revisiting.
+Do not recreate the old `.interior-lede` wrapper or its 800px width cap, and do
+not transfer that cap to the rest of the body copy. Layout B uses the design
+system's built-in rich-text measure; Layout A keeps the `max-w-[800px]` utility
+on its content column. Do not add a separate accent line or page-scoped lede CSS.
 
 **`headline-five` is the one ambiguous row.** At 20px it sits exactly 2px from
 level 2 (22px) and 2px from level 3 (18px), so size cannot break the tie. Break
@@ -491,7 +456,7 @@ five 18px `<strong>` labels were shipped at 32px.
 | `tuition/frederick-douglass-scholarship.html` | `headline-four` ×2 | 2 |
 | `know-before-you-go.html` | `headline-three` ×2, `headline-four` ×2 | 1, 2 |
 | `student-life/find-community.html` | `<strong>` ×5 | 3 (plus 2 of our own groupings at level 2) |
-| `student-life/student-support.html` *(branch)* | `headline-four` ×4 | 2 |
+| `student-life/student-support.html` | `headline-four` ×4 | 2 |
 
 `know-before-you-go.html` is the reference: it is the only source page carrying
 both `headline-three` and `headline-four`, so it is the one page that

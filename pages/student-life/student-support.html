@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Admission Representatives — Undergraduate Admissions | University of Maryland</title>
+  <title>Student Support & Safety — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -818,172 +818,35 @@
       text-decoration: none;
     }
   </style>
-
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
-
-  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
-       NOT appended to the inlined critical.css above. tools/inline-critical.py
-       rewrites the FIRST style block in a file and leaves later ones alone, so
-       page CSS sitting inside that block is (a) invisible to --check, which
-       then reports the page as permanently stale, and (b) DELETED the moment
-       the tool is run over pages/. Cascade order is unchanged: critical <
-       page CSS < chrome CSS, exactly as when this sat at the tail of the
-       critical block. (No literal style tag in this comment on purpose -- the
-       repo's tooling finds these blocks by regex.) -->
   <style>
-    /* ============================================================
-       26. ADMISSION REPRESENTATIVES — intro lockup + rep pages
-       ============================================================ */
-
-    /* --- intro lockup with brand chevron (landing page) --------
-       Same treatment as how-to-apply/index.html and tuition/index.html:
-       rule, uppercase eyebrow, rich text, with the brand animation
-       riding behind it and overlapping ~180px up into the hero.
-       The animation hardcodes its inner container to width:100vw /
-       height:50vw and anchors chevrons to right:0, so the host must
-       span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
-      position: relative;
-      overflow: visible;
-      z-index: 100;
+    @media (min-width: 768px) {
+      .student-support-media .student-support-safety-image {
+        object-position: center 10%;
+      }
     }
 
-    .reps-intro-content {
-      position: relative;
-      z-index: 2;
+    .student-support-media {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
     }
 
-    .reps-chevron {
-      position: absolute;
-      top: -180px;
-      left: 0;
-      right: 0;
-      bottom: -80px;
-      pointer-events: none;
-      z-index: 1;
-      overflow: visible;
-    }
-
-    .reps-chevron > umd-element-brand-logo-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+    .student-support-media img {
       display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
+    .student-support-copy > h2 {
+      margin-bottom: 16px;
     }
 
-    /* --- rep grid ----------------------------------------------
-       No grid CSS of its own. The cards are the documented border-grid
-       pattern exactly as LAYOUT-PATTERNS.md describes it:
-       umd-layout-grid-border-four + class="umd-shell-person-grid-helper"
-       on every umd-element-person host (that class is the container-query
-       target -- without it the 24/32/48px cell padding never applies).
-       Partial rows are handled by critical.css §19's :not(:has(...)) rules,
-       so 24 reps in a 4-up grid needs no filler markup.
-
-       The one thing added: the grid's own left/right border is drawn by
-       layout.min.css against the cell edge, and a headshot sitting flush
-       in a 24px cell reads as unaligned next to a name that wraps to two
-       lines. umd-layout-grid-child-fill-height equalises the cells so the
-       job-title baselines line up across a row. */
-
-    /* --- search page: filter form ------------------------------
-       The CMS person-index template (omc.umd.edu/people) is built almost
-       entirely from design-system classes that ARE in our bundles:
-       umd-layout-background-highlight-light (grey panel + red left rule),
-       umd-layout-grid-gap-stacked / -two, umd-layout-grid-inline-stretch,
-       umd-text-line-trailing-light, umd-field-select-wrapper, umd-field-input,
-       umd-action-outline, umd-skip-content, sr-only.
-
-       What is NOT in our bundles, and is therefore reproduced below:
-         - the `umd-shell-*` classes (shellcraft site CSS, not the DS)
-         - the Tailwind utilities the template leans on for the search row
-           (flex, gap-min, items-center, aspect-square, bg-red, h-[44px])
-       Measured against the loaded bundles, not assumed. The rules below are
-       the "minimal lift" from briefs/experts-filter.md, which documents this
-       same search bar on the experts page. */
-    .reps-search-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
+    .student-support-title-rule {
+      margin-bottom: 24px;
     }
-    .reps-search-row input { flex: 1; }
-    /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
-      flex: none;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--umd-color-red, #e21833);
-      border: 0;
-      cursor: pointer;
-      transition: background-color .5s;
-    }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
 
-    /* Gap between the results grid and whatever follows it.
-
-       The DS vertical rhythm classes are margin-BOTTOM only -- measured,
-       umd-layout-vertical-landing is `margin-bottom: 120px; margin-top: 0`
-       (the same thing CLAUDE.md notes about -child, and it holds for the
-       parent class too). The grid's own wrapper is a bare
-       umd-layout-space-horizontal-larger with no vertical class, so nothing
-       separated it from the next block and both the Load More button and the
-       trailing copy sat flush against the last row of cards.
-
-       Putting the space on the WRAPPER rather than on either follower is what
-       makes it hold in both states: Load More is display:none when every match
-       is already shown, so a margin on that section would vanish with it and
-       the copy would jump back up against the grid the moment a filter
-       narrowed the results. Followers have margin-top: 0, so there is no
-       collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
-
-    /* Results count + empty state. The template's .umd-shell-pagination-results
-       is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
-      font-size: 14px;
-      color: var(--umd-color-gray-dark, #757575);
-      margin-top: 24px;
-    }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
-    /* JS hides this when every match is already on screen; without JS the
-       whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
-
-    /* --- territory list (bio pages) ----------------------------
-       The territories are a plain list, but a rep can cover nine of them
-       (Abigail Trice) or none at all, so a single column runs long and a
-       fixed multi-column grid leaves a ragged hole. Columns that fill on
-       width keep both ends honest. */
-    .rep-regions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px 32px;
-    }
-    @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
-    }
-    .rep-regions-list li {
-      border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
-      padding-top: 12px;
-    }
   </style>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1306,7 +1169,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:gate:END -->
 </head>
 <body>
-
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1443,10 +1305,10 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/academics/limited-enrollment-programs"><span>Limited Enrollment Programs</span></a>
         <a href="https://ugst.umd.edu/llsop/index.html"><span>Living-Learning &amp; Special Programs</span></a>
       </div>
-      <div data-parent-ref="student-life">
+      <div data-parent-ref="student-life" data-active>
         <a href="../../pages/student-life/"><span>Overview</span></a>
         <a href="https://admissions.umd.edu/student/housing-and-dining"><span>Housing &amp; Dining</span></a>
-        <a href="../../pages/student-life/student-support.html"><span>Student Support &amp; Safety</span></a>
+        <a href="../../pages/student-life/student-support.html" data-selected><span>Student Support &amp; Safety</span></a>
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
@@ -1474,191 +1336,125 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 3. HERO — small background, centred text (matches how-to-apply/index.html
-       and personas/prospective-students.html; the section landings that lead
-       with a directory rather than a pathway stack use the centred variant). -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-hero data-layout-height="small" data-layout-text="center">
-      <img slot="image" src="../../images/admission-representatives/representatives-hero.jpg" alt="University of Maryland students walking together on campus" />
-      <h1 slot="headline">Admission Representatives</h1>
-      <div slot="text"><p>Our admission counselors are traveling the globe to find the next class of fearless Terps!</p></div>
-    </umd-element-hero>
-  </section>
+  <main id="main-content">
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <p slot="eyebrow">Student Life</p>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+        <h1 slot="headline">Student Support &amp; Safety</h1>
+      </umd-element-hero-minimal>
+    </section>
 
-  <!-- 4. WE'RE HERE FOR YOU — the project's eyebrow lockup + brand chevron,
-       same treatment as how-to-apply/index.html § "Get to Know Our Process".
-       The source page's instruction to click a photo is rewritten to point at
-       the profile pages, since this recreation has no modals. -->
-  <section class="umd-layout-vertical-landing reps-intro-section">
-    <div class="reps-chevron" aria-hidden="true">
-      <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
-    </div>
-    <div class="umd-layout-space-horizontal-small reps-intro-content">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">We're Here for You</p>
-      <div class="umd-text-rich-advanced">
-        <p>Your admission representative can answer your questions, offer advice and guide you through the admission process. We understand selecting a college is a big decision, but it doesn&rsquo;t have to be a stressful one. <strong>Learn more about each of our reps, and the territories they cover, on their profile pages.</strong></p>
-        <p>To get in touch with your admission representative, simply email <a href="mailto:ApplyMaryland@umd.edu">ApplyMaryland@umd.edu</a> and include your city and state in the subject line (for example, &ldquo;Student Inquiry from College Park, Maryland&rdquo;).</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. THE REPS — DS border grid, 4-up. Every host carries
-       umd-shell-person-grid-helper (critical.css §19 container-query target);
-       24 reps, 6 of them linked to a profile page. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <!-- include-separator draws the DS's red vertical accent above the
-           headline (and adds the top padding it needs). Boolean attribute --
-           presence enables it, so it takes no value. -->
-      <umd-element-section-intro include-separator class="umd-layout-vertical-landing-child">
-        <h2 slot="headline">Meet the Office of Undergraduate Admissions</h2>
-      </umd-element-section-intro>
-      <div class="umd-layout-grid-border-four">
-
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/abigail-trice.jpg" alt="Portrait of Abigail Trice, Senior Coordinator of Admissions and Rural Recruitment" loading="lazy" />
-          <a href="abigail-trice.html" slot="name"><span>Abigail Trice</span></a>
-          <p slot="job-title">Senior Coordinator of Admissions and Rural Recruitment</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/albert-clarke.jpg" alt="Portrait of Albert Clarke, Senior Coordinator of Admissions &amp; Diversity Initiatives" loading="lazy" />
-          <p slot="name">Albert Clarke</p>
-          <p slot="job-title">Senior Coordinator of Admissions &amp; Diversity Initiatives</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/amanda-hudson.jpg" alt="Portrait of Amanda Hudson, Northeast Regional Coordinator" loading="lazy" />
-          <p slot="name">Amanda Hudson</p>
-          <p slot="job-title">Northeast Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/brandon-moten.jpg" alt="Portrait of Brandon Moten, Coordinator of Recruitment at Shady Grove" loading="lazy" />
-          <p slot="name">Brandon Moten</p>
-          <p slot="job-title">Coordinator of Recruitment at Shady Grove</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/colin-crow.jpg" alt="Portrait of Colin Crow, Admission Counselor" loading="lazy" />
-          <p slot="name">Colin Crow</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/courtney-milton.jpg" alt="Portrait of Courtney Milton, Associate Director of Admissions &amp; Diversity Initiatives" loading="lazy" />
-          <p slot="name">Courtney Milton</p>
-          <p slot="job-title">Associate Director of Admissions &amp; Diversity Initiatives</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/dominique-tucker.jpg" alt="Portrait of Dominique Tucker, Senior Coordinator of Student Transition" loading="lazy" />
-          <p slot="name">Dominique Tucker</p>
-          <p slot="job-title">Senior Coordinator of Student Transition</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/ebony-freeman.jpg" alt="Portrait of Ebony Freeman, West Coast Regional Coordinator" loading="lazy" />
-          <a href="ebony-freeman.html" slot="name"><span>Ebony Freeman</span></a>
-          <p slot="job-title">West Coast Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/james-b-massey-jr.jpg" alt="Portrait of James B. Massey, Jr., Director of Undergraduate Admissions" loading="lazy" />
-          <a href="james-b-massey-jr.html" slot="name"><span>James B. Massey, Jr.</span></a>
-          <p slot="job-title">Director of Undergraduate Admissions</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/javier-mena.jpg" alt="Portrait of Javier Mena, Assistant Director of Regional Recruitment &amp; Alumni Relations" loading="lazy" />
-          <p slot="name">Javier Mena</p>
-          <p slot="job-title">Assistant Director of Regional Recruitment &amp; Alumni Relations</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/karen-pryor.jpg" alt="Portrait of Karen Pryor, Sr. Associate Director of Recruitment and Strategic Planning" loading="lazy" />
-          <p slot="name">Karen Pryor</p>
-          <p slot="job-title">Sr. Associate Director of Recruitment and Strategic Planning</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/karina-reid.jpg" alt="Portrait of Karina Reid, Assistant Director for Transfer Admission" loading="lazy" />
-          <p slot="name">Karina Reid</p>
-          <p slot="job-title">Assistant Director for Transfer Admission</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/katya-kuzemka.jpg" alt="Portrait of Katya Kuzemka, Admission Counselor" loading="lazy" />
-          <p slot="name">Katya Kuzemka</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/kegan-duncan.jpg" alt="Portrait of Kegan Duncan, Southwest Regional Coordinator" loading="lazy" />
-          <p slot="name">Kegan Duncan</p>
-          <p slot="job-title">Southwest Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/maggie-much.jpg" alt="Portrait of Maggie Much, Senior Coordinator of Admissions" loading="lazy" />
-          <p slot="name">Maggie Much</p>
-          <p slot="job-title">Senior Coordinator of Admissions</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/matt-leichman.jpg" alt="Portrait of Matt Leichman, Admission Counselor" loading="lazy" />
-          <p slot="name">Matt Leichman</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/matt-tick.jpg" alt="Portrait of Matt Tick, Admission Counselor" loading="lazy" />
-          <p slot="name">Matt Tick</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/mike-nixon.jpg" alt="Portrait of Mike Nixon, Senior Associate Director of Undergraduate Admissions" loading="lazy" />
-          <p slot="name">Mike Nixon</p>
-          <p slot="job-title">Senior Associate Director of Undergraduate Admissions</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/nico-magpantay.jpg" alt="Portrait of Nico Magpantay, Admission Counselor" loading="lazy" />
-          <a href="nico-magpantay.html" slot="name"><span>Nico Magpantay</span></a>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/olander-fleming.jpg" alt="Portrait of Olander Fleming, Southeast Regional Coordinator" loading="lazy" />
-          <p slot="name">Olander Fleming</p>
-          <p slot="job-title">Southeast Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/raquel-sobczak.jpg" alt="Portrait of Raquel Sobczak, Admission Counselor" loading="lazy" />
-          <p slot="name">Raquel Sobczak</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/seth-johnson.jpg" alt="Portrait of Seth Johnson, Admission Counselor" loading="lazy" />
-          <p slot="name">Seth Johnson</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/sofia-cisneros.jpg" alt="Portrait of Sofia Cisneros, Admission Counselor" loading="lazy" />
-          <a href="sofia-cisneros.html" slot="name"><span>Sofia Cisneros</span></a>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/taylor-duvall.jpg" alt="Portrait of Taylor Duvall, Coordinator of Scholarships &amp; Special Programs; Liaison for Military Connected and Veteran Students" loading="lazy" />
-          <a href="taylor-duvall.html" slot="name"><span>Taylor Duvall</span></a>
-          <p slot="job-title">Coordinator of Scholarships &amp; Special Programs; Liaison for Military Connected and Veteran Students</p>
-        </umd-element-person>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. JOIN THE MAILING LIST — banner promo -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <umd-element-banner-promo>
-        <p slot="eyebrow">Join the Mailing List</p>
-        <h2 slot="headline">Stay in touch with UMD</h2>
-        <p slot="text">Complete a brief form to be added to UMD's mailing list. We'll send you emails about upcoming events, deadlines and helpful information about applying to UMD.</p>
-        <div slot="actions" class="banner-promo-actions">
-          <umd-element-call-to-action data-display="primary">
-            <a href="https://admissions.umd.edu/connect/join-mailing-list">Sign Up Now</a>
-          </umd-element-call-to-action>
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
+        <div slot="paths">
+          <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
+          <a href="../../pages/student-life/"><span>Student Life</span></a>
+          <p aria-label="Current Page"><span>Student Support &amp; Safety</span></p>
         </div>
-      </umd-element-banner-promo>
+      </umd-element-breadcrumb>
     </div>
-  </section>
 
-  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
-  <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
+    <div class="umd-layout-space-horizontal-normal">
+      <div id="umd-shell-content">
+        <section class="umd-layout-space-vertical-interior">
+          <div class="umd-text-rich-advanced">
+            <h2 class="umd-sans-large text-black">Safety is the shared responsibility of each campus community member. We know that students thrive in a community they feel safe and supported in and continue to work toward a safer and more secure community.</h2>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <div class="umd-layout-grid-gap-two">
+            <div class="umd-text-rich-advanced">
+              <figure class="umd-layout-alignment-block-stacked student-support-media">
+                <img src="../../images/student-life/student-support-academics.jpg" alt="Students sitting around a table in an engineering lab." />
+              </figure>
+            </div>
+            <div class="student-support-copy">
+              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">Academics</h2>
+              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>
+              <div class="umd-text-rich-advanced">
+                <ul>
+                  <li>Tutoring services</li>
+                  <li><a href="https://careers.umd.edu/" target="_blank" rel="noopener noreferrer">Career Center</a> - Whether you’re looking to gain experience through an internship, fine tune your resume, practice your interviewing skills or evaluate a job offer, the Career Center has you covered. You’ll receive support at every stage of your career development and will be prepared to pursue a meaningful career path through high-quality services, resources and instruction.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <div class="umd-layout-grid-gap-two">
+            <div class="student-support-copy">
+              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">Wellness</h2>
+              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>
+              <div class="umd-text-rich-advanced">
+                <ul>
+                  <li><a href="https://health.umd.edu/prospective-students" target="_blank" rel="noopener noreferrer">University Health Center</a> - Provides high-quality, cost-effective health care and wellness programs in order to promote the health of the university community and support academic success.</li>
+                  <li><a href="https://www.counseling.umd.edu/aboutus/" target="_blank" rel="noopener noreferrer">Counseling Center</a> - Provides comprehensive support services that promote the personal, social and academic success of UMD students.</li>
+                  <li><a href="https://recwell.umd.edu/" target="_blank" rel="noopener noreferrer">Recreation &amp; Wellness</a> - Creates a culture of wellness where all members of the university community thrive. Recreation is for everyone and there is something for everyone at RecWell.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="umd-text-rich-advanced">
+              <figure class="umd-layout-alignment-block-stacked student-support-media">
+                <img src="../../images/student-life/student-support-wellness.jpg" alt="Front door to the health center." />
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <div class="umd-layout-grid-gap-two">
+            <div class="umd-text-rich-advanced">
+              <figure class="umd-layout-alignment-block-stacked student-support-media">
+                <img class="student-support-safety-image" src="../../images/student-life/safety@2x.jpg" alt="Safety" />
+              </figure>
+            </div>
+            <div class="student-support-copy">
+              <h2 class="umd-layout-space-vertical-headline-large text-black umd-sans-larger-bold">Safety</h2>
+              <div class="umd-text-rich-advanced student-support-title-rule"><hr></div>
+              <div class="umd-text-rich-advanced">
+                <p>Call University Police at 911 or (301) 405-3555. If you ever see a situation involving fighting between partners or groups, threatening actions or statements, screams, suspicious persons or behavior, weapons, etc., do not hesitate to call police immediately. Then, call your Service Desk or CA.</p>
+                <ul>
+                  <li>Blue Light Program</li>
+                  <li>Police Escorts</li>
+                  <li>Opt-in Safety Alerts</li>
+                  <li>UID Only Accessibility</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Transportation &amp; Parking</h2>
+          <div class="umd-text-rich-advanced">
+            <p>Whether you live on campus or off, the Department of Transportation Services makes it easy to get around. Shuttle-UM buses operate several campus-based routes and serve a six-mile radius beyond, taking students to Metro station, shops, restaurants and more than two dozen apartment communities. All you need to ride Shuttle-UM is your student ID. It’s also a snap to travel to Washington, D.C., Baltimore and local airports by using Metrorail and MARC trains.</p>
+            <p>If you’re living off campus, permits for campus parking are available for purchase from the Department of Transportation Services.</p>
+            <ul>
+              <li><a href="https://transportation.umd.edu/shuttle-um" target="_blank" rel="noopener noreferrer">Shuttle-UM</a> - DOTS provides routes that circulate around campus, commuter routes to neighboring communities and Park &amp; Ride routes that can be tracked on the Transit app. Students can also use the NITE Ride evening service to get around campus when shuttle routes are not operating.</li>
+              <li><a href="https://transportation.umd.edu/bikeumd-escooters" target="_blank" rel="noopener noreferrer">BikeUMD</a> - Students can bring their own bike to campus or rent one from the RecWell Bike Shop. Community members can also utilize the shared mobility system provided by VEO in partnership with the City of College Park and University Park.</li>
+              <li><a href="https://transportation.umd.edu/sustainable-transportation/local-regional-transit" target="_blank" rel="noopener noreferrer">Local &amp; Regional Transit</a> - College Park connects to many local and regional transit options that make many destinations easily accessible. It’s also a snap to travel to Washington, D.C., Baltimore and local airports by using <a href="https://www.wmata.com/service/rail/" target="_blank" rel="noopener noreferrer">Metrorail</a> and <a href="https://mta.maryland.gov/marc-train" target="_blank" rel="noopener noreferrer">MARC</a> trains.</li>
+              <li><a href="https://transportation.umd.edu/parking" target="_blank" rel="noopener noreferrer">Parking</a> - Flexible parking permit options are available for each individual working, living and learning situation. If you are going to have a car on campus, you will need a parking permit. Permits can be purchased on the Department of Transportation Services website.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <umd-element-banner-promo>
+            <h2 slot="headline">There is a lot more to learn about UMD</h2>
+            <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the Mailing List</a> or <a href="https://admissions.umd.edu/connect">Connect</a>!</p>
+            <div slot="actions" class="banner-promo-actions">
+              <umd-element-call-to-action data-display="primary">
+                <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the List</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-banner-promo>
+        </section>
+      </div>
+    </div>
+  </main>
 
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
@@ -1725,6 +1521,16 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-footer>
   <!-- SHARED:footer:END -->
 
+  <script>
+    customElements.whenDefined('umd-element-banner-promo').then(() => {
+      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
+        const style = document.createElement('style');
+        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
+        el.shadowRoot && el.shadowRoot.appendChild(style);
+      });
+    });
+  </script>
+
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
   <!-- ============================================================
        SHARED CHROME — shadow injections
@@ -1764,36 +1570,5 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     })();
   </script>
   <!-- SHARED:chrome-scripts:END -->
-
-  <!-- Person-card link affordance — page-content-driven (OVERRIDES.md).
-       umd-element-person styles a linked and an unlinked name the same; this
-       gives the linked ones an underline on hover/focus so the card reads as
-       actionable. Scoped to `a.person-name`, so it is inert on the cards whose
-       rep has no profile page yet.
-
-       Exposed as a re-runnable function, not a one-shot pass: the search page
-       builds fresh cards on every filter, and those need the injection too. The
-       per-element flag keeps repeat calls from stacking <style> nodes. -->
-  <script>
-    window.umdInjectPersonLinkCss = function () {
-      document.querySelectorAll('umd-element-person').forEach(el => {
-        if (!el.shadowRoot || el.dataset.personLinkCssDone) return;
-        const style = document.createElement('style');
-        style.textContent =
-          'a.person-name{text-decoration:none}' +
-          'a.person-name:hover,a.person-name:focus-visible' +
-          '{text-decoration:underline;text-underline-offset:3px;' +
-          'text-decoration-thickness:2px;color:var(--umd-color-red,#e21833)}';
-        el.shadowRoot.appendChild(style);
-        el.dataset.personLinkCssDone = '1';
-      });
-    };
-    customElements.whenDefined('umd-element-person')
-      .then(() => window.umdInjectPersonLinkCss());
-  </script>
-
-  <!-- Canonical grid-entry animations (page-builder/CLAUDE.md: never inline). -->
-  <script src="../../page-builder/scripts/grid-animations.js"></script>
-
 </body>
 </html>

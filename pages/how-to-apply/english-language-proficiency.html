@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Admission Representatives — Undergraduate Admissions | University of Maryland</title>
+  <title>English Language Proficiency — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -818,172 +818,7 @@
       text-decoration: none;
     }
   </style>
-
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
-
-  <!-- Page CSS gets its OWN style block, after cdn.js -- it is deliberately
-       NOT appended to the inlined critical.css above. tools/inline-critical.py
-       rewrites the FIRST style block in a file and leaves later ones alone, so
-       page CSS sitting inside that block is (a) invisible to --check, which
-       then reports the page as permanently stale, and (b) DELETED the moment
-       the tool is run over pages/. Cascade order is unchanged: critical <
-       page CSS < chrome CSS, exactly as when this sat at the tail of the
-       critical block. (No literal style tag in this comment on purpose -- the
-       repo's tooling finds these blocks by regex.) -->
-  <style>
-    /* ============================================================
-       26. ADMISSION REPRESENTATIVES — intro lockup + rep pages
-       ============================================================ */
-
-    /* --- intro lockup with brand chevron (landing page) --------
-       Same treatment as how-to-apply/index.html and tuition/index.html:
-       rule, uppercase eyebrow, rich text, with the brand animation
-       riding behind it and overlapping ~180px up into the hero.
-       The animation hardcodes its inner container to width:100vw /
-       height:50vw and anchors chevrons to right:0, so the host must
-       span full width -- sizing or clipping it does not work. */
-    .reps-intro-section {
-      position: relative;
-      overflow: visible;
-      z-index: 100;
-    }
-
-    .reps-intro-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .reps-chevron {
-      position: absolute;
-      top: -180px;
-      left: 0;
-      right: 0;
-      bottom: -80px;
-      pointer-events: none;
-      z-index: 1;
-      overflow: visible;
-    }
-
-    .reps-chevron > umd-element-brand-logo-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: block;
-    }
-
-    @media (max-width: 1023px) {
-      .reps-chevron { display: none; }
-    }
-
-    /* --- rep grid ----------------------------------------------
-       No grid CSS of its own. The cards are the documented border-grid
-       pattern exactly as LAYOUT-PATTERNS.md describes it:
-       umd-layout-grid-border-four + class="umd-shell-person-grid-helper"
-       on every umd-element-person host (that class is the container-query
-       target -- without it the 24/32/48px cell padding never applies).
-       Partial rows are handled by critical.css §19's :not(:has(...)) rules,
-       so 24 reps in a 4-up grid needs no filler markup.
-
-       The one thing added: the grid's own left/right border is drawn by
-       layout.min.css against the cell edge, and a headshot sitting flush
-       in a 24px cell reads as unaligned next to a name that wraps to two
-       lines. umd-layout-grid-child-fill-height equalises the cells so the
-       job-title baselines line up across a row. */
-
-    /* --- search page: filter form ------------------------------
-       The CMS person-index template (omc.umd.edu/people) is built almost
-       entirely from design-system classes that ARE in our bundles:
-       umd-layout-background-highlight-light (grey panel + red left rule),
-       umd-layout-grid-gap-stacked / -two, umd-layout-grid-inline-stretch,
-       umd-text-line-trailing-light, umd-field-select-wrapper, umd-field-input,
-       umd-action-outline, umd-skip-content, sr-only.
-
-       What is NOT in our bundles, and is therefore reproduced below:
-         - the `umd-shell-*` classes (shellcraft site CSS, not the DS)
-         - the Tailwind utilities the template leans on for the search row
-           (flex, gap-min, items-center, aspect-square, bg-red, h-[44px])
-       Measured against the loaded bundles, not assumed. The rules below are
-       the "minimal lift" from briefs/experts-filter.md, which documents this
-       same search bar on the experts page. */
-    .reps-search-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .reps-search-row input { flex: 1; }
-    /* 44x44 red submit, matching the template's Tailwind box exactly. */
-    .reps-search-submit {
-      flex: none;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--umd-color-red, #e21833);
-      border: 0;
-      cursor: pointer;
-      transition: background-color .5s;
-    }
-    .reps-search-submit:hover,
-    .reps-search-submit:focus-visible { background: #a90007; }
-    .reps-search-submit svg { width: 20px; height: 20px; fill: #fff; }
-
-    /* Gap between the results grid and whatever follows it.
-
-       The DS vertical rhythm classes are margin-BOTTOM only -- measured,
-       umd-layout-vertical-landing is `margin-bottom: 120px; margin-top: 0`
-       (the same thing CLAUDE.md notes about -child, and it holds for the
-       parent class too). The grid's own wrapper is a bare
-       umd-layout-space-horizontal-larger with no vertical class, so nothing
-       separated it from the next block and both the Load More button and the
-       trailing copy sat flush against the last row of cards.
-
-       Putting the space on the WRAPPER rather than on either follower is what
-       makes it hold in both states: Load More is display:none when every match
-       is already shown, so a margin on that section would vanish with it and
-       the copy would jump back up against the grid the moment a filter
-       narrowed the results. Followers have margin-top: 0, so there is no
-       collapsing to reason about -- the gap is exactly this value. */
-    .reps-results-wrap { margin-bottom: 80px; }
-
-    /* Results count + empty state. The template's .umd-shell-pagination-results
-       is site CSS, not DS, so the type is set here. */
-    .reps-results-status {
-      font-size: 14px;
-      color: var(--umd-color-gray-dark, #757575);
-      margin-top: 24px;
-    }
-    .reps-empty { padding: 48px 0; text-align: center; }
-    .reps-load-more { display: flex; justify-content: center; }
-    /* JS hides this when every match is already on screen; without JS the
-       whole set is rendered, so the button has nothing to do and stays gone. */
-    .reps-load-more[hidden] { display: none; }
-
-    /* --- territory list (bio pages) ----------------------------
-       The territories are a plain list, but a rep can cover nine of them
-       (Abigail Trice) or none at all, so a single column runs long and a
-       fixed multi-column grid leaves a ragged hole. Columns that fill on
-       width keep both ends honest. */
-    .rep-regions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px 32px;
-    }
-    @media (min-width: 650px) {
-      .rep-regions-list { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .rep-regions-list { grid-template-columns: repeat(3, 1fr); }
-    }
-    .rep-regions-list li {
-      border-top: 1px solid var(--umd-color-gray-light, #e6e6e6);
-      padding-top: 12px;
-    }
-  </style>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1306,7 +1141,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:gate:END -->
 </head>
 <body>
-
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1450,12 +1284,12 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
-      <div data-parent-ref="how-to-apply">
+      <div data-parent-ref="how-to-apply" data-active>
         <a href="../../pages/how-to-apply/"><span>Overview</span></a>
         <a href="../../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
         <a href="../../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
         <a href="../../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
-        <a href="../../pages/how-to-apply/english-language-proficiency.html"><span>English Language Proficiency</span></a>
+        <a href="../../pages/how-to-apply/english-language-proficiency.html" data-selected><span>English Language Proficiency</span></a>
         <a href="https://admissions.umd.edu/apply/shady-grove-applicants"><span>Shady Grove Applicants</span></a>
         <a href="https://admissions.umd.edu/apply/application-deadlines"><span>Application Deadlines</span></a>
         <a href="https://admissions.umd.edu/apply/admission-review-process-factors"><span>Admission Review Process &amp; Factors</span></a>
@@ -1474,191 +1308,160 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 3. HERO — small background, centred text (matches how-to-apply/index.html
-       and personas/prospective-students.html; the section landings that lead
-       with a directory rather than a pathway stack use the centred variant). -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-hero data-layout-height="small" data-layout-text="center">
-      <img slot="image" src="../../images/admission-representatives/representatives-hero.jpg" alt="University of Maryland students walking together on campus" />
-      <h1 slot="headline">Admission Representatives</h1>
-      <div slot="text"><p>Our admission counselors are traveling the globe to find the next class of fearless Terps!</p></div>
-    </umd-element-hero>
-  </section>
+  <main id="main-content">
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <p slot="eyebrow">International Applicants</p>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+        <h1 slot="headline">English Language Proficiency</h1>
+      </umd-element-hero-minimal>
+    </section>
 
-  <!-- 4. WE'RE HERE FOR YOU — the project's eyebrow lockup + brand chevron,
-       same treatment as how-to-apply/index.html § "Get to Know Our Process".
-       The source page's instruction to click a photo is rewritten to point at
-       the profile pages, since this recreation has no modals. -->
-  <section class="umd-layout-vertical-landing reps-intro-section">
-    <div class="reps-chevron" aria-hidden="true">
-      <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
-    </div>
-    <div class="umd-layout-space-horizontal-small reps-intro-content">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">We're Here for You</p>
-      <div class="umd-text-rich-advanced">
-        <p>Your admission representative can answer your questions, offer advice and guide you through the admission process. We understand selecting a college is a big decision, but it doesn&rsquo;t have to be a stressful one. <strong>Learn more about each of our reps, and the territories they cover, on their profile pages.</strong></p>
-        <p>To get in touch with your admission representative, simply email <a href="mailto:ApplyMaryland@umd.edu">ApplyMaryland@umd.edu</a> and include your city and state in the subject line (for example, &ldquo;Student Inquiry from College Park, Maryland&rdquo;).</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. THE REPS — DS border grid, 4-up. Every host carries
-       umd-shell-person-grid-helper (critical.css §19 container-query target);
-       24 reps, 6 of them linked to a profile page. -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <!-- include-separator draws the DS's red vertical accent above the
-           headline (and adds the top padding it needs). Boolean attribute --
-           presence enables it, so it takes no value. -->
-      <umd-element-section-intro include-separator class="umd-layout-vertical-landing-child">
-        <h2 slot="headline">Meet the Office of Undergraduate Admissions</h2>
-      </umd-element-section-intro>
-      <div class="umd-layout-grid-border-four">
-
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/abigail-trice.jpg" alt="Portrait of Abigail Trice, Senior Coordinator of Admissions and Rural Recruitment" loading="lazy" />
-          <a href="abigail-trice.html" slot="name"><span>Abigail Trice</span></a>
-          <p slot="job-title">Senior Coordinator of Admissions and Rural Recruitment</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/albert-clarke.jpg" alt="Portrait of Albert Clarke, Senior Coordinator of Admissions &amp; Diversity Initiatives" loading="lazy" />
-          <p slot="name">Albert Clarke</p>
-          <p slot="job-title">Senior Coordinator of Admissions &amp; Diversity Initiatives</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/amanda-hudson.jpg" alt="Portrait of Amanda Hudson, Northeast Regional Coordinator" loading="lazy" />
-          <p slot="name">Amanda Hudson</p>
-          <p slot="job-title">Northeast Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/brandon-moten.jpg" alt="Portrait of Brandon Moten, Coordinator of Recruitment at Shady Grove" loading="lazy" />
-          <p slot="name">Brandon Moten</p>
-          <p slot="job-title">Coordinator of Recruitment at Shady Grove</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/colin-crow.jpg" alt="Portrait of Colin Crow, Admission Counselor" loading="lazy" />
-          <p slot="name">Colin Crow</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/courtney-milton.jpg" alt="Portrait of Courtney Milton, Associate Director of Admissions &amp; Diversity Initiatives" loading="lazy" />
-          <p slot="name">Courtney Milton</p>
-          <p slot="job-title">Associate Director of Admissions &amp; Diversity Initiatives</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/dominique-tucker.jpg" alt="Portrait of Dominique Tucker, Senior Coordinator of Student Transition" loading="lazy" />
-          <p slot="name">Dominique Tucker</p>
-          <p slot="job-title">Senior Coordinator of Student Transition</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/ebony-freeman.jpg" alt="Portrait of Ebony Freeman, West Coast Regional Coordinator" loading="lazy" />
-          <a href="ebony-freeman.html" slot="name"><span>Ebony Freeman</span></a>
-          <p slot="job-title">West Coast Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/james-b-massey-jr.jpg" alt="Portrait of James B. Massey, Jr., Director of Undergraduate Admissions" loading="lazy" />
-          <a href="james-b-massey-jr.html" slot="name"><span>James B. Massey, Jr.</span></a>
-          <p slot="job-title">Director of Undergraduate Admissions</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/javier-mena.jpg" alt="Portrait of Javier Mena, Assistant Director of Regional Recruitment &amp; Alumni Relations" loading="lazy" />
-          <p slot="name">Javier Mena</p>
-          <p slot="job-title">Assistant Director of Regional Recruitment &amp; Alumni Relations</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/karen-pryor.jpg" alt="Portrait of Karen Pryor, Sr. Associate Director of Recruitment and Strategic Planning" loading="lazy" />
-          <p slot="name">Karen Pryor</p>
-          <p slot="job-title">Sr. Associate Director of Recruitment and Strategic Planning</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/karina-reid.jpg" alt="Portrait of Karina Reid, Assistant Director for Transfer Admission" loading="lazy" />
-          <p slot="name">Karina Reid</p>
-          <p slot="job-title">Assistant Director for Transfer Admission</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/katya-kuzemka.jpg" alt="Portrait of Katya Kuzemka, Admission Counselor" loading="lazy" />
-          <p slot="name">Katya Kuzemka</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/kegan-duncan.jpg" alt="Portrait of Kegan Duncan, Southwest Regional Coordinator" loading="lazy" />
-          <p slot="name">Kegan Duncan</p>
-          <p slot="job-title">Southwest Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/maggie-much.jpg" alt="Portrait of Maggie Much, Senior Coordinator of Admissions" loading="lazy" />
-          <p slot="name">Maggie Much</p>
-          <p slot="job-title">Senior Coordinator of Admissions</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/matt-leichman.jpg" alt="Portrait of Matt Leichman, Admission Counselor" loading="lazy" />
-          <p slot="name">Matt Leichman</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/matt-tick.jpg" alt="Portrait of Matt Tick, Admission Counselor" loading="lazy" />
-          <p slot="name">Matt Tick</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/mike-nixon.jpg" alt="Portrait of Mike Nixon, Senior Associate Director of Undergraduate Admissions" loading="lazy" />
-          <p slot="name">Mike Nixon</p>
-          <p slot="job-title">Senior Associate Director of Undergraduate Admissions</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/nico-magpantay.jpg" alt="Portrait of Nico Magpantay, Admission Counselor" loading="lazy" />
-          <a href="nico-magpantay.html" slot="name"><span>Nico Magpantay</span></a>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/olander-fleming.jpg" alt="Portrait of Olander Fleming, Southeast Regional Coordinator" loading="lazy" />
-          <p slot="name">Olander Fleming</p>
-          <p slot="job-title">Southeast Regional Coordinator</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/raquel-sobczak.jpg" alt="Portrait of Raquel Sobczak, Admission Counselor" loading="lazy" />
-          <p slot="name">Raquel Sobczak</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/seth-johnson.jpg" alt="Portrait of Seth Johnson, Admission Counselor" loading="lazy" />
-          <p slot="name">Seth Johnson</p>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/sofia-cisneros.jpg" alt="Portrait of Sofia Cisneros, Admission Counselor" loading="lazy" />
-          <a href="sofia-cisneros.html" slot="name"><span>Sofia Cisneros</span></a>
-          <p slot="job-title">Admission Counselor</p>
-        </umd-element-person>
-        <umd-element-person class="umd-shell-person-grid-helper umd-layout-grid-child-fill-height">
-          <img slot="image" src="../../images/admission-representatives/taylor-duvall.jpg" alt="Portrait of Taylor Duvall, Coordinator of Scholarships &amp; Special Programs; Liaison for Military Connected and Veteran Students" loading="lazy" />
-          <a href="taylor-duvall.html" slot="name"><span>Taylor Duvall</span></a>
-          <p slot="job-title">Coordinator of Scholarships &amp; Special Programs; Liaison for Military Connected and Veteran Students</p>
-        </umd-element-person>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. JOIN THE MAILING LIST — banner promo -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <umd-element-banner-promo>
-        <p slot="eyebrow">Join the Mailing List</p>
-        <h2 slot="headline">Stay in touch with UMD</h2>
-        <p slot="text">Complete a brief form to be added to UMD's mailing list. We'll send you emails about upcoming events, deadlines and helpful information about applying to UMD.</p>
-        <div slot="actions" class="banner-promo-actions">
-          <umd-element-call-to-action data-display="primary">
-            <a href="https://admissions.umd.edu/connect/join-mailing-list">Sign Up Now</a>
-          </umd-element-call-to-action>
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
+        <div slot="paths">
+          <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
+          <a href="../../pages/how-to-apply/"><span>How To Apply</span></a>
+          <a href="../../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
+          <p aria-label="Current Page"><span>English Language Proficiency</span></p>
         </div>
-      </umd-element-banner-promo>
+      </umd-element-breadcrumb>
     </div>
-  </section>
 
-  <!-- SCROLL TO TOP — fixed 24px from viewport bottom-right (pin lives in shared/chrome.css) -->
-  <umd-element-scroll-top data-layout-fixed="true"></umd-element-scroll-top>
+    <div class="umd-layout-space-horizontal-normal">
+      <div id="umd-shell-content">
+        <section class="umd-layout-space-vertical-interior">
+          <div class="umd-text-rich-advanced">
+            <h2 class="umd-sans-large text-black">If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</h2>
+            <p>The Office of Undergraduate Admissions employs a holistic review process when considering all applicants and will consider all materials submitted in the application package to determine the level of English language proficiency.</p>
+            <p>Please have an official report of your scores sent directly to the Office of Undergraduate Admissions by the <a href="https://admissions.umd.edu/apply/application-deadlines">appropriate deadline</a>. Submitted scores must be less than two years old.</p>
+            <p>For the University of Maryland (UMD) to receive your scores, <strong>please use the reporting code 5814</strong>.</p>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Accepted English Proficiency Tests:</h2>
+          <div class="umd-layout-grid-gap-three umd-layout-grid-child-fill-height">
+            <umd-element-card-overlay data-theme="light">
+              <h3 slot="headline"><a href="https://englishtest.duolingo.com/applicants" target="_blank" rel="noopener">Duolingo English Test (DET)</a></h3>
+              <div slot="text">
+                <p>UMD accepts official scores from the <a href="https://englishtest.duolingo.com/applicants" target="_blank" rel="noopener">Duolingo English Test</a>, which can be taken online and on-demand. </p>
+                <p>UMD passing score: 120</p>
+                <p>Maryland English Institute score: 115 or lower</p>
+              </div>
+            </umd-element-card-overlay>
+            <umd-element-card-overlay data-theme="light">
+              <h3 slot="headline"><a href="http://www.ielts.org/" target="_blank" rel="noopener">International English Language Testing System (IELTS)</a></h3>
+              <div slot="text">
+                <p>UMD accepts official <a href="http://www.ielts.org/" target="_blank" rel="noopener">IELTS</a> and <a href="https://www.ielts.org/about-ielts/ielts-indicator" target="_blank" rel="noopener">IELTS Indicator</a> scores.</p>
+                <p>UMD passing score: 7</p>
+                <p>Maryland English Institute score: 6.5 or lower</p>
+              </div>
+            </umd-element-card-overlay>
+            <umd-element-card-overlay data-theme="light">
+              <h3 slot="headline"><a href="http://www.ets.org/toefl" target="_blank" rel="noopener">Test of English as a Foreign Language (TOEFL)</a></h3>
+              <div slot="text">
+                <p>UMD accepts official <a href="http://www.ets.org/toefl" target="_blank" rel="noopener">TOEFL</a> and <a href="https://www.ets.org/s/cv/toefl/at-home/" target="_blank" rel="noopener">TOEFL iBT</a>&nbsp;(Home Edition) scores. At this time, we are not accepting TOEFL superscores known as MyBest Scores. <br></p>
+                <p>UMD passing score: 5 (1-6 point scale),  95 (0-120 point scale)<br><br>Maryland English Institute score: 4.5 or lower (1-6 point scale), 94 or lower (0-120 point scale)<br></p>
+              </div>
+            </umd-element-card-overlay>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Potential Waivers for English Proficiency Requirement</h2>
+          <div class="umd-text-rich-advanced">
+            <p>While a passing English proficiency test score is the only absolute way a student can meet the English language proficiency requirement, we may consider waiving the English proficiency test requirement if a student has completed all elements of one of the following waivers by the application deadline:</p>
+            <ul>
+              <li>Four years at a U.S. high school or U.S. accredited high school without enrolling in any English as a Second Language coursework (ESL, ESOL, ELL, ELD, or other English Language Support coursework)</li>
+              <li>Posted associate’s, bachelor’s or master’s degree earned from a regionally accredited U.S. institution</li>
+              <li>Completed 55+ semester credits or 82.5 quarter credits from a regionally accredited U.S. institution with coursework equivalent to English Compositions 1 and 2</li>
+              <li>English is your first language, you hold a citizenship and/or&nbsp;you have a completed high school or university degree earned from one of the following countries or territories:</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">English-speaking countries</h2>
+          <div class="umd-layout-grid-gap-two umd-layout-space-vertical-interior-child">
+              <div class="umd-text-rich-advanced">
+                <hr>
+                <ul>
+                  <li>Antigua</li>
+                  <li>Australia</li>
+                  <li>Bahamas</li>
+                  <li>Barbados</li>
+                  <li>Belize</li>
+                  <li>Bermuda</li>
+                  <li>British Virgin Islands</li>
+                  <li>Canada<sup>1</sup></li>
+                  <li>Cayman Islands</li>
+                  <li>Dominica</li>
+                  <li>The Gambia</li>
+                  <li>Ghana</li>
+                  <li>Grenada</li>
+                  <li>Guyana</li>
+                  <li>Ireland</li>
+                  <li>Jamaica</li>
+                  <li>Kenya</li>
+                </ul>
+              </div>
+              <div class="umd-text-rich-advanced">
+                <hr>
+                <ul>
+                  <li>Montserrat</li>
+                  <li>Namibia</li>
+                  <li>New Zealand</li>
+                  <li>Nigeria</li>
+                  <li>Singapore</li>
+                  <li>South Africa</li>
+                  <li>St. Lucia</li>
+                  <li>St. Vincent</li>
+                  <li>Swaziland</li>
+                  <li>Tanzania</li>
+                  <li>Trinidad and Tobago</li>
+                  <li>Turks and Caicos Islands</li>
+                  <li>Uganda</li>
+                  <li>United Kingdom</li>
+                  <li>Zambia</li>
+                  <li>Zimbabwe</li>
+                </ul>
+              </div>
+          </div>
+          <p class="umd-sans-smaller">1. English proficiency test is required for the French system only.</p>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Resources</h2>
+          <div class="umd-layout-grid-gap-two">
+            <umd-element-card-icon>
+              <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+              <h3 slot="headline">
+                <a href="https://marylandenglishinstitute.com/" target="_blank" rel="noopener">Maryland English Institute</a>
+              </h3>
+              <div slot="text">
+                <p>The Maryland English Institute (MEI) provides English language instruction and assessment at the postsecondary level for speakers of other languages. MEI offers rigorous courses of study while providing a positive and supportive learning community and promoting cross-cultural understanding.</p>
+                <p>In some cases, UMD applicants must complete coursework through MEI before beginning their degree program. Students are notified within their admission decision letter if this is required of them.</p>
+              </div>
+            </umd-element-card-icon>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <umd-element-banner-promo>
+            <h2 slot="headline">There is a lot more to learn about UMD</h2>
+            <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the Mailing List</a> or <a href="https://admissions.umd.edu/connect">Connect</a>!</p>
+            <div slot="actions" class="banner-promo-actions">
+              <umd-element-call-to-action data-display="primary">
+                <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the List</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-banner-promo>
+        </section>
+
+      </div>
+    </div>
+  </main>
 
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
@@ -1725,6 +1528,16 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-footer>
   <!-- SHARED:footer:END -->
 
+  <script>
+    customElements.whenDefined('umd-element-banner-promo').then(() => {
+      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
+        const style = document.createElement('style');
+        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
+        el.shadowRoot && el.shadowRoot.appendChild(style);
+      });
+    });
+  </script>
+
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
   <!-- ============================================================
        SHARED CHROME — shadow injections
@@ -1764,36 +1577,5 @@ umd-element-scroll-top[data-layout-fixed="true"] {
     })();
   </script>
   <!-- SHARED:chrome-scripts:END -->
-
-  <!-- Person-card link affordance — page-content-driven (OVERRIDES.md).
-       umd-element-person styles a linked and an unlinked name the same; this
-       gives the linked ones an underline on hover/focus so the card reads as
-       actionable. Scoped to `a.person-name`, so it is inert on the cards whose
-       rep has no profile page yet.
-
-       Exposed as a re-runnable function, not a one-shot pass: the search page
-       builds fresh cards on every filter, and those need the injection too. The
-       per-element flag keeps repeat calls from stacking <style> nodes. -->
-  <script>
-    window.umdInjectPersonLinkCss = function () {
-      document.querySelectorAll('umd-element-person').forEach(el => {
-        if (!el.shadowRoot || el.dataset.personLinkCssDone) return;
-        const style = document.createElement('style');
-        style.textContent =
-          'a.person-name{text-decoration:none}' +
-          'a.person-name:hover,a.person-name:focus-visible' +
-          '{text-decoration:underline;text-underline-offset:3px;' +
-          'text-decoration-thickness:2px;color:var(--umd-color-red,#e21833)}';
-        el.shadowRoot.appendChild(style);
-        el.dataset.personLinkCssDone = '1';
-      });
-    };
-    customElements.whenDefined('umd-element-person')
-      .then(() => window.umdInjectPersonLinkCss());
-  </script>
-
-  <!-- Canonical grid-entry animations (page-builder/CLAUDE.md: never inline). -->
-  <script src="../../page-builder/scripts/grid-animations.js"></script>
-
 </body>
 </html>
