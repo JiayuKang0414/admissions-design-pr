@@ -357,6 +357,43 @@ directory and its drawer refs have to follow. A page in no section
 (`pages/calendar/`) matches nothing and the drawer opens at its top level, which
 is correct.
 
+### ⚠️ The nav carries top-level entries only — not every page we build
+
+`shared/header.html` mirrors the live site's **top-level** nav entries. A page
+that is a *child* of one of those entries on the live site does not get its own
+nav item, however much we want to link it: the flat dropdown has no second
+level to put it on, and adding the children of one entry while omitting the
+children of every other entry is worse than omitting them all.
+
+Two worked examples, both settled on 2026-09-15:
+
+- **`how-to-apply/english-language-proficiency.html`** is a sub-page of
+  **International Applicants** on the live site, alongside Obtaining a Visa and
+  Financial Certification. It was added to the How to Apply dropdown and drawer
+  and removed the same day.
+- **`tuition/frederick-douglass-scholarship.html`** is a sub-page of **Transfer
+  Merit Scholarships**, and came off the Tuition & Aid dropdown and drawer for
+  the same reason.
+
+In both cases the position *looked* right — each sits immediately after its
+parent in the live site's markup — but that ordering is a nested child rendered
+inline, not a sibling. Scraping link order out of the live page cannot tell the
+two apart; check whether the entry is a child before adding it.
+
+**A built page with no nav entry is normal, and is not a bug to fix.** Such a
+page gets `data-active` on its section's drawer group and **no `data-selected`**
+anywhere, because no drawer link points at it. That asymmetry is the expected
+signature of a child page — do not "correct" it by adding a nav item. Reach the
+page the way the live site does: from its parent's body copy
+(`how-to-apply/international-applicants.html` links English Language
+Proficiency twice) and from `pages/search/index.html`.
+
+**A Layout A page keeps its sub-page in its own left nav** — that sidebar is
+*section* navigation and is page content, not chrome. `frederick-douglass-
+scholarship.html` still lists itself with `data-selected` in its
+`umd-element-nav-slider`, which is correct and unaffected by the dropdown
+removal. Only the shared chrome is top-level-only.
+
 Because the chrome is now rendered per page rather than per depth,
 `_chrome.block(key, page)` / `payload(key, page)` take the **output page path**,
 not a depth — `depth_of()` is derived from it.
