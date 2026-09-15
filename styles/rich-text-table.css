@@ -1,0 +1,128 @@
+/* Admissions reusable rich-text table pattern.
+   Canonical markup is rendered by scripts/rich_text.py. */
+
+.umd-text-rich-table-scroll {
+  margin-bottom: 32px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.umd-text-rich-table-scroll:focus-visible {
+  outline: 2px solid #e21833;
+  outline-offset: 4px;
+}
+
+.umd-text-rich-table {
+  border-collapse: collapse;
+  font-family: var(--umd-font-sans, Interstate, Helvetica, Arial, Verdana, sans-serif);
+  min-width: 680px;
+  width: 100%;
+}
+
+.umd-text-rich-table thead th {
+  background: #000000;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  height: 71px;
+  line-height: 1.25;
+  padding: 16px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.umd-text-rich-table tr > * {
+  text-align: left !important;
+}
+
+.umd-text-rich-table-heading-parenthetical {
+  display: block;
+}
+
+.umd-text-rich-table tbody th,
+.umd-text-rich-table tbody td {
+  border-bottom: 1px solid #242424;
+  color: #454545;
+  font-size: 16px;
+  font-weight: 400;
+  height: 64px;
+  line-height: 1.25;
+  padding: 16px;
+  vertical-align: middle;
+}
+
+.umd-text-rich-table tbody td {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.umd-text-rich-table tbody tr:nth-child(even) th,
+.umd-text-rich-table tbody tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+.umd-text-rich-table tbody tr.umd-text-rich-table-total th,
+.umd-text-rich-table tbody tr.umd-text-rich-table-total td {
+  border-bottom: 0;
+  color: #000000;
+  font-weight: 700;
+}
+
+.umd-text-rich-table sup {
+  font-size: 0.72em;
+  line-height: 0;
+}
+
+.umd-text-rich-table-footnotes {
+  color: #454545;
+  font-family: var(--umd-font-sans, Interstate, Helvetica, Arial, Verdana, sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 24px 0 0;
+}
+
+.umd-text-rich-table-footnotes > * {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.umd-text-rich-table-footnotes ul {
+  font-size: 14px;
+  line-height: 1.5;
+  list-style: disc;
+  margin: 0;
+  padding-left: 22px;
+}
+
+.umd-text-rich-table-footnotes li {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.umd-text-rich-table-footnotes li:first-child {
+  margin-top: 0;
+}
+
+.umd-text-rich-table-footnotes em,
+.umd-text-rich-table-footnotes a {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.umd-text-rich-table-footnotes a {
+  background-image: linear-gradient(#000000, #000000);
+  background-position: left calc(100% - 1px);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  color: #000000;
+  position: relative;
+  text-decoration: none;
+  transition: color 0.5s, background-size 0.5s, background-image 0.5s, background-position 0.5s;
+}
+
+.umd-text-rich-table-footnotes a:hover,
+.umd-text-rich-table-footnotes a:focus {
+  background-image: linear-gradient(#e21833, #e21833);
+}

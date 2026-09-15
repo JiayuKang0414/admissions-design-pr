@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>Academics — Undergraduate Admissions | University of Maryland</title>
+  <title>English Language Proficiency — Undergraduate Admissions | University of Maryland</title>
 
   <!-- ============================================================
        UMD Critical CSS — Hybrid CDN + Local
@@ -818,50 +818,16 @@
       text-decoration: none;
     }
   </style>
-
-  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
-
   <style>
-    /* Brand chevron animation flanking the Study Here rich text and
-       overlapping ~120px up into the hero above. Hidden below tablet
-       to avoid crowding the single-column stacked content. */
-    .study-here-section {
-      position: relative;
-      overflow: visible;
-      z-index: 100;
+    /* Keep long-form text readable within the design-system content container. */
+    @media (min-width: 768px) {
+      .english-proficiency-content .umd-text-rich-advanced {
+        max-width: 800px;
+      }
     }
 
-    .study-here-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* The brand-logo-animation hardcodes its inner container to
-       width:100vw, height:50vw and anchors chevrons to right:0. So
-       the host must span full width — sizing/clipping won't work. */
-    .study-here-chevron {
-      position: absolute;
-      top: -180px;
-      left: 0;
-      right: 0;
-      bottom: -80px;
-      pointer-events: none;
-      z-index: 1;
-      overflow: visible;
-    }
-
-    .study-here-chevron > umd-element-brand-logo-animation {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: block;
-    }
-
-    @media (max-width: 1023px) {
-      .study-here-chevron { display: none; }
-    }
   </style>
+  <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
 /* ============================================================
@@ -1184,8 +1150,6 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   <!-- SHARED:gate:END -->
 </head>
 <body>
-
-  <!-- 1. GLOBAL UNIVERSITY HEADER -->
   <!-- SHARED:header:START — generated from shared/header.html; do not edit here -->
   <umd-element-navigation-utility data-alert-off="true" role="navigation" aria-label="Utility navigation"></umd-element-navigation-utility>
 
@@ -1294,7 +1258,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          scripts/_chrome.py relies on that to stamp data-active / data-selected
          per page — rename a directory and its drawer ref has to follow. -->
     <div slot="primary-slide-links">
-      <a href="../../pages/academics/" data-selected data-child-ref="academics"><span>Academics</span></a>
+      <a href="../../pages/academics/" data-child-ref="academics"><span>Academics</span></a>
       <a href="../../pages/student-life/" data-child-ref="student-life"><span>Student Life</span></a>
       <a href="../../pages/how-to-apply/" data-child-ref="how-to-apply"><span>How To Apply</span></a>
       <a href="../../pages/tuition/" data-child-ref="tuition"><span>Tuition &amp; Aid</span></a>
@@ -1313,8 +1277,8 @@ umd-element-scroll-top[data-layout-fixed="true"] {
       <a href="../../pages/search/"><span>Search</span></a>
     </div>
     <div slot="children-slides">
-      <div data-parent-ref="academics" data-active>
-        <a href="../../pages/academics/" data-selected><span>Overview</span></a>
+      <div data-parent-ref="academics">
+        <a href="../../pages/academics/"><span>Overview</span></a>
         <a href="../../pages/academics/programs.html"><span>All Programs</span></a>
         <a href="../../pages/academics/colleges-schools.html"><span>Colleges &amp; Schools</span></a>
         <a href="https://admissions.umd.edu/programs/interest"><span>Programs by Interest</span></a>
@@ -1328,7 +1292,7 @@ umd-element-scroll-top[data-layout-fixed="true"] {
         <a href="https://admissions.umd.edu/student/get-involved"><span>Get Involved on Campus</span></a>
         <a href="../../pages/student-life/find-community.html"><span>Find Your Community</span></a>
       </div>
-      <div data-parent-ref="how-to-apply">
+      <div data-parent-ref="how-to-apply" data-active>
         <a href="../../pages/how-to-apply/"><span>Overview</span></a>
         <a href="../../pages/how-to-apply/freshman-applicants.html"><span>Freshman Applicants</span></a>
         <a href="../../pages/how-to-apply/transfer-applicants.html"><span>Transfer Applicants</span></a>
@@ -1351,277 +1315,161 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-navigation-header>
   <!-- SHARED:header:END -->
 
-  <!-- 3. HERO — small background -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-hero data-layout-height="small" data-layout-text="center">
-      <img slot="image" src="../../images/academics/StartUpShell.jpg" alt="Students collaborating in the Start Up Shell workspace" />
-      <h1 slot="headline">Academics</h1>
-      <div slot="text"><p>The University of Maryland (UMD) is consistently recognized as one of the preeminent public research universities in the United States.</p></div>
-    </umd-element-hero>
-  </section>
+  <main id="main-content">
+    <section>
+      <umd-element-hero-minimal data-theme="dark">
+        <p slot="eyebrow">International Applicants</p>
+        <img slot="image" src="../../images/shared/interior-hero-pattern.png" alt="" />
+        <h1 slot="headline">English Language Proficiency</h1>
+      </umd-element-hero-minimal>
+    </section>
 
-  <!-- 4. STUDY HERE — eyebrow headline + rich text + CTA pulled from hero -->
-  <section class="umd-layout-vertical-landing study-here-section">
-    <div class="study-here-chevron" aria-hidden="true">
-      <umd-element-brand-logo-animation></umd-element-brand-logo-animation>
-    </div>
-    <div class="umd-layout-space-horizontal-small study-here-content">
-      <hr style="border:none;border-top:1px solid var(--umd-color-black);margin:0 0 24px 0;" />
-      <p class="umd-sans-large mb-md text-black" style="text-transform:uppercase;">Study Here</p>
-      <div class="umd-text-rich-advanced">
-        <p>Our Terps are fearless innovators across every discipline — Nobel laureates, Pulitzer Prize winners, members of the national academies, MacArthur Fellows, and Pell Scholars among them. Whether your passion is computer science, journalism, public health, or the performing arts, you'll find faculty mentors and classmates pushing the boundaries of what's possible.</p>
-      </div>
-      <div style="margin-top:24px;">
-        <umd-element-call-to-action data-display="primary">
-          <a href="programs.html">Explore All Programs</a>
-        </umd-element-call-to-action>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. BY THE NUMBERS — stat cards in a grid -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger umd-layout-vertical-landing-child">
-      <div class="umd-layout-grid-gap-three">
-        <umd-element-stat data-display="block" class="umd-layout-grid-child-fill-height">
-          <span slot="stat">100+</span>
-          <p slot="text">Undergraduate Majors</p>
-        </umd-element-stat>
-        <umd-element-stat data-display="block" class="umd-layout-grid-child-fill-height">
-          <span slot="stat">18:1</span>
-          <p slot="text">Student-to-Faculty Ratio</p>
-        </umd-element-stat>
-        <umd-element-stat data-display="block" class="umd-layout-grid-child-fill-height">
-          <span slot="stat">69</span>
-          <p slot="text">Colleges, schools and programs ranked in the top 25 nationwide</p>
-          <p slot="sub-text">2025 U.S. News &amp; World Report</p>
-        </umd-element-stat>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. CHOOSING A MAJOR — pathway, image left -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-pathway data-layout-image-position="left">
-      <img slot="image" src="../../images/academics/students-studying-table-c5f3b2f9.jpg" alt="Students studying together at a table" />
-      <h2 slot="headline">Choosing a Major</h2>
-      <div slot="text">
-        <p>With more than 100 majors across 12 colleges and schools, choosing a path at UMD is an act of discovery. Talk to advisors, sit in on classes, and meet the faculty doing work that excites you — your major isn't a label, it's the start of how you'll shape your career.</p>
-      </div>
-    </umd-element-pathway>
-  </section>
-
-  <!-- 7. TWO-COLUMN NAV CARDS — Browse Programs / Colleges & Schools
-       Icon cards with default link icon (matches promise.html footer-link pattern). -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <div class="umd-layout-grid-gap-two">
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
-          <h3 slot="headline">
-            <a href="programs.html">Browse All Programs</a>
-          </h3>
-          <div slot="text">
-            <p>The full undergraduate catalog — every major, minor, and certificate offered across UMD's 12 colleges and schools, with course requirements and degree paths.</p>
-          </div>
-        </umd-element-card-icon>
-        <umd-element-card-icon>
-          <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
-          <h3 slot="headline">
-            <a href="https://www.umd.edu/colleges-schools">Get to Know UMD's Colleges &amp; Schools</a>
-          </h3>
-          <div slot="text">
-            <p>Twelve schools, one university — explore the colleges that make up UMD, from Engineering and Business to Public Policy, Public Health, and the Arts &amp; Humanities.</p>
-          </div>
-        </umd-element-card-icon>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. BEYOND THE CLASSROOM — dark band, intro + 3 cards -->
-  <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
-        <h2 slot="headline">Beyond the Classroom</h2>
-        <div slot="text"><p>Research, internships, and education abroad turn ideas into experience — and Terps into the kind of graduates employers and grad schools come looking for.</p></div>
-      </umd-element-section-intro>
-
-      <div class="umd-layout-grid-gap-three">
-        <umd-element-card data-theme="dark" data-visual-image-aligned="true">
-          <a slot="image" href="https://ugresearch.umd.edu/"><img src="../../images/academics/astronomy-class.jpg" alt="Students observing through a telescope at the campus observatory" /></a>
-          <h3 slot="headline"><a href="https://ugresearch.umd.edu/">Research</a></h3>
-          <p slot="text">Join faculty-led research from your first year. The Office of Undergraduate Research connects students with labs, archives, studios, and grants across every college.</p>
-        </umd-element-card>
-        <umd-element-card data-theme="dark" data-visual-image-aligned="true">
-          <a slot="image" href="https://careers.umd.edu/students/internships"><img src="../../images/academics/students-standing-hallway-StartUpUMD_02092023_JC_9577.jpg" alt="Three students laughing together in a hallway" /></a>
-          <h3 slot="headline"><a href="https://careers.umd.edu/students/internships">Internships</a></h3>
-          <p slot="text">From DC consulting firms to Maryland startups, the University Career Center helps Terps land internships that turn into careers.</p>
-        </umd-element-card>
-        <umd-element-card data-theme="dark" data-visual-image-aligned="true">
-          <a slot="image" href="https://globalmaryland.umd.edu/offices/education-abroad"><img src="../../images/academics/Education-Abroad-bridge-355d65ff.jpg" alt="Education abroad bridge in Taiwan" /></a>
-          <h3 slot="headline"><a href="https://globalmaryland.umd.edu/offices/education-abroad">Education Abroad</a></h3>
-          <p slot="text">Study in 70+ countries through the #TerpsAbroad program. Short faculty-led trips, semester exchanges, and full-year immersions — there's a fit for every major.</p>
-        </umd-element-card>
-      </div>
-    </div>
-  </section>
-
-  <!-- 9. LIVING-LEARNING PROGRAMS — pathway -->
-  <section class="umd-layout-vertical-landing">
-    <umd-element-pathway>
-      <img slot="image" src="../../images/academics/ZC4U2140.JPG" alt="Two students smiling together in a living-learning program class" />
-      <h2 slot="headline">Living-Learning Programs</h2>
-      <div slot="text">
-        <p>About half of UMD's first-year students join a living-learning program — small academic communities that share a residence hall, take a few classes together, and pursue a common interest, from entrepreneurship to global public health.</p>
-      </div>
-      <div slot="actions">
-        <umd-element-call-to-action data-display="primary">
-          <a href="https://www.scholarship.umd.edu/living-learning">Learn about living-learning programs</a>
-        </umd-element-call-to-action>
-      </div>
-    </umd-element-pathway>
-  </section>
-
-  <!-- 10. NOTABLE ALUMNI — section intro + thumbnail carousel -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <umd-element-section-intro class="umd-layout-vertical-landing-child">
-        <h2 slot="headline">Notable Alumni</h2>
-        <div slot="text"><p>Terps go on to lead, build, perform, report, and invent across every field. A few of the names you may know.</p></div>
-      </umd-element-section-intro>
-    </div>
-
-    <div class="umd-layout-space-horizontal-larger">
-    <umd-element-carousel-thumbnail>
-      <div slot="blocks">
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/KevinPlank-e307fe2f.jpg">
-          <img slot="image" src="../../images/academics/KevinPlank-e307fe2f.jpg" alt="Kevin Plank" />
-          <p slot="headline">Kevin Plank '96</p>
-          <div slot="text"><p>Founder, Under Armour</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/GayleKing-2a8d8edb.jpg">
-          <img slot="image" src="../../images/academics/GayleKing-2a8d8edb.jpg" alt="Gayle King" />
-          <p slot="headline">Gayle King '76</p>
-          <div slot="text"><p>Co-host, CBS Mornings</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/JimHenson-e0a44238.jpg">
-          <img slot="image" src="../../images/academics/JimHenson-e0a44238.jpg" alt="Jim Henson" />
-          <p slot="headline">Jim Henson '60</p>
-          <div slot="text"><p>Creator, The Muppets</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/ConnieChung-2637d0a1.jpg">
-          <img slot="image" src="../../images/academics/ConnieChung-2637d0a1.jpg" alt="Connie Chung" />
-          <p slot="headline">Connie Chung '69</p>
-          <div slot="text"><p>Journalist and news anchor</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/DominiqueDawes-fdd4924f.jpg">
-          <img slot="image" src="../../images/academics/DominiqueDawes-fdd4924f.jpg" alt="Dominique Dawes" />
-          <p slot="headline">Dominique Dawes '02</p>
-          <div slot="text"><p>Olympic gold medalist, gymnastics</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/BrendanIribe-0aa7950a.jpg">
-          <img slot="image" src="../../images/academics/BrendanIribe-0aa7950a.jpg" alt="Brendan Iribe" />
-          <p slot="headline">Brendan Iribe</p>
-          <div slot="text"><p>Co-founder, Oculus VR</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/LarryDavid-52d4a0d7.jpg">
-          <img slot="image" src="../../images/academics/LarryDavid-52d4a0d7.jpg" alt="Larry David" />
-          <p slot="headline">Larry David '69</p>
-          <div slot="text"><p>Co-creator, Seinfeld; creator, Curb Your Enthusiasm</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/AaronMcgruder-e72860b6.jpg">
-          <img slot="image" src="../../images/academics/AaronMcgruder-e72860b6.jpg" alt="Aaron McGruder" />
-          <p slot="headline">Aaron McGruder '96</p>
-          <div slot="text"><p>Creator, The Boondocks</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/JasmineSnead-b3dddfde.jpg">
-          <img slot="image" src="../../images/academics/JasmineSnead-b3dddfde.jpg" alt="Jasmine Snead" />
-          <p slot="headline">Jasmine Snead '15</p>
-          <div slot="text"><p>Engineer and STEM advocate</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/GailBerman_2023-06-07-183600_vkkt-e966a0a0.jpg">
-          <img slot="image" src="../../images/academics/GailBerman_2023-06-07-183600_vkkt-e966a0a0.jpg" alt="Gail Berman" />
-          <p slot="headline">Gail Berman '78</p>
-          <div slot="text"><p>Television and film executive</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/RobertBriskman-f8d9de42.jpg">
-          <img slot="image" src="../../images/academics/RobertBriskman-f8d9de42.jpg" alt="Robert Briskman" />
-          <p slot="headline">Robert Briskman '54</p>
-          <div slot="text"><p>Co-founder, Sirius Satellite Radio</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/EthanBrown-1e3392f5.jpg">
-          <img slot="image" src="../../images/academics/EthanBrown-1e3392f5.jpg" alt="Ethan Brown" />
-          <p slot="headline">Ethan Brown '04</p>
-          <div slot="text"><p>Founder, Beyond Meat</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/DianneWiest-092f676e.jpg">
-          <img slot="image" src="../../images/academics/DianneWiest-092f676e.jpg" alt="Dianne Wiest" />
-          <p slot="headline">Dianne Wiest '69</p>
-          <div slot="text"><p>Two-time Academy Award–winning actress</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/JasonReynolds-9ab96f46.jpg">
-          <img slot="image" src="../../images/academics/JasonReynolds-9ab96f46.jpg" alt="Jason Reynolds" />
-          <p slot="headline">Jason Reynolds '05</p>
-          <div slot="text"><p>Award-winning author of young adult fiction</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/JeffKinney-7f768c66.jpg">
-          <img slot="image" src="../../images/academics/JeffKinney-7f768c66.jpg" alt="Jeff Kinney" />
-          <p slot="headline">Jeff Kinney '93</p>
-          <div slot="text"><p>Author, Diary of a Wimpy Kid</p></div>
-        </umd-element-card>
-        <umd-element-card data-visual-transparent="true" data-visual-image-aligned="true" data-thumbnail="../../images/academics/RobertBasham-1ca2a6e3.jpg">
-          <img slot="image" src="../../images/academics/RobertBasham-1ca2a6e3.jpg" alt="Robert Basham" />
-          <p slot="headline">Robert Basham '70</p>
-          <div slot="text"><p>Co-founder, Outback Steakhouse</p></div>
-        </umd-element-card>
-      </div>
-    </umd-element-carousel-thumbnail>
-    </div>
-  </section>
-
-  <!-- 11. RESOURCES — dark section intro + dark icon-link cards. Same band as
-       how-to-apply/{freshman,transfer,international}-applicants.html so every
-       "Resources" block on the site reads identically: full-dark section,
-       dark section-intro, dark icon cards whose headline IS the link.
-
-       Two cards here, so the grid is umd-layout-grid-gap-two (gap-three would
-       leave a hole in the third column). -->
-  <section class="umd-layout-background-full-dark umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <umd-element-section-intro data-theme="dark" class="umd-layout-vertical-landing-child">
-        <h2 slot="headline">Resources</h2>
-      </umd-element-section-intro>
-      <div class="umd-layout-grid-gap-two">
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
-          <h3 slot="headline"><a href="https://academiccatalog.umd.edu/">Undergraduate Catalog</a></h3>
-          <p slot="text">The complete listing of UMD's undergraduate programs, requirements, and policies — your reference for everything academic.</p>
-        </umd-element-card-icon>
-        <umd-element-card-icon data-theme="dark">
-          <img slot="image" src="../../page-builder/images/icons/icon-link-dark.svg" alt="" />
-          <h3 slot="headline"><a href="https://careers.umd.edu/students">Career Center</a></h3>
-          <p slot="text">Career counseling, internship placement, employer connections, and the tools to turn your degree into a meaningful first job.</p>
-        </umd-element-card-icon>
-      </div>
-    </div>
-  </section>
-
-  <!-- 12. STAY CONNECTED — banner-promo (gold default) inside larger lock -->
-  <section class="umd-layout-vertical-landing">
-    <div class="umd-layout-space-horizontal-larger">
-      <umd-element-banner-promo>
-        <h2 slot="headline">There is a lot more to learn about UMD</h2>
-        <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Join the mailing list</a> or <a href="https://admissions.umd.edu/connect">connect</a>!</p>
-        <div slot="actions" class="banner-promo-actions">
-          <umd-element-call-to-action data-display="primary">
-            <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener noreferrer">Subscribe</a>
-          </umd-element-call-to-action>
+    <div class="umd-layout-space-horizontal-normal umd-layout-space-vertical-interior">
+      <umd-element-breadcrumb>
+        <div slot="paths">
+          <a href="../../pages/" aria-label="Return Home"><span aria-hidden="true">Home</span></a>
+          <a href="../../pages/how-to-apply/"><span>How To Apply</span></a>
+          <a href="../../pages/how-to-apply/international-applicants.html"><span>International Applicants</span></a>
+          <p aria-label="Current Page"><span>English Language Proficiency</span></p>
         </div>
-      </umd-element-banner-promo>
+      </umd-element-breadcrumb>
     </div>
-  </section>
 
-  <!-- 13. FOOTER — visual (uses default specially-formatted footer image) -->
+    <div class="umd-layout-space-horizontal-normal">
+      <div id="umd-shell-content" class="english-proficiency-content">
+        <section class="umd-layout-space-vertical-interior">
+          <div class="umd-text-rich-advanced">
+            <p>If you are a Domestic student and English is not your native language or you are an International student, you must provide the university with verification of your proficiency in English. We may consider waiving the English proficiency test requirement if a student has met certain requirements. Please read below to learn more about approved English proficiency exams and potential waivers.</p>
+            <p>The Office of Undergraduate Admissions employs a holistic review process when considering all applicants and will consider all materials submitted in the application package to determine the level of English language proficiency.</p>
+            <p>Please have an official report of your scores sent directly to the Office of Undergraduate Admissions by the <a href="https://admissions.umd.edu/apply/application-deadlines">appropriate deadline</a>. Submitted scores must be less than two years old.</p>
+            <p>For the University of Maryland (UMD) to receive your scores, <strong>please use the reporting code 5814</strong>.</p>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Accepted English Proficiency Tests:</h2>
+          <div class="umd-layout-grid-gap-three umd-layout-grid-child-fill-height">
+            <umd-element-card-overlay data-theme="light">
+              <h3 slot="headline"><a href="https://englishtest.duolingo.com/applicants" target="_blank" rel="noopener">Duolingo English Test (DET)</a></h3>
+              <div slot="text">
+                <p>UMD accepts official scores from the <a href="https://englishtest.duolingo.com/applicants" target="_blank" rel="noopener">Duolingo English Test</a>, which can be taken online and on-demand. </p>
+                <p>UMD passing score: 120</p>
+                <p>Maryland English Institute score: 115 or lower</p>
+              </div>
+            </umd-element-card-overlay>
+            <umd-element-card-overlay data-theme="light">
+              <h3 slot="headline"><a href="http://www.ielts.org/" target="_blank" rel="noopener">International English Language Testing System (IELTS)</a></h3>
+              <div slot="text">
+                <p>UMD accepts official <a href="http://www.ielts.org/" target="_blank" rel="noopener">IELTS</a> and <a href="https://www.ielts.org/about-ielts/ielts-indicator" target="_blank" rel="noopener">IELTS Indicator</a> scores.</p>
+                <p>UMD passing score: 7</p>
+                <p>Maryland English Institute score: 6.5 or lower</p>
+              </div>
+            </umd-element-card-overlay>
+            <umd-element-card-overlay data-theme="light">
+              <h3 slot="headline"><a href="http://www.ets.org/toefl" target="_blank" rel="noopener">Test of English as a Foreign Language (TOEFL)</a></h3>
+              <div slot="text">
+                <p>UMD accepts official <a href="http://www.ets.org/toefl" target="_blank" rel="noopener">TOEFL</a> and <a href="https://www.ets.org/s/cv/toefl/at-home/" target="_blank" rel="noopener">TOEFL iBT</a>&nbsp;(Home Edition) scores. At this time, we are not accepting TOEFL superscores known as MyBest Scores. <br></p>
+                <p>UMD passing score: 5 (1-6 point scale),  95 (0-120 point scale)<br><br>Maryland English Institute score: 4.5 or lower (1-6 point scale), 94 or lower (0-120 point scale)<br></p>
+              </div>
+            </umd-element-card-overlay>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Potential Waivers for English Proficiency Requirement</h2>
+          <div class="umd-text-rich-advanced">
+            <p>While a passing English proficiency test score is the only absolute way a student can meet the English language proficiency requirement, we may consider waiving the English proficiency test requirement if a student has completed all elements of one of the following waivers by the application deadline:</p>
+            <ul>
+              <li>Four years at a U.S. high school or U.S. accredited high school without enrolling in any English as a Second Language coursework (ESL, ESOL, ELL, ELD, or other English Language Support coursework)</li>
+              <li>Posted associate’s, bachelor’s or master’s degree earned from a regionally accredited U.S. institution</li>
+              <li>Completed 55+ semester credits or 82.5 quarter credits from a regionally accredited U.S. institution with coursework equivalent to English Compositions 1 and 2</li>
+              <li>English is your first language, you hold a citizenship and/or&nbsp;you have a completed high school or university degree earned from one of the following countries or territories:</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">English-speaking countries</h2>
+          <div class="umd-layout-grid-gap-two umd-layout-space-vertical-interior-child">
+              <div class="umd-text-rich-advanced">
+                <hr>
+                <ul>
+                  <li>Antigua</li>
+                  <li>Australia</li>
+                  <li>Bahamas</li>
+                  <li>Barbados</li>
+                  <li>Belize</li>
+                  <li>Bermuda</li>
+                  <li>British Virgin Islands</li>
+                  <li>Canada<sup>1</sup></li>
+                  <li>Cayman Islands</li>
+                  <li>Dominica</li>
+                  <li>The Gambia</li>
+                  <li>Ghana</li>
+                  <li>Grenada</li>
+                  <li>Guyana</li>
+                  <li>Ireland</li>
+                  <li>Jamaica</li>
+                  <li>Kenya</li>
+                </ul>
+              </div>
+              <div class="umd-text-rich-advanced">
+                <hr>
+                <ul>
+                  <li>Montserrat</li>
+                  <li>Namibia</li>
+                  <li>New Zealand</li>
+                  <li>Nigeria</li>
+                  <li>Singapore</li>
+                  <li>South Africa</li>
+                  <li>St. Lucia</li>
+                  <li>St. Vincent</li>
+                  <li>Swaziland</li>
+                  <li>Tanzania</li>
+                  <li>Trinidad and Tobago</li>
+                  <li>Turks and Caicos Islands</li>
+                  <li>Uganda</li>
+                  <li>United Kingdom</li>
+                  <li>Zambia</li>
+                  <li>Zimbabwe</li>
+                </ul>
+              </div>
+          </div>
+          <p class="umd-sans-smaller">1. English proficiency test is required for the French system only.</p>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Resources</h2>
+          <div class="umd-layout-grid-gap-two">
+            <umd-element-card-icon>
+              <img slot="image" src="../../page-builder/images/icons/icon-link.svg" alt="" />
+              <h3 slot="headline">
+                <a href="https://marylandenglishinstitute.com/" target="_blank" rel="noopener">Maryland English Institute</a>
+              </h3>
+              <div slot="text">
+                <p>The Maryland English Institute (MEI) provides English language instruction and assessment at the postsecondary level for speakers of other languages. MEI offers rigorous courses of study while providing a positive and supportive learning community and promoting cross-cultural understanding.</p>
+                <p>In some cases, UMD applicants must complete coursework through MEI before beginning their degree program. Students are notified within their admission decision letter if this is required of them.</p>
+              </div>
+            </umd-element-card-icon>
+          </div>
+        </section>
+
+        <section class="umd-layout-space-vertical-interior">
+          <umd-element-banner-promo>
+            <h2 slot="headline">There is a lot more to learn about UMD</h2>
+            <p slot="text">Let's stay in touch! <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the Mailing List</a> or <a href="https://admissions.umd.edu/connect">Connect</a>!</p>
+            <div slot="actions" class="banner-promo-actions">
+              <umd-element-call-to-action data-display="primary">
+                <a href="https://apply.umd.edu/register/request-info" target="_blank" rel="noopener">Join the List</a>
+              </umd-element-call-to-action>
+            </div>
+          </umd-element-banner-promo>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
   <!-- SHARED:footer:START — generated from shared/footer.html; do not edit here -->
   <umd-element-footer data-display="visual">
     <a slot="logo" href="../../pages/">
@@ -1687,99 +1535,14 @@ umd-element-scroll-top[data-layout-fixed="true"] {
   </umd-element-footer>
   <!-- SHARED:footer:END -->
 
-  <!-- ============================================================
-       SHADOW OVERRIDES
-  ============================================================ -->
   <script>
-    // umd-element-pathway — force 1:1 image aspect ratio.
-    // No CSS variable / ::part hook for the pathway image container; inject
-    // shadow CSS to override intrinsic image ratio.
-    customElements.whenDefined('umd-element-pathway').then(() => {
-      document.querySelectorAll('umd-element-pathway').forEach(el => {
+    customElements.whenDefined('umd-element-banner-promo').then(() => {
+      document.querySelectorAll('umd-element-banner-promo').forEach(el => {
         const style = document.createElement('style');
-        style.textContent = '.pathway-image-container,.image-container,.umd-asset-image-wrapper-scaled{aspect-ratio:6/5!important;height:auto!important}.pathway-image-container img,.image-container img,.umd-asset-image-wrapper-scaled img{width:100%!important;height:100%!important;object-fit:cover!important}';
+        style.textContent = '.banner-promo-actions{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:8px!important}';
         el.shadowRoot && el.shadowRoot.appendChild(style);
       });
     });
-
-
-
-    // GRID ENTRY ANIMATIONS — auto-applied to layout grids. Mirrors the
-    // upstream observeGridAnimations() logic but expands the selector
-    // set to all umd-layout-grid-* containers so authors don't need to
-    // add umd-animation-grid manually. (This block is also in
-    // page-builder/TEMPLATE.html — every new page gets it for free.)
-    (function () {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var GRID_SELECTORS = [
-        '.umd-layout-grid-gap-two',
-        '.umd-layout-grid-gap-three',
-        '.umd-layout-grid-gap-stacked',
-        '.umd-layout-grid-columns-four',
-        '.umd-layout-grid-masonry',
-        '.umd-layout-grid-inline-tablet-rows',
-        '.umd-animation-grid',
-        '.umd-grid-animation'
-      ].join(',');
-      var FADE_CLASS = 'umd-animation-transition-fade-bottom';
-      var OFFSET_ATTR = 'data-animation';
-
-      var style = document.createElement('style');
-      style.textContent =
-        '@keyframes fade-in-from-bottom{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}' +
-        '@media (prefers-reduced-motion: no-preference){' +
-          ':where(' + GRID_SELECTORS + ') > *{opacity:0;transform:translateY(50px)}' +
-          '.' + FADE_CLASS + '{animation:fade-in-from-bottom 1s forwards;opacity:0;transform:translateY(50px)}' +
-        '}';
-      document.head.appendChild(style);
-
-      function init() {
-        var children = [];
-        document.querySelectorAll(GRID_SELECTORS).forEach(function (grid) {
-          Array.prototype.push.apply(children, grid.children);
-        });
-        if (!children.length) return;
-
-        function setRowOffsets() {
-          var prevTop = null;
-          children.forEach(function (el) {
-            var top = el.getBoundingClientRect().top;
-            if (prevTop !== null && Math.abs(top - prevTop) < 1) {
-              el.setAttribute(OFFSET_ATTR, 'offset');
-            } else {
-              el.removeAttribute(OFFSET_ATTR);
-              prevTop = top;
-            }
-          });
-        }
-
-        var observer = new IntersectionObserver(function (entries) {
-          var delay = 0;
-          entries.forEach(function (entry) {
-            if (!entry.isIntersecting) return;
-            var el = entry.target;
-            if (el.getAttribute(OFFSET_ATTR) === 'offset') {
-              delay += 350;
-            } else {
-              delay = 0;
-            }
-            el.style.animationDelay = delay + 'ms';
-            el.classList.add(FADE_CLASS);
-            observer.unobserve(el);
-          });
-        }, { rootMargin: '0px', threshold: [0.35] });
-
-        children.forEach(function (el) { observer.observe(el); });
-        setRowOffsets();
-        window.addEventListener('resize', setRowOffsets);
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
-    })();
   </script>
 
   <!-- SHARED:chrome-scripts:START — generated from shared/chrome-scripts.html; do not edit here -->
