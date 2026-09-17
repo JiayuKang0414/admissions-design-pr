@@ -841,23 +841,6 @@
        mt-xl all compute to 0. Hence this. */
     .kbyg-top-space { margin-top: 48px; }
 
-    /* PAGE LEDE — replaces the section-intro component for the opening
-       paragraph. That component centres its text in a ~992px block, which is
-       fine under a full-width grid but reads wrong on a text-led page where
-       everything below it is left-aligned. The source lede is left-aligned
-       24px/400 in an 800px column, so this is left-aligned and capped at 800.
-
-       The <p> must sit OUTSIDE .umd-text-rich-advanced: a umd-sans-* size
-       collapses to 18px inside that wrapper (RULES §18), which would silently
-       undo the 22px.
-
-       The lede owns its own bottom spacing — 24px, the gap the source runs
-       between its intro and the block below it — so the section it sits in
-       carries no vertical-spacing class. The usual *-interior 80px would
-       strand it away from the copy it introduces. */
-    .interior-lede { max-width: 800px; margin-bottom: 24px; }
-    .interior-lede > p { margin: 0; }
-
     /* ZIG-ZAG COLUMNS (LAYOUT-PATTERNS.md). Neither rule is in the base
        bundles or critical.css.
        min-width: 0 lets the 1fr tracks shrink — otherwise the image's
@@ -1396,15 +1379,13 @@ umd-element-scroll-top[data-layout-fixed="true"] {
          use the full 1152px content box. -->
     <div class="umd-layout-space-horizontal-normal">
 
-      <!-- 5. LEDE — a left-aligned paragraph, NOT the section-intro
-           component. That component centres its text, which works under a
-           full-width grid but reads wrong on a text-led page. See §A for the
-           accent line. The <p> is deliberately NOT wrapped in
-           .umd-text-rich-advanced: that would collapse umd-sans-larger-bold
-           to 18px (RULES §18). -->
-      <section>
-        <div class="interior-lede">
-          <p class="umd-sans-larger-bold text-black">We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
+      <!-- 5. LEDE — a paragraph, not a heading, inside rich text. The source
+           lede is 24px/400; the project migrates it as umd-sans-large
+           (18px/700), which survives the RULES §18 collapse inside
+           .umd-text-rich-advanced because it is already 18px. -->
+      <section class="umd-layout-space-vertical-interior">
+        <div class="umd-text-rich-advanced">
+          <p class="umd-sans-large text-black">We&rsquo;re excited to welcome you to our campus. To ensure you have a smooth and enjoyable trip, here&rsquo;s some essential information you should know before you go.</p>
         </div>
       </section>
 
