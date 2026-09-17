@@ -513,6 +513,7 @@ five 18px `<strong>` labels were shipped at 32px.
 | `know-before-you-go.html` | `headline-three` ×2, `headline-four` ×2 | 1, 2 |
 | `student-life/find-community.html` | `<strong>` ×5 | 3 (plus 2 of our own groupings at level 2) |
 | `student-life/student-support.html` | `headline-four` ×4 | 2 |
+| `how-to-apply/freshman-application-faqs.html` | `headline-four` ×6 | 2 |
 
 `know-before-you-go.html` is the reference: it is the only source page carrying
 both `headline-three` and `headline-four`, so it is the one page that
