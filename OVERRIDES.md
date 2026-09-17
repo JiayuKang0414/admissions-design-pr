@@ -470,7 +470,12 @@ Pages using this: `pages/how-to-apply/freshman-applicants.html`.
 
 ## Deadlines table
 
-`.deadlines-table` — simple two-column rich-text table for the Important Dates section. Admissions-specific.
+`.deadlines-table` — simple two-column rich-text table for the Important Dates
+section on `pages/index.html`. Admissions-specific, and **not** the house table
+style: it is a borderless date list on a landing page, with no header row to put
+the black band on. `.applicant-deadlines-table` on
+`pages/personas/prospective-students.html` is the same pattern. A table with a
+header row uses `styles/rich-text-table.css` — see *Tables: one house style*.
 
 ## Applicant spotlight — stats and deadlines in the pathway `stats` slot
 
@@ -1573,3 +1578,136 @@ Verified at 1280px: image and caption both flush to the content column's right
 edge (371px of 775px), every line of copy stopping short of the float. At 375px
 the float collapses to stacked, which is the design system's own behaviour.
 See `pages/tuition/frederick-douglass-scholarship.html`.
+
+## Tables: one house style, `styles/rich-text-table.css`
+
+Two table treatments existed on the site. They are now one. Canonical markup is
+rendered by `scripts/rich_text.py`; the stylesheet is
+`styles/rich-text-table.css`, linked per page:
+
+```html
+<link rel="stylesheet" href="../../styles/rich-text-table.css">
+```
+
+| | |
+|---|---|
+| `.umd-text-rich-table` | **2px `#e21833` top border**, `border-collapse: collapse`, `width: 100%`, `min-width: 680px` |
+| `thead th` | `#000` ground, `#fff` text, 18/700, 71px tall, 16px padding, left-aligned |
+| `tbody th`, `tbody td` | 16/400 `#454545`, 64px tall, 16px padding, middle-aligned, `border-bottom: 1px solid #242424` |
+| `tbody tr:nth-child(even)` | `#fafafa` |
+| `.umd-text-rich-table-total` | no bottom rule, `#000`, 700 |
+| `.umd-text-rich-table-scroll` | the scroll container — `tabindex="0"` + `role="region"`, red focus ring, 32px below |
+| `.umd-text-rich-advanced + .umd-text-rich-table-scroll` | 32px above, **only** when the table follows body copy |
+
+That last rule exists because the two ways a table gets introduced space
+themselves differently. A table under a heading already has its gap —
+`umd-layout-space-vertical-interior-child` is margin-**bottom** 32px — but a
+table that follows a paragraph or a list has nothing above it at all, and its
+red cap lands flush against the last line. Scoping the `margin-top` to the
+adjacent-sibling case gives 32px in both without doubling either.
+
+**Do not use the design system's own rich-text table defaults.**
+`element.min.css` styles bare `<table>` under
+`:is(.umd-text-rich-advanced, .umd-rich-text)` with a grey `#F1F1F1` header and
+`#E6E6E6` rules — a third style, and it puts `display: block; overflow-x: auto`
+on the **table element itself**. That turns the `<table>` into a block box whose
+rows form a shrink-to-fit anonymous table inside it, so the header band and the
+columns size to their text and stop short of the lock, and `table-layout: fixed`
+has nothing to distribute across. Measured while building
+`english-language-proficiency.html`: a 627px header band in a 1152px content box,
+columns at 221 / 155 / 251. The house stylesheet avoids all of it by keeping
+`display: table` on the table and putting the scroll on the wrapper — the same
+arrangement the legacy site uses.
+
+Keeping the table **out** of `.umd-text-rich-advanced` is the simplest way to
+stay clear of those defaults.
+
+#### Evaluated and rejected: a bare table in rich text with a small override (2026-09-17)
+
+The tempting alternative is to drop the wrapper, put a bare `<table>` in rich
+text, and override just the header colours and padding — inheriting the DS's
+built-in `overflow-x` scroll (and the CMS swipe affordance that rides on it).
+Measured, then rejected. Two findings, in order:
+
+1. **The override itself works.** Black band, white text, 16px padding,
+   `vertical-align`, and the red `border-top` cap all apply cleanly with
+   `display: block` left alone, and the scroll keeps working. This part is not
+   the problem, and earlier drafts of this file implied it was.
+2. **The table then shrink-to-fits and will not fill its container.** Under
+   `display: block` the rows form an anonymous table box that sizes to content.
+   At 1280px the countries table came out **636px in a 1152px lock (55%)** with
+   ragged columns (262/139/235 against the house pattern's 384/384/384);
+   cost-of-attendance came out 694 in 790 (88%).
+
+**No CSS on the `<table>` fixes point 2** — the anonymous box is unselectable.
+Measured, all leaving the band at 274px in a 327px box: `width: 100%`,
+`min-width: 100%`, and `min-width: 680px` — the last also balloons the block
+past its container and kills the internal scroll.
+
+And the scroll cannot be bought back by overriding `display`: setting
+`display: table` makes `overflow-x` compute to **`visible`**, because overflow
+does not apply to table boxes. The DS's `display: block` *is* its scroll
+mechanism; the two are one feature, and taking it means taking shrink-to-fit
+with it.
+
+Hence the wrapper: it is the only way to have a real table layout **and**
+horizontal scroll. Its `min-width: 680px` is the other half — the DS default
+has no width floor, which is why the live alumni table collapses to 80–85px
+columns at 375px while ours holds its width and scrolls.
+
+The **footnotes below the table are the opposite case** — they go *inside*
+`.umd-text-rich-advanced` precisely so the design system styles them, as
+`<li><small>…</small></li>`. There is no page-owned footnote CSS and there
+should not be any: the DS already ships `small` at 14px / 1.28em in rich text,
+the black→red gradient link underline, and `li + li { margin-top: 16px }`.
+`.umd-text-rich-table-footnotes` was 52 lines re-declaring those and was deleted
+on 2026-09-17. See `RICH-TEXT-PATTERNS.md` for what it got wrong and for the
+one thing that is markup rather than CSS — the gap above the block comes from
+the DS's `ul { margin-top: 24px }`, which only applies to a sibling **within the
+same** rich-text div, so footnotes that follow a paragraph belong in that
+paragraph's div.
+
+### `.umd-text-rich-table-columns` — one list in several columns
+
+The legacy site also uses a table to lay a single long list out in columns, with
+one header spanning them all and a single body row whose cells each hold a
+stacked `<p>` + `<br>` run. Add the modifier for that shape:
+
+```html
+<div class="umd-text-rich-table-scroll" tabindex="0" role="region" aria-label="…">
+  <table class="umd-text-rich-table umd-text-rich-table-columns">
+    <thead>
+      <tr><th>English-speaking countries</th><th></th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr><td><p>Antigua<br>Australia<br>…</p></td>…</tr>
+    </tbody>
+  </table>
+</div>
+```
+
+**The header keeps the source's three `<th>`** — the first carrying the label,
+two empty — rather than one `colspan="3"` cell, and carries no `<caption>`:
+while migrating, the markup stays as close to the original page as the house
+classes allow. Nothing in the layout depends on this. Measured at 1280px, both
+shapes give a 1152px band and 384/384/384 columns, because `table-layout: fixed`
+is what equalises them; the three cells collapse into one continuous black strip
+(gaps of 0). Revisit it if this page gets an accessibility pass — two empty
+header cells announce worse than a colspan, and the visible `<h2>` above the
+table already names it.
+
+It switches on `table-layout: fixed` (equal columns — auto layout sizes them to
+their longest name instead, measured 241 / 164 / 275 under one colspanned
+header) and turns off the three data-grid defaults that are wrong for a stacked
+list: the 64px row-height floor, middle alignment, and `nowrap`. Everything else
+— the red cap, the black band, the row rule, the scroll wrapper — is shared,
+which is the point.
+
+**Cells hold `<p>` + `<br>`, not `<ul>`.** A rich-text `ul` carries a `•`
+pseudo-element, `padding-left: 24px` per `li` and `margin-top: 16px` between
+items — unusable for a stacked list inside a narrow column.
+
+`scripts/rich_text.py`'s `render_rich_text_table()` covers the data-grid shape
+only; it has no `colspan`, so a `-columns` table is hand-written in its builder.
+See `pages/how-to-apply/english-language-proficiency.html` (columns) and
+`pages/tuition/cost-of-attendance.html` (data grid).

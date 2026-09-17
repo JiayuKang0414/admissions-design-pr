@@ -20,7 +20,12 @@ class RichTextTableTests(unittest.TestCase):
         self.assertIn('aria-label="Costs &amp; fees"', output)
         self.assertIn('<th scope="row">Tuition<sup>1</sup></th>', output)
         self.assertIn("umd-text-rich-table-heading-parenthetical", output)
-        self.assertIn("umd-text-rich-table-footnotes", output)
+        # Footnotes carry no page-owned class: <small> inside a rich-text
+        # <ul> is what the design system styles at 14px.
+        self.assertIn(
+            '<div class="umd-text-rich-advanced">', output
+        )
+        self.assertIn("<li><small><em>Estimated amount.</em></small></li>", output)
         self.assertIn('class="umd-text-rich-table-total"', output)
 
     def test_rejects_rows_with_the_wrong_cell_count(self):

@@ -818,6 +818,10 @@
       text-decoration: none;
     }
   </style>
+
+  <!-- Admissions reusable rich-text table pattern. -->
+  <link rel="stylesheet" href="../../styles/rich-text-table.css">
+
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@2.0.0/dist/cdn.js"></script>
   <!-- SHARED:chrome-css:START — generated from shared/chrome.css; do not edit here -->
   <style>
@@ -1379,52 +1383,63 @@ umd-element-scroll-top[data-layout-fixed="true"] {
 
         <section class="umd-layout-space-vertical-interior">
           <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">English-speaking countries</h2>
-          <div class="umd-layout-grid-gap-two umd-layout-space-vertical-interior-child">
-              <div class="umd-text-rich-advanced">
-                <hr>
-                <ul>
-                  <li>Antigua</li>
-                  <li>Australia</li>
-                  <li>Bahamas</li>
-                  <li>Barbados</li>
-                  <li>Belize</li>
-                  <li>Bermuda</li>
-                  <li>British Virgin Islands</li>
-                  <li>Canada<sup>1</sup></li>
-                  <li>Cayman Islands</li>
-                  <li>Dominica</li>
-                  <li>The Gambia</li>
-                  <li>Ghana</li>
-                  <li>Grenada</li>
-                  <li>Guyana</li>
-                  <li>Ireland</li>
-                  <li>Jamaica</li>
-                  <li>Kenya</li>
-                </ul>
-              </div>
-              <div class="umd-text-rich-advanced">
-                <hr>
-                <ul>
-                  <li>Montserrat</li>
-                  <li>Namibia</li>
-                  <li>New Zealand</li>
-                  <li>Nigeria</li>
-                  <li>Singapore</li>
-                  <li>South Africa</li>
-                  <li>St. Lucia</li>
-                  <li>St. Vincent</li>
-                  <li>Swaziland</li>
-                  <li>Tanzania</li>
-                  <li>Trinidad and Tobago</li>
-                  <li>Turks and Caicos Islands</li>
-                  <li>Uganda</li>
-                  <li>United Kingdom</li>
-                  <li>Zambia</li>
-                  <li>Zimbabwe</li>
-                </ul>
-              </div>
+          <div class="umd-text-rich-table-scroll" tabindex="0" role="region" aria-label="English-speaking countries">
+            <table class="umd-text-rich-table umd-text-rich-table-columns">
+              <thead>
+                <tr>
+                  <th>English-speaking countries</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p>Antigua<br>
+                      Australia<br>
+                      Bahamas<br>
+                      Barbados<br>
+                      Belize<br>
+                      Bermuda<br>
+                      British Virgin Islands<br>
+                      Canada<sup>1</sup><br>
+                      Cayman Islands<br>
+                      Dominica<br>
+                      The Gambia</p>
+                  </td>
+                  <td>
+                    <p>Ghana<br>
+                      Grenada<br>
+                      Guyana<br>
+                      Ireland<br>
+                      Jamaica<br>
+                      Kenya<br>
+                      Montserrat<br>
+                      Namibia<br>
+                      New Zealand<br>
+                      Nigeria<br>
+                      Singapore</p>
+                  </td>
+                  <td>
+                    <p>South Africa<br>
+                      St. Lucia<br>
+                      St. Vincent<br>
+                      Swaziland<br>
+                      Tanzania<br>
+                      Trinidad and Tobago<br>
+                      Turks and Caicos Islands<br>
+                      Uganda<br>
+                      United Kingdom<br>
+                      Zambia<br>
+                      Zimbabwe</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <p class="umd-sans-smaller">1. English proficiency test is required for the French system only.</p>
+          <div class="umd-text-rich-advanced">
+            <p><small>1. English proficiency test is required for the French system only.</small></p>
+          </div>
         </section>
 
         <section class="umd-layout-space-vertical-interior">

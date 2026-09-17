@@ -39,6 +39,10 @@ pin = re.search(r"web-components-library@([\d.]+)/dist/cdn\.js", template)
 assert pin, "TEMPLATE.html has no web-components-library cdn.js pin"
 
 body = r'''  </style>
+
+  <!-- Admissions reusable rich-text table pattern. -->
+  <link rel="stylesheet" href="../../styles/rich-text-table.css">
+
   <script src="https://unpkg.com/@universityofmaryland/web-components-library@@@PIN@@/dist/cdn.js"></script>
 @@CHROME:chrome-css@@
 @@CHROME:gate@@
@@ -121,52 +125,63 @@ body = r'''  </style>
 
         <section class="umd-layout-space-vertical-interior">
           <h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">English-speaking countries</h2>
-          <div class="umd-layout-grid-gap-two umd-layout-space-vertical-interior-child">
-              <div class="umd-text-rich-advanced">
-                <hr>
-                <ul>
-                  <li>Antigua</li>
-                  <li>Australia</li>
-                  <li>Bahamas</li>
-                  <li>Barbados</li>
-                  <li>Belize</li>
-                  <li>Bermuda</li>
-                  <li>British Virgin Islands</li>
-                  <li>Canada<sup>1</sup></li>
-                  <li>Cayman Islands</li>
-                  <li>Dominica</li>
-                  <li>The Gambia</li>
-                  <li>Ghana</li>
-                  <li>Grenada</li>
-                  <li>Guyana</li>
-                  <li>Ireland</li>
-                  <li>Jamaica</li>
-                  <li>Kenya</li>
-                </ul>
-              </div>
-              <div class="umd-text-rich-advanced">
-                <hr>
-                <ul>
-                  <li>Montserrat</li>
-                  <li>Namibia</li>
-                  <li>New Zealand</li>
-                  <li>Nigeria</li>
-                  <li>Singapore</li>
-                  <li>South Africa</li>
-                  <li>St. Lucia</li>
-                  <li>St. Vincent</li>
-                  <li>Swaziland</li>
-                  <li>Tanzania</li>
-                  <li>Trinidad and Tobago</li>
-                  <li>Turks and Caicos Islands</li>
-                  <li>Uganda</li>
-                  <li>United Kingdom</li>
-                  <li>Zambia</li>
-                  <li>Zimbabwe</li>
-                </ul>
-              </div>
+          <div class="umd-text-rich-table-scroll" tabindex="0" role="region" aria-label="English-speaking countries">
+            <table class="umd-text-rich-table umd-text-rich-table-columns">
+              <thead>
+                <tr>
+                  <th>English-speaking countries</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p>Antigua<br>
+                      Australia<br>
+                      Bahamas<br>
+                      Barbados<br>
+                      Belize<br>
+                      Bermuda<br>
+                      British Virgin Islands<br>
+                      Canada<sup>1</sup><br>
+                      Cayman Islands<br>
+                      Dominica<br>
+                      The Gambia</p>
+                  </td>
+                  <td>
+                    <p>Ghana<br>
+                      Grenada<br>
+                      Guyana<br>
+                      Ireland<br>
+                      Jamaica<br>
+                      Kenya<br>
+                      Montserrat<br>
+                      Namibia<br>
+                      New Zealand<br>
+                      Nigeria<br>
+                      Singapore</p>
+                  </td>
+                  <td>
+                    <p>South Africa<br>
+                      St. Lucia<br>
+                      St. Vincent<br>
+                      Swaziland<br>
+                      Tanzania<br>
+                      Trinidad and Tobago<br>
+                      Turks and Caicos Islands<br>
+                      Uganda<br>
+                      United Kingdom<br>
+                      Zambia<br>
+                      Zimbabwe</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <p class="umd-sans-smaller">1. English proficiency test is required for the French system only.</p>
+          <div class="umd-text-rich-advanced">
+            <p><small>1. English proficiency test is required for the French system only.</small></p>
+          </div>
         </section>
 
         <section class="umd-layout-space-vertical-interior">
@@ -245,11 +260,30 @@ assert output.count(countries_heading) == 1
 countries_start = output.index(countries_heading)
 countries_end = output.index("</section>", countries_start)
 countries_markup = output[countries_start:countries_end]
-assert '<div class="umd-layout-grid-gap-two umd-layout-space-vertical-interior-child">' in countries_markup
-assert countries_markup.count('<div class="umd-text-rich-advanced">') == 2
-assert countries_markup.count("<hr>") == 2
-assert countries_markup.count("<li>") == 33
-assert '<p class="umd-sans-smaller">1. English proficiency test is required for the French system only.</p>' in countries_markup
+# The source lays this list out as a table (three columns, 11 names each), so
+# it migrates as one — see OVERRIDES.md "umd-text-rich-table-columns".
+assert countries_markup.count('<table class="umd-text-rich-table umd-text-rich-table-columns">') == 1
+assert '<div class="umd-text-rich-table-scroll" tabindex="0" role="region"' in countries_markup
+# Header matches the source exactly: three <th>, the first carrying the label
+# and two empty. Equal columns come from table-layout: fixed, not from colspan.
+assert countries_markup.count("<th>") == 3
+assert "<th>English-speaking countries</th>" in countries_markup
+assert countries_markup.count("<th></th>") == 2
+assert "colspan" not in countries_markup
+assert "<caption" not in countries_markup
+assert countries_markup.count("<td>") == 3
+# Cells hold <p> + <br> runs, never <ul> — a rich-text li carries a bullet,
+# 24px padding and 16px item spacing, all wrong inside a narrow column.
+assert countries_markup.count("<li>") == 0
+assert countries_markup.count("<hr>") == 0
+assert countries_markup.count("<br>") == 30, "33 names, 3 columns, no trailing <br>"
+for _country in ("Antigua", "Canada<sup>1</sup>", "The Gambia", "Ghana",
+                 "Singapore", "South Africa", "Zimbabwe"):
+    assert _country in countries_markup, _country
+# Footnote follows the source: a plain paragraph with a "1." marker, not a
+# bulleted list. <small> is the design system's own 14px step in rich text.
+assert '<p><small>1. English proficiency test is required for the French system only.</small></p>' in countries_markup
+assert "umd-sans-smaller" not in countries_markup
 waivers_start = output.index("Potential Waivers for English Proficiency Requirement")
 assert "</section>" in output[waivers_start:countries_start]
 resources_heading = '<h2 class="umd-layout-space-vertical-interior-child text-black umd-sans-larger-bold">Resources</h2>'
@@ -264,8 +298,8 @@ assert '<h3 slot="headline">' in resources_markup
 assert 'href="https://marylandenglishinstitute.com/" target="_blank" rel="noopener">Maryland English Institute</a>' in resources_markup
 assert "Students are notified within their admission decision letter" in resources_markup
 assert "mei-resource-" not in output
-assert "<table" not in output
-assert "rich-text-table.css" not in output
+assert output.count("<table") == 1
+assert '<link rel="stylesheet" href="../../styles/rich-text-table.css">' in output
 # The page lede is a PARAGRAPH, not a heading. umd-sans-large gives it 18px/700
 # in place; wrapping a multi-sentence lede in <h2> puts a paragraph in the
 # document outline and makes screen-reader heading navigation announce the whole

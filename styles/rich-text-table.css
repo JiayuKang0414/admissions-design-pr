@@ -8,6 +8,15 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* A table introduced by a heading gets its gap from the heading:
+   umd-layout-space-vertical-interior-child is margin-BOTTOM 32px. A table that
+   follows body copy instead has nothing above it, and its red cap lands flush
+   against the last line — so give it the matching 32px here, and only here, to
+   keep from doubling the heading case. */
+.umd-text-rich-advanced + .umd-text-rich-table-scroll {
+  margin-top: 32px;
+}
+
 .umd-text-rich-table-scroll:focus-visible {
   outline: 2px solid #e21833;
   outline-offset: 4px;
@@ -15,6 +24,10 @@
 
 .umd-text-rich-table {
   border-collapse: collapse;
+  /* 2px Maryland red cap above the black header band. With border-collapse the
+     table's own border-top is what paints here — thead th declares no top
+     border, so there is nothing for it to lose the collapse to. */
+  border-top: 2px solid #e21833;
   font-family: var(--umd-font-sans, Interstate, Helvetica, Arial, Verdana, sans-serif);
   min-width: 680px;
   width: 100%;
@@ -69,60 +82,40 @@
   font-weight: 700;
 }
 
+/* MODIFIER: one list set in several columns, not a data grid.
+
+   The legacy site uses a table to lay a long single list (countries, programs)
+   out in columns, with one header spanning them all and a single body row whose
+   cells each hold a stacked <p> + <br> run. The data-grid defaults fight that:
+   a 64px row-height floor is meaningless against a 300px cell, middle alignment
+   pushes the shorter columns' first line down out of line with the others, and
+   nowrap is there for currency figures, not place names.
+
+   Everything else — the red cap, the black header band, the 1px #242424 row
+   rule, the scroll wrapper — is shared with the data tables, which is the
+   point. */
+.umd-text-rich-table-columns {
+  /* Equal thirds. The data tables want auto layout so a label column can size
+     to its text, but here every column holds the same kind of run and the
+     source sets them equal — under auto layout they size to their longest
+     name instead (measured 241/164/275). This is the only thing making the
+     columns equal: the header shape does not matter, and the markup keeps the
+     source's three <th> (one labelled, two empty) rather than a colspan. */
+  table-layout: fixed;
+}
+
+.umd-text-rich-table-columns tbody th,
+.umd-text-rich-table-columns tbody td {
+  height: auto;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.umd-text-rich-table-columns tbody td p {
+  margin: 0;
+}
+
 .umd-text-rich-table sup {
   font-size: 0.72em;
   line-height: 0;
-}
-
-.umd-text-rich-table-footnotes {
-  color: #454545;
-  font-family: var(--umd-font-sans, Interstate, Helvetica, Arial, Verdana, sans-serif);
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 24px 0 0;
-}
-
-.umd-text-rich-table-footnotes > * {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.umd-text-rich-table-footnotes ul {
-  font-size: 14px;
-  line-height: 1.5;
-  list-style: disc;
-  margin: 0;
-  padding-left: 22px;
-}
-
-.umd-text-rich-table-footnotes li {
-  font-size: 14px;
-  line-height: 1.5;
-  margin-top: 16px;
-}
-
-.umd-text-rich-table-footnotes li:first-child {
-  margin-top: 0;
-}
-
-.umd-text-rich-table-footnotes em,
-.umd-text-rich-table-footnotes a {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.umd-text-rich-table-footnotes a {
-  background-image: linear-gradient(#000000, #000000);
-  background-position: left calc(100% - 1px);
-  background-repeat: no-repeat;
-  background-size: 100% 1px;
-  color: #000000;
-  position: relative;
-  text-decoration: none;
-  transition: color 0.5s, background-size 0.5s, background-image 0.5s, background-position 0.5s;
-}
-
-.umd-text-rich-table-footnotes a:hover,
-.umd-text-rich-table-footnotes a:focus {
-  background-image: linear-gradient(#e21833, #e21833);
 }

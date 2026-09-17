@@ -92,11 +92,13 @@ def render_rich_text_table(
         lines.extend(
             [
                 "",
-                '<div class="umd-text-rich-advanced umd-text-rich-table-footnotes">',
+                '<div class="umd-text-rich-advanced">',
                 "  <ul>",
             ]
         )
-        lines.extend(f"    <li>{footnote}</li>" for footnote in footnotes)
+        lines.extend(
+            f"    <li><small>{footnote}</small></li>" for footnote in footnotes
+        )
         lines.extend(["  </ul>", "</div>"])
 
     return "\n".join(lines)
